@@ -1,0 +1,32 @@
+# Project file
+
+# Dev
+test_*.cpp
+*_old.c
+
+# General
+.DS_Store
+
+# Editor
+.vscode
+
+# Prerequisites
+*.d
+
+# Object files
+*.o
+
+# Libraries
+*.dylib
+*.lib
+*.a
+
+# Executables
+*.exe
+*.out
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
