@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <exception>
+#include "enable_if.hpp"
 
 namespace ft {
 	template < typename T, typename Allocator = std::allocator<T> >
@@ -53,7 +54,7 @@ namespace ft {
 		}
 		template < typename InputIterator>
 		vector( InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(),
-			typename std::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+			typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
 			: first(0), last(0), reserved_last(0), alloc(alloc)
 		{
 			reserve(std::distance(first, last));
