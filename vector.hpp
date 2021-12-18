@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <exception>
+#include "vector_iterator.hpp"
 #include "enable_if.hpp"
 
 namespace ft {
@@ -20,8 +21,8 @@ namespace ft {
 		typedef std::size_t								size_type;
 		typedef std::ptrdiff_t							difference_type;
 		typedef Allocator								allocator_type;
-		typedef pointer									iterator;
-		typedef const_pointer							const_iterator;
+		typedef vector_iterator<pointer>				iterator;
+		typedef vector_iterator<const_pointer>			const_iterator;
 		typedef std::reverse_iterator<iterator>			reverse_iterator;
 		typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -148,35 +149,43 @@ namespace ft {
 		// イテレーターアクセス
 		iterator begin()
 		{
-			return first;
+			// return first;
+			return __make_iter(this->first);
+			// return iterator(first);
 		}
 		iterator end()
 		{
-			return last;
+			// return last;
+			return __make_iter(this->last);
+			// return iterator(last);
 		}
 		const_iterator begin() const
 		{
-			return first;
+			// return first;
+			return __make_iter(this->first);
+			// return iterator(first);
 		}
 		const_iterator end() const
 		{
-			return last;
+			// return last;
+			return __make_iter(this->last);
+			// return iterator(last);
 		}
 		reverse_iterator rbegin()
 		{
-			return static_cast<reverse_iterator>(last);
+			return static_cast<reverse_iterator>(end());
 		}
 		reverse_iterator rend()
 		{
-			return static_cast<reverse_iterator>(last);
+			return static_cast<reverse_iterator>(begin());
 		}
 		const_reverse_iterator rbegin() const
 		{
-			return static_cast<const_reverse_iterator>(last);
+			return static_cast<const_reverse_iterator>(end());
 		}
 		const_reverse_iterator rend() const
 		{
-			return static_cast<const_reverse_iterator>(last);
+			return static_cast<const_reverse_iterator>(begin());
 		}
 
 		size_type size() const
@@ -306,6 +315,9 @@ namespace ft {
 		}
 
 	private:
+		iterator __make_iter(pointer __p);
+		const_iterator __make_iter(const_pointer __p) const;
+
 		pointer allocate(size_type n)
 		{
 			return alloc.allocate(n);
@@ -330,6 +342,20 @@ namespace ft {
 			first = last = reserved_last = 0;
 		}
 	};
+
+	template <class _Tp, class _Allocator>
+	inline typename vector<_Tp, _Allocator>::iterator
+	vector<_Tp, _Allocator>::__make_iter(pointer __p)
+	{
+		return iterator(__p);
+	}
+
+	template <class _Tp, class _Allocator>
+	inline typename vector<_Tp, _Allocator>::const_iterator
+	vector<_Tp, _Allocator>::__make_iter(const_pointer __p) const
+	{
+		return const_iterator(__p);
+	}
 }
 
 #endif /* VECTOR_HPP */
