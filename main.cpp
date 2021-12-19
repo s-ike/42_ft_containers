@@ -46,4 +46,11 @@ int main()
 		print_container(v2);
 		std::cout << v2.size() << std::endl;
 	}
+	{
+		ft::vector<int> v(5);
+		int value = 0;
+		for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
+			*p = ++value;
+		print_container(v);
+	}
 }

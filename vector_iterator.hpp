@@ -28,12 +28,12 @@ namespace ft {
 		explicit vector_iterator(pointer __x)
 			: __i(__x)
 		{}
-		template <class T>
-		vector_iterator(const vector_iterator<T>& __x)
+		template <class _T>
+		vector_iterator(const vector_iterator<_T>& __x)
 			: __i(__x.base())
 		{}
-		template <class T>
-		vector_iterator& operator=(const vector_iterator<T>& __x)
+		template <class _T>
+		vector_iterator& operator=(const vector_iterator<_T>& __x)
 		{
 			if (this != &__x)
 				__i = __x.__i;
@@ -104,11 +104,16 @@ namespace ft {
 		}
 
 	private:
-		template <class _Tp, class _Alloc> friend class vector;
+		// template <class _Tp, class _Alloc> friend class vector;
 	};
 
 	template <class _Iter>
 	bool operator==(const vector_iterator<_Iter>& __x, const vector_iterator<_Iter>& __y)
+	{
+		return __x.base() == __y.base();
+	}
+	template <class _Iter1, class _Iter2>
+	bool operator==(const vector_iterator<_Iter1>& __x, const vector_iterator<_Iter2>& __y)
 	{
 		return __x.base() == __y.base();
 	}
@@ -118,9 +123,19 @@ namespace ft {
 	{
 		return __x.base() < __y.base();
 	}
+	template <class _Iter1, class _Iter2>
+	bool operator<(const vector_iterator<_Iter1>& __x, const vector_iterator<_Iter2>& __y)
+	{
+		return __x.base() < __y.base();
+	}
 
 	template <class _Iter>
 	bool operator!=(const vector_iterator<_Iter>& __x, const vector_iterator<_Iter>& __y)
+	{
+		return !(__x == __y);
+	}
+	template <class _Iter1, class _Iter2>
+	bool operator!=(const vector_iterator<_Iter1>& __x, const vector_iterator<_Iter2>& __y)
 	{
 		return !(__x == __y);
 	}
@@ -130,9 +145,19 @@ namespace ft {
 	{
 		return __y < __x;
 	}
+	template <class _Iter1, class _Iter2>
+	bool operator>(const vector_iterator<_Iter1>& __x, const vector_iterator<_Iter2>& __y)
+	{
+		return __y < __x;
+	}
 
 	template <class _Iter>
 	bool operator>=(const vector_iterator<_Iter>& __x, const vector_iterator<_Iter>& __y)
+	{
+		return !(__x < __y);
+	}
+	template <class _Iter1, class _Iter2>
+	bool operator>=(const vector_iterator<_Iter1>& __x, const vector_iterator<_Iter2>& __y)
 	{
 		return !(__x < __y);
 	}
@@ -142,18 +167,23 @@ namespace ft {
 	{
 		return !(__y < __x);
 	}
+	template <class _Iter1, class _Iter2>
+	bool operator<=(const vector_iterator<_Iter1>& __x, const vector_iterator<_Iter2>& __y)
+	{
+		return !(__y < __x);
+	}
+
+	template <class _Iter1, class _Iter2>
+	typename vector_iterator<_Iter1>::difference_type operator-(const vector_iterator<_Iter1>& __x, const vector_iterator<_Iter2>& __y)
+	{
+		return __x.base() - __y.base();
+	}
 
 	template <class _Iter>
 	vector_iterator<_Iter> operator+(typename vector_iterator<_Iter>::difference_type __n, vector_iterator<_Iter> __x)
 	{
 		__x += __n;
 		return __x;
-	}
-
-	template <class _Iter>
-	typename vector_iterator<_Iter>::difference_type operator-(const vector_iterator<_Iter>& __x, const vector_iterator<_Iter>& __y)
-	{
-		return __x.base() - __y.base();
 	}
 }
 
