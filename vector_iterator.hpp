@@ -4,8 +4,6 @@
 #include <iterator>
 #include "iterator_traits.hpp"
 
-#include <iostream>
-
 namespace ft {
 	template <class _Iter>
 	class vector_iterator : public std::iterator<std::random_access_iterator_tag, _Iter>

@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <exception>
+#include "reverse_iterator.hpp"
 #include "vector_iterator.hpp"
 #include "enable_if.hpp"
 
@@ -23,8 +24,8 @@ namespace ft {
 		typedef Allocator								allocator_type;
 		typedef vector_iterator<pointer>				iterator;
 		typedef vector_iterator<const_pointer>			const_iterator;
-		typedef std::reverse_iterator<iterator>			reverse_iterator;
-		typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator>			reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 	private :
 		// 先頭の要素へのポインター

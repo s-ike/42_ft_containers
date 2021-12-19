@@ -53,4 +53,11 @@ int main()
 			*p = ++value;
 		print_container(v);
 	}
+	{
+		ft::vector<int> v(5);
+		int value = 5;
+		for (ft::vector<int>::reverse_iterator p = v.rbegin(); p != v.rend(); ++p)
+			*p = value--;
+		print_container(v);
+	}
 }
