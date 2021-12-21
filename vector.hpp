@@ -13,19 +13,18 @@ namespace ft {
 	class vector
 	{
 	public:
-		// value_typeなどネストされた型名
 		typedef T										value_type;
-		typedef T*										pointer;
-		typedef const T* 								const_pointer;
+		typedef Allocator								allocator_type;
 		typedef value_type&								reference;
 		typedef const value_type&						const_reference;
-		typedef std::size_t								size_type;
-		typedef std::ptrdiff_t							difference_type;
-		typedef Allocator								allocator_type;
+		typedef T*										pointer;
+		typedef const T* 								const_pointer;
 		typedef vector_iterator<pointer>				iterator;
 		typedef vector_iterator<const_pointer>			const_iterator;
 		typedef ft::reverse_iterator<iterator>			reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+		typedef std::ptrdiff_t							difference_type;
+		typedef std::size_t								size_type;
 
 	private :
 		// 先頭の要素へのポインター
@@ -38,32 +37,85 @@ namespace ft {
 		allocator_type	alloc ;
 
 	public:
-		// コンストラクター
-		vector()
+		// constructor
+		explicit vector(const allocator_type& __alloc = allocator_type())
+			: first(0), last(0), reserved_last(0), alloc(__alloc)
 		{}
-		vector( const allocator_type & alloc )
-			: first(0), last(0), reserved_last(0), alloc(alloc)
-		{}
-		vector(size_type size, const allocator_type & alloc = allocator_type())
-			: first(0), last(0), reserved_last(0), alloc(alloc)
+		explicit vector(size_type __n, const value_type& __val = value_type(),
+				 const allocator_type& __alloc = allocator_type())
+			: first(0), last(0), reserved_last(0), alloc(__alloc)
 		{
-			resize( size ) ;
-		}
-		vector( size_type size, const_reference value, const allocator_type & alloc = allocator_type() )
-			: first(0), last(0), reserved_last(0), alloc(alloc)
-		{
-			resize( size, value ) ;
+			if (__n > 0)
+			{
+				pointer __temp = allocate(__n);
+				std::uninitialized_fill(__temp, __temp + __n, __val);
+				first = __temp;
+				reserved_last = last = first + __n;
+			}
+
+			// resize(__n, __val);
+
+			// if (__n > 0)
+			// {
+			// 	allocate(__n);
+			// 	for (size_type __i = 0; __i < __n; ++__i)
+			// 		alloc.construct(&first[__i], __val);
+			// }
 		}
 		template < typename InputIterator>
-		vector( InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(),
-			typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
-			: first(0), last(0), reserved_last(0), alloc(alloc)
+		vector(InputIterator __first, InputIterator __last, const allocator_type & __alloc = allocator_type(),
+				typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
+			: first(0), last(0), reserved_last(0), alloc(__alloc)
 		{
-			reserve(std::distance(first, last));
-			for (InputIterator i = first ; i != last ; ++i )
+			size_type __n = static_cast<size_type>(std::distance(__first, __last));
+			if (__n > 0)
 			{
-				push_back( *i ) ;
+				pointer __temp = allocate(__n);
+				std::uninitialized_copy(__first, __last, __temp);
+				first = __temp;
+				reserved_last = last = first + __n;
 			}
+
+			// reserve(std::distance(__first, __last));
+			// for (InputIterator __i = __first; __i != __last; ++__i)
+			// 	push_back(*__i);
+		}
+		vector(const vector& __x)
+			: first(0), last(0), reserved_last(0), alloc(__x.alloc)
+		{
+			size_type __n = __x.size();
+			if (__n > 0)
+			{
+				pointer __temp = allocate(__n);
+				std::uninitialized_copy(__x.begin(), __x.end(), __temp);
+				first = __temp;
+				reserved_last = last = first + __x.size();
+			}
+
+			// // llvm
+			// // size_type __n = __x.size();
+			// // if (__n > 0)
+			// // {
+			// // 	__vallocate(__n);
+			// // 	__construct_at_end(__x.__begin_, __x.__end_, __n);
+			// // }
+
+			// if (!__x.first)
+			// 	return;
+
+			// reserve(__x.size());
+			// // コメント
+			// // pointer dest = first;
+			// // iterator src = r.begin();
+			// // for (; src != r.end(); ++src, ++dest)
+			// // {
+			// // 	std::cout << typeid(src).name() << std::endl;
+			// // 	alloc.construct(dest, *src);
+			// // }
+			// // last = first + r.size();
+			// for (size_type i = 0; i < __x.size(); i++)
+			// 	alloc.construct(&first[i], __x.first[i]);
+			// last = first + __x.size();
 		}
 		// デストラクター
 		~vector()
@@ -71,27 +123,7 @@ namespace ft {
 			clear();
 			deallocate();
 		}
-		// コピー
-		vector( const vector & r )
-			: first(0), last(0), reserved_last(0), alloc(r.alloc)
-		{
-			if (!r.first)
-				return;
 
-			reserve(r.size());
-			// pointer dest = first;
-			// iterator src = r.begin();
-			// for (; src != r.end(); ++src, ++dest)
-			// {
-			// 	std::cout << typeid(src).name() << std::endl;
-			// 	alloc.construct(dest, *src);
-			// }
-			// last = first + r.size();
-			for (size_type i = 0; i < r.size(); i++)
-				alloc.construct(&first[i], r.first[i]);
-			last = first + r.size();
-
-		}
 		// コピー代入演算子ではアロケーターのコピーをする必要はない。
 		// 自分自身への代入への対応が必要だ。
 		// コピー代入のコピー先とコピー元の要素数が同じであるとは限らない。
