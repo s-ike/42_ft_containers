@@ -47,10 +47,8 @@ namespace ft {
 		{
 			if (__n > 0)
 			{
-				pointer __temp = allocate(__n);
-				std::uninitialized_fill(__temp, __temp + __n, __val);
-				__begin = __temp;
-				__end_cap = __end = __begin + __n;
+				__vallocate(__n);
+				std::uninitialized_fill(__begin, __begin + __n, __val);
 			}
 
 			// resize(__n, __val);
@@ -70,10 +68,8 @@ namespace ft {
 			size_type __n = static_cast<size_type>(std::distance(__first, __last));
 			if (__n > 0)
 			{
-				pointer __temp = allocate(__n);
-				std::uninitialized_copy(__first, __last, __temp);
-				__begin = __temp;
-				__end_cap = __end = __begin + __n;
+				__vallocate(__n);
+				std::uninitialized_copy(__first, __last, __begin);
 			}
 
 			// reserve(std::distance(__first, __last));
@@ -86,10 +82,8 @@ namespace ft {
 			size_type __n = __x.size();
 			if (__n > 0)
 			{
-				pointer __temp = allocate(__n);
-				std::uninitialized_copy(__x.begin(), __x.end(), __temp);
-				__begin = __temp;
-				__end_cap = __end = __begin + __x.size();
+				__vallocate(__n);
+				std::uninitialized_copy(__x.begin(), __x.end(), __begin);
 			}
 
 			// // llvm
@@ -348,8 +342,12 @@ namespace ft {
 		}
 
 	private:
-		iterator __make_iter(pointer __p);
-		const_iterator __make_iter(const_pointer __p) const;
+        void __vallocate(size_type __n)
+        {
+            __begin = __end = __alloc.allocate(__n);
+            __end_cap = __begin + __n;
+        }
+        // void __vdeallocate() _NOEXCEPT;
 
 		pointer allocate(size_type n)
 		{
@@ -374,6 +372,9 @@ namespace ft {
 			deallocate();
 			__begin = __end = __end_cap = 0;
 		}
+
+        iterator __make_iter(pointer __p);
+        const_iterator __make_iter(const_pointer __p) const;
 	};
 
 	template <class _Tp, class _Allocator>
