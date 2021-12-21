@@ -39,11 +39,11 @@ namespace ft {
 	public:
 		// constructor
 		explicit vector(const allocator_type& __alloc = allocator_type())
-			: __begin(0), __end(0), __end_cap(0), __alloc(__alloc)
+			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
 		{}
 		explicit vector(size_type __n, const value_type& __val = value_type(),
 				 const allocator_type& __alloc = allocator_type())
-			: __begin(0), __end(0), __end_cap(0), __alloc(__alloc)
+			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
 		{
 			if (__n > 0)
 			{
@@ -65,7 +65,7 @@ namespace ft {
 		template < typename InputIterator>
 		vector(InputIterator __first, InputIterator __last, const allocator_type & __alloc = allocator_type(),
 				typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
-			: __begin(0), __end(0), __end_cap(0), __alloc(__alloc)
+			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
 		{
 			size_type __n = static_cast<size_type>(std::distance(__first, __last));
 			if (__n > 0)
@@ -81,7 +81,7 @@ namespace ft {
 			// 	push_back(*__i);
 		}
 		vector(const vector& __x)
-			: __begin(0), __end(0), __end_cap(0), __alloc(__x.__alloc)
+			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__x.__alloc)
 		{
 			size_type __n = __x.size();
 			if (__n > 0)
