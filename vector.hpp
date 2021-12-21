@@ -28,29 +28,29 @@ namespace ft {
 
 	private :
 		// 先頭の要素へのポインター
-		pointer			first ;
+		pointer         __begin;
 		// 最後の要素の1つ前方のポインター
-		pointer			last ;
+		pointer         __end;
 		// 確保したストレージの終端
-		pointer			reserved_last ;
+		pointer         __end_cap;
 		// アロケーターの値
-		allocator_type	alloc ;
+		allocator_type  __alloc;
 
 	public:
 		// constructor
 		explicit vector(const allocator_type& __alloc = allocator_type())
-			: first(0), last(0), reserved_last(0), alloc(__alloc)
+			: __begin(0), __end(0), __end_cap(0), __alloc(__alloc)
 		{}
 		explicit vector(size_type __n, const value_type& __val = value_type(),
 				 const allocator_type& __alloc = allocator_type())
-			: first(0), last(0), reserved_last(0), alloc(__alloc)
+			: __begin(0), __end(0), __end_cap(0), __alloc(__alloc)
 		{
 			if (__n > 0)
 			{
 				pointer __temp = allocate(__n);
 				std::uninitialized_fill(__temp, __temp + __n, __val);
-				first = __temp;
-				reserved_last = last = first + __n;
+				__begin = __temp;
+				__end_cap = __end = __begin + __n;
 			}
 
 			// resize(__n, __val);
@@ -65,15 +65,15 @@ namespace ft {
 		template < typename InputIterator>
 		vector(InputIterator __first, InputIterator __last, const allocator_type & __alloc = allocator_type(),
 				typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
-			: first(0), last(0), reserved_last(0), alloc(__alloc)
+			: __begin(0), __end(0), __end_cap(0), __alloc(__alloc)
 		{
 			size_type __n = static_cast<size_type>(std::distance(__first, __last));
 			if (__n > 0)
 			{
 				pointer __temp = allocate(__n);
 				std::uninitialized_copy(__first, __last, __temp);
-				first = __temp;
-				reserved_last = last = first + __n;
+				__begin = __temp;
+				__end_cap = __end = __begin + __n;
 			}
 
 			// reserve(std::distance(__first, __last));
@@ -81,15 +81,15 @@ namespace ft {
 			// 	push_back(*__i);
 		}
 		vector(const vector& __x)
-			: first(0), last(0), reserved_last(0), alloc(__x.alloc)
+			: __begin(0), __end(0), __end_cap(0), __alloc(__x.__alloc)
 		{
 			size_type __n = __x.size();
 			if (__n > 0)
 			{
 				pointer __temp = allocate(__n);
 				std::uninitialized_copy(__x.begin(), __x.end(), __temp);
-				first = __temp;
-				reserved_last = last = first + __x.size();
+				__begin = __temp;
+				__end_cap = __end = __begin + __x.size();
 			}
 
 			// // llvm
@@ -148,9 +148,9 @@ namespace ft {
 					std::copy( r.begin(), r.begin() + r.size(), begin() ) ;
 					// 残りはコピー構築
 					for (   auto src_iter = r.begin() + r.size(), src_end = r.end() ;
-							src_iter != src_end ; ++src_iter, ++last )
+							src_iter != src_end ; ++src_iter, ++__end )
 					{
-						alloc.construct( last, *src_iter ) ;
+						__alloc.construct(__begin, *src_iter ) ;
 					}
 				}
 				// 4. 予約数が不十分ならば
@@ -166,9 +166,9 @@ namespace ft {
 					// {
 					// 	alloc.construct( dest_iter, *src_iter ) ;
 					// }
-					for (size_type i = 0; i < r.size(); ++i, ++last)
+					for (size_type i = 0; i < r.size(); ++i, ++__end)
 					{
-						alloc.construct(&first[i], r.first[i]);
+						__alloc.construct(&__begin[i], r.__begin[i]);
 					}
 				}
 			}
@@ -182,27 +182,27 @@ namespace ft {
 		// イテレーターアクセス
 		iterator begin()
 		{
-			// return first;
-			return __make_iter(this->first);
-			// return iterator(first);
+			// return __begin;
+			return __make_iter(this->__begin);
+			// return iterator(__begin);
 		}
 		iterator end()
 		{
-			// return last;
-			return __make_iter(this->last);
-			// return iterator(last);
+			// return __end;
+			return __make_iter(this->__end);
+			// return iterator(__end);
 		}
 		const_iterator begin() const
 		{
-			// return first;
-			return __make_iter(this->first);
-			// return iterator(first);
+			// return __begin;
+			return __make_iter(this->__begin);
+			// return iterator(__begin);
 		}
 		const_iterator end() const
 		{
-			// return last;
-			return __make_iter(this->last);
-			// return iterator(last);
+			// return __end;
+			return __make_iter(this->__end);
+			// return iterator(__end);
 		}
 		reverse_iterator rbegin()
 		{
@@ -231,55 +231,55 @@ namespace ft {
 		}
 		size_type capacity() const
 		{
-			return reserved_last - first ;
+			return __end_cap - __begin;
 		}
 
 		reference operator []( size_type i )
 		{
-			return first[i];
+			return __begin[i];
 		}
 		const_reference operator []( size_type i ) const
 		{
-			return first[i];
+			return __begin[i];
 		}
 		reference at( size_type i )
 		{
 			if ( i >= size() )
 				throw std::out_of_range( "index is out of range." ) ;
 
-			return first[i] ;
+			return __begin[i] ;
 		}
 		const_reference at( size_type i ) const
 		{
 			if ( i >= size() )
 				throw std::out_of_range( "index is out of range." ) ;
 
-			return first[i] ;
+			return __begin[i] ;
 		}
 
 		reference front()
 		{
-			return first;
+			return __begin;
 		}
 		const_reference front() const
 		{
-			return first;
+			return __begin;
 		}
 		reference back()
 		{
-			return last - 1;
+			return __end - 1;
 		}
 		const_reference back() const
 		{
-			return last - 1;
+			return __end - 1;
 		}
 		pointer data()
 		{
-			return first;
+			return __begin;
 		}
 		const_pointer data() const
 		{
-			return first;
+			return __begin;
 		}
 
 		void clear()
@@ -293,19 +293,19 @@ namespace ft {
 				return ;
 
 			pointer ptr = allocate( sz );
-			pointer old_first = first ;
+			pointer old_first = __begin;
 			size_type old_size = size();
 			size_type old_capa = capacity();
 
-			first = ptr ;
-			last = first ;
-			reserved_last = first + sz ;
+			__begin = ptr;
+			__end = __begin;
+			__end_cap = __begin + sz;
 
-			for (size_type i = 0; i < old_size; ++i, ++last)
-				alloc.construct(&first[i], old_first[i]);
+			for (size_type i = 0; i < old_size; ++i, ++__end)
+				__alloc.construct(&__begin[i], old_first[i]);
 			for (size_type i = 0; i < old_size; ++i)
 				destroy(&old_first[i]);
-			alloc.deallocate(old_first, old_capa);
+			__alloc.deallocate(old_first, old_capa);
 		}
 		void resize (size_type n, value_type val = value_type())
 		{
@@ -314,15 +314,15 @@ namespace ft {
 			{
 				size_type diff = size() - n;
 				destroy_until(rbegin() + diff);
-				last = first + n;
+				__end = __begin + n;
 			}
 			// 現在の要素数より大きい
 			else if (n > size())
 			{
 				reserve(n);
-				for (; last != reserved_last; ++last)
+				for (; __end != __end_cap; ++__end)
 				{
-					alloc.construct(last, val);
+					__alloc.construct(__end, val);
 				}
 			}
 		}
@@ -342,9 +342,9 @@ namespace ft {
 			}
 
 			// 要素を末尾に追加
-			alloc.construct(last, val);
+			__alloc.construct(__end, val);
 			// 有効な要素数を更新
-			++last ;
+			++__end;
 		}
 
 	private:
@@ -353,26 +353,26 @@ namespace ft {
 
 		pointer allocate(size_type n)
 		{
-			return alloc.allocate(n);
+			return __alloc.allocate(n);
 		}
 		void deallocate()
 		{
-			alloc.deallocate(first, capacity());
+			__alloc.deallocate(__begin, capacity());
 		}
 		void destroy( pointer ptr )
 		{
-			alloc.destroy(ptr);
+			__alloc.destroy(ptr);
 		}
 		void destroy_until( reverse_iterator rend )
 		{
-			for (reverse_iterator riter = rbegin() ; riter != rend ; ++riter, --last )
+			for (reverse_iterator riter = rbegin() ; riter != rend ; ++riter, --__end)
 				destroy( &*riter ) ;
 		}
 		void destroy_all()
 		{
 			destroy_until(rend());
 			deallocate();
-			first = last = reserved_last = 0;
+			__begin = __end = __end_cap = 0;
 		}
 	};
 
