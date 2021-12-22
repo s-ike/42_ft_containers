@@ -127,6 +127,7 @@ namespace ft {
 		// コピー代入演算子ではアロケーターのコピーをする必要はない。
 		// 自分自身への代入への対応が必要だ。
 		// コピー代入のコピー先とコピー元の要素数が同じであるとは限らない。
+        // TODO: assginを実装してから考える
 		vector& operator=(const vector& r)
 		{
 			// 1. 自分自身への代入なら何もしない
@@ -175,51 +176,39 @@ namespace ft {
 			return *this ;
 		}
 
-		// 要素アクセス
-		// void push_back( const T & x ) ;
-		// T & operator []( std::size_t i ) noexcept ;
-
-		// イテレーターアクセス
-		iterator begin()
-		{
-			// return __begin;
-			return __make_iter(this->__begin);
-			// return iterator(__begin);
-		}
-		iterator end()
-		{
-			// return __end;
-			return __make_iter(this->__end);
-			// return iterator(__end);
-		}
-		const_iterator begin() const
-		{
-			// return __begin;
-			return __make_iter(this->__begin);
-			// return iterator(__begin);
-		}
-		const_iterator end() const
-		{
-			// return __end;
-			return __make_iter(this->__end);
-			// return iterator(__end);
-		}
-		reverse_iterator rbegin()
-		{
-			return static_cast<reverse_iterator>(end());
-		}
-		reverse_iterator rend()
-		{
-			return static_cast<reverse_iterator>(begin());
-		}
-		const_reverse_iterator rbegin() const
-		{
-			return static_cast<const_reverse_iterator>(end());
-		}
-		const_reverse_iterator rend() const
-		{
-			return static_cast<const_reverse_iterator>(begin());
-		}
+        // Iterators
+        iterator begin()
+        {
+            return __make_iter(__begin);
+        }
+        const_iterator begin() const
+        {
+            return __make_iter(__begin);
+        }
+        iterator end()
+        {
+            return __make_iter(__end);
+        }
+        const_iterator end() const
+        {
+            return __make_iter(__end);
+        }
+        reverse_iterator rbegin()
+        {
+            return reverse_iterator(end());
+        }
+        const_reverse_iterator rbegin() const
+        {
+            return const_reverse_iterator(end());
+        }
+        reverse_iterator rend()
+        {
+            return reverse_iterator(begin());
+        }
+        const_reverse_iterator rend() const
+        {
+            return const_reverse_iterator(begin());
+        }
 
 		size_type size() const
 		{
@@ -391,23 +380,15 @@ namespace ft {
 			__begin = __end = __end_cap = NULL;
 		}
 
-        iterator __make_iter(pointer __p);
-        const_iterator __make_iter(const_pointer __p) const;
+        iterator __make_iter(pointer __p)
+        {
+            return iterator(__p);
+        }
+        const_iterator __make_iter(const_pointer __p) const
+        {
+            return const_iterator(__p);
+        }
 	};
-
-	template <class _Tp, class _Allocator>
-	inline typename vector<_Tp, _Allocator>::iterator
-	vector<_Tp, _Allocator>::__make_iter(pointer __p)
-	{
-		return iterator(__p);
-	}
-
-	template <class _Tp, class _Allocator>
-	inline typename vector<_Tp, _Allocator>::const_iterator
-	vector<_Tp, _Allocator>::__make_iter(const_pointer __p) const
-	{
-		return const_iterator(__p);
-	}
 }
 
 #endif /* VECTOR_HPP */
