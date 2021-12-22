@@ -50,6 +50,22 @@ void leaks()
 int main()
 {
 	{
+		print_header("default constructor");
+		ft::vector<int> v;
+		std::cout << v.size() << std::endl;
+		std::cout << v.capacity() << std::endl;
+		v.push_back(21);
+		std::cout << v.size() << std::endl;
+		std::cout << v.capacity() << std::endl;
+		v.push_back(42);
+		std::cout << v.size() << std::endl;
+		std::cout << v.capacity() << std::endl;
+		v.push_back(84);
+		std::cout << v.size() << std::endl;
+		std::cout << v.capacity() << std::endl;
+		print_container(v);
+	}
+	{
 		// ft::vector<int> v;
 		// std::cout << v.size() << std::endl;
 		print_header("size & value constructor");

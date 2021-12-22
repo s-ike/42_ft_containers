@@ -49,6 +49,7 @@ namespace ft {
 			{
 				__vallocate(__n);
 				std::uninitialized_fill(__begin, __begin + __n, __val);
+                __end = __begin + __n;
 			}
 
 			// resize(__n, __val);
@@ -70,6 +71,7 @@ namespace ft {
 			{
 				__vallocate(__n);
 				std::uninitialized_copy(__first, __last, __begin);
+                __end = __begin + __n;
 			}
 
 			// reserve(std::distance(__first, __last));
@@ -84,6 +86,7 @@ namespace ft {
 			{
 				__vallocate(__n);
 				std::uninitialized_copy(__x.begin(), __x.end(), __begin);
+                __end = __begin + __n;
 			}
 
 			// // llvm
