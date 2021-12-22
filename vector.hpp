@@ -114,11 +114,14 @@ namespace ft {
 			// 	alloc.construct(&first[i], __x.first[i]);
 			// last = first + __x.size();
 		}
-		// デストラクター
+		// destructor
 		~vector()
 		{
-			clear();
-			deallocate();
+            if (__begin != NULL)
+            {
+                __clear();
+			    __deallocate();
+            }
 		}
 
 		// コピー代入演算子ではアロケーターのコピーをする必要はない。
@@ -356,7 +359,19 @@ namespace ft {
 		{
 			return __alloc.allocate(n);
 		}
-		void deallocate()
+        void __clear()
+        {
+            __base_destruct_at_end(__begin);
+        }
+        // destroy_until
+        void __base_destruct_at_end(pointer __new_last)
+        {
+            pointer __soon_to_be_end = __end;
+            while (__new_last != __soon_to_be_end)
+                __alloc.destroy(--__soon_to_be_end);
+            __end = __new_last;
+        }
+		void __deallocate()
 		{
 			__alloc.deallocate(__begin, capacity());
 		}
@@ -372,8 +387,8 @@ namespace ft {
 		void destroy_all()
 		{
 			destroy_until(rend());
-			deallocate();
-			__begin = __end = __end_cap = 0;
+			__deallocate();
+			__begin = __end = __end_cap = NULL;
 		}
 
         iterator __make_iter(pointer __p);

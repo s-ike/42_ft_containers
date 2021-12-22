@@ -143,4 +143,6 @@ int main()
 		print_container(v2);
 		std::cout << v2.size() << std::endl;
 	}
+	print_header("leaks");
+	leaks();
 }
