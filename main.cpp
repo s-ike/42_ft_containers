@@ -66,6 +66,25 @@ int main()
 		print_container(v);
 	}
 	{
+		print_header("size constructor");
+		std::vector<int> v(5);
+		int value = 0;
+		for (std::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
+			*p = ++value;
+		print_container(v);
+	}
+	{
+		print_header("size constructor error");
+		try
+		{
+			ft::vector<int> v(4611686018427387904);
+		}
+		catch (const std::exception& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+	}
+	{
 		// ft::vector<int> v;
 		// std::cout << v.size() << std::endl;
 		print_header("size & value constructor");
@@ -80,11 +99,13 @@ int main()
 		std::cout << v.size() << std::endl;
 		print_header("capa", COLOR_B);
 		std::cout << v.capacity() << std::endl;
+		print_header("max_size", COLOR_B);
+		std::cout << v.max_size() << std::endl;
 		leaks();
 	}
 	{
 		print_header("iterator");
-		ft::vector<int> v(5);
+		ft::vector<int> v(4611686018427387904);
 		int value = 0;
 		for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
 			*p = ++value;

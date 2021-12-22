@@ -210,18 +210,62 @@ namespace ft {
             return const_reverse_iterator(begin());
         }
 
-		size_type size() const
-		{
-			return end() - begin() ;
-		}
-		bool empty() const
-		{
-			return begin() == end() ;
-		}
-		size_type capacity() const
-		{
-			return __end_cap - __begin;
-		}
+        // Capacity
+        size_type size() const
+        {
+            return end() - begin() ;
+        }
+        size_type max_size() const
+        {
+            return std::min(__alloc.max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max()));
+        }
+        void resize(size_type __n, value_type __val = value_type())
+        {
+            // 現在の要素数より少ない
+            if (__n < size())
+            {
+                size_type diff = size() - __n;
+                destroy_until(rbegin() + diff);
+                __end = __begin + __n;
+            }
+            // 現在の要素数より大きい
+            else if (__n > size())
+            {
+                reserve(__n);
+                for (; __end != __end_cap; ++__end)
+                {
+                    __alloc.construct(__end, __val);
+                }
+            }
+        }
+        size_type capacity() const
+        {
+            return __end_cap - __begin;
+        }
+        bool empty() const
+        {
+            return begin() == end() ;
+        }
+        void reserve(size_type __sz)
+        {
+            if (__sz <= capacity())
+                return ;
+
+            pointer ptr = allocate(__sz);
+            pointer old_first = __begin;
+            size_type old_size = size();
+            size_type old_capa = capacity();
+
+            __begin = ptr;
+            __end = __begin;
+            __end_cap = __begin + __sz;
+
+            for (size_type i = 0; i < old_size; ++i, ++__end)
+                __alloc.construct(&__begin[i], old_first[i]);
+            for (size_type i = 0; i < old_size; ++i)
+                destroy(&old_first[i]);
+            __alloc.deallocate(old_first, old_capa);
+        }
 
 		reference operator []( size_type i )
 		{
@@ -276,46 +320,6 @@ namespace ft {
 			destroy_until( rend() ) ;
 		}
 
-		void reserve( size_type sz )
-		{
-			if ( sz <= capacity() )
-				return ;
-
-			pointer ptr = allocate( sz );
-			pointer old_first = __begin;
-			size_type old_size = size();
-			size_type old_capa = capacity();
-
-			__begin = ptr;
-			__end = __begin;
-			__end_cap = __begin + sz;
-
-			for (size_type i = 0; i < old_size; ++i, ++__end)
-				__alloc.construct(&__begin[i], old_first[i]);
-			for (size_type i = 0; i < old_size; ++i)
-				destroy(&old_first[i]);
-			__alloc.deallocate(old_first, old_capa);
-		}
-		void resize (size_type n, value_type val = value_type())
-		{
-			// 現在の要素数より少ない
-			if (n < size())
-			{
-				size_type diff = size() - n;
-				destroy_until(rbegin() + diff);
-				__end = __begin + n;
-			}
-			// 現在の要素数より大きい
-			else if (n > size())
-			{
-				reserve(n);
-				for (; __end != __end_cap; ++__end)
-				{
-					__alloc.construct(__end, val);
-				}
-			}
-		}
-
 		void push_back(const value_type& val)
 		{
 			// 予約メモリーが足りなければ拡張
@@ -339,6 +343,8 @@ namespace ft {
 	private:
         void __vallocate(size_type __n)
         {
+            if (__n > max_size())
+                throw std::length_error("vector");
             __begin = __end = __alloc.allocate(__n);
             __end_cap = __begin + __n;
         }
