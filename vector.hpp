@@ -219,17 +219,26 @@ namespace ft {
         {
             return std::min(__alloc.max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max()));
         }
+        /*
+        vector<_Tp, _Allocator>::resize(size_type __sz, const_reference __x)
+        {
+            size_type __cs = size();
+            if (__cs < __sz)
+                this->__append(__sz - __cs, __x);
+            else if (__cs > __sz)
+                this->__destruct_at_end(this->__begin_ + __sz);
+        }
+        */
         void resize(size_type __n, value_type __val = value_type())
         {
-            // 現在の要素数より少ない
-            if (__n < size())
+            size_type __cs = size();
+            if (__cs > __n)
             {
-                size_type diff = size() - __n;
-                destroy_until(rbegin() + diff);
+                size_type __diff = __cs - __n;
+                destroy_until(rbegin() + __diff);
                 __end = __begin + __n;
             }
-            // 現在の要素数より大きい
-            else if (__n > size())
+            else if (__cs < __n)
             {
                 reserve(__n);
                 for (; __end != __end_cap; ++__end)
@@ -240,31 +249,43 @@ namespace ft {
         }
         size_type capacity() const
         {
-            return __end_cap - __begin;
+            return static_cast<size_type>(__end_cap - __begin);
         }
         bool empty() const
         {
-            return begin() == end() ;
+            return __begin == __end;
         }
+        /*
+        template <class _Tp, class _Allocator>
+        void
+        vector<_Tp, _Allocator>::reserve(size_type __n)
+        {
+            if (__n > capacity())
+            {
+                if (__n > max_size())
+                    this->__throw_length_error();
+                allocator_type& __a = this->__alloc();
+                __split_buffer<value_type, allocator_type&> __v(__n, size(), __a);
+                __swap_out_circular_buffer(__v);
+            }
+        }
+        */
         void reserve(size_type __sz)
         {
             if (__sz <= capacity())
                 return ;
 
-            pointer ptr = allocate(__sz);
-            pointer old_first = __begin;
-            size_type old_size = size();
-            size_type old_capa = capacity();
+            pointer __old_begin = __begin;
+            size_type __old_size = size();
+            size_type __old_capa = capacity();
 
-            __begin = ptr;
-            __end = __begin;
-            __end_cap = __begin + __sz;
+            __vallocate(__sz);
 
-            for (size_type i = 0; i < old_size; ++i, ++__end)
-                __alloc.construct(&__begin[i], old_first[i]);
-            for (size_type i = 0; i < old_size; ++i)
-                destroy(&old_first[i]);
-            __alloc.deallocate(old_first, old_capa);
+            for (size_type __i = 0; __i < __old_size; ++__i, ++__end)
+                __alloc.construct(&__begin[__i], __old_begin[__i]);
+            for (size_type __i = 0; __i < __old_size; ++__i)
+                destroy(&__old_begin[__i]);
+            __alloc.deallocate(__old_begin, __old_capa);
         }
 
 		reference operator []( size_type i )

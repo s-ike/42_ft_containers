@@ -105,7 +105,7 @@ int main()
 	}
 	{
 		print_header("iterator");
-		ft::vector<int> v(4611686018427387904);
+		ft::vector<int> v(5);
 		int value = 0;
 		for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
 			*p = ++value;
@@ -163,6 +163,21 @@ int main()
 		print_container(v);
 		print_container(v2);
 		std::cout << v2.size() << std::endl;
+	}
+	{
+		print_header("resize");
+		ft::vector<int> v(10, 1);
+		print_container(v);
+		std::cout << "v.resize(5): " << std::endl;
+		v.resize(5);
+		print_container(v);
+		std::cout << "v.resize(8, 100): " << std::endl;
+		v.resize(8, 100);
+		print_container(v);
+		std::cout << "v.resize(12): " << std::endl;
+		v.resize(12);
+		print_container(v);
+		leaks();
 	}
 	print_header("leaks");
 	leaks();
