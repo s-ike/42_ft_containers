@@ -288,53 +288,43 @@ namespace ft {
             __alloc.deallocate(__old_begin, __old_capa);
         }
 
-		reference operator []( size_type i )
-		{
-			return __begin[i];
-		}
-		const_reference operator []( size_type i ) const
-		{
-			return __begin[i];
-		}
-		reference at( size_type i )
-		{
-			if ( i >= size() )
-				throw std::out_of_range( "index is out of range." ) ;
-
-			return __begin[i] ;
-		}
-		const_reference at( size_type i ) const
-		{
-			if ( i >= size() )
-				throw std::out_of_range( "index is out of range." ) ;
-
-			return __begin[i] ;
-		}
-
-		reference front()
-		{
-			return __begin;
-		}
-		const_reference front() const
-		{
-			return __begin;
-		}
-		reference back()
-		{
-			return __end - 1;
-		}
-		const_reference back() const
-		{
-			return __end - 1;
-		}
-		pointer data()
-		{
-			return __begin;
-		}
-		const_pointer data() const
-		{
-			return __begin;
-		}
+        // Element access
+        reference operator[](size_type __n)
+        {
+            return __begin[__n];
+        }
+        const_reference operator[](size_type __n) const
+        {
+            return __begin[__n];
+        }
+        reference at(size_type __n)
+        {
+            if (__n >= size())
+                throw std::out_of_range("vector");
+            return __begin[__n];
+        }
+        const_reference at(size_type __n) const
+        {
+            if (__n >= size())
+                throw std::out_of_range("vector");
+            return __begin[__n];
+        }
+        reference front()
+        {
+            return *__begin;
+        }
+        const_reference front() const
+        {
+            return *__begin;
+        }
+        reference back()
+        {
+            return *(__end - 1);
+        }
+        const_reference back() const
+        {
+            return *(__end - 1);
+        }
 
 		void clear()
 		{

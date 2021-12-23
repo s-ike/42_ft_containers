@@ -179,6 +179,35 @@ int main()
 		print_container(v);
 		leaks();
 	}
+	{
+		print_header("Element access");
+		ft::vector<int> v(10, 1);
+		v[0] = 42;
+		v.at(1) = 100;
+		print_container(v);
+
+		print_header("element access error", COLOR_B);
+		try
+		{
+			v.at(100) = 42;
+		}
+		catch (const std::exception& e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+	}
+	{
+		print_header("front() & back()");
+		ft::vector<int> v(5);
+		int value = 0;
+		for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
+			*p = ++value;
+		print_container(v);
+		std::cout << "front(): \n";
+		std::cout << v.front() << '\n';
+		std::cout << "back(): \n";
+		std::cout << v.back() << std::endl;
+	}
 	print_header("leaks");
 	leaks();
 }
