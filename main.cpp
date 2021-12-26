@@ -208,6 +208,132 @@ int main()
 		std::cout << "back(): \n";
 		std::cout << v.back() << std::endl;
 	}
+	{
+		print_header("assign (sufficient capacity)");
+		ft::vector<int> v(1);
+		v.reserve(10);
+		v.assign(3, 1);
+		print_container(v);
+		v.assign(2, 2);
+		print_container(v);
+		leaks();
+	}
+	{
+		print_header("assign (small capacity)");
+		ft::vector<int> v(1);
+		v.assign(3, 1);
+		print_container(v);
+		v.assign(10, 2);
+		print_container(v);
+		leaks();
+	}
+	{
+		print_header("assign (cplusplus.com)");
+		ft::vector<int> first;
+		ft::vector<int> second;
+		ft::vector<int> third;
+
+		first.assign (7,100);             // 7 ints with a value of 100
+
+		ft::vector<int>::iterator it;
+		it=first.begin()+1;
+
+		second.assign (it,first.end()-1); // the 5 central values of first
+
+		int myints[] = {1776,7,4};
+		third.assign (myints,myints+3);   // assigning from array.
+
+		std::cout << "Size of first: " << int (first.size()) << '\n';
+		std::cout << "Size of second: " << int (second.size()) << '\n';
+		std::cout << "Size of third: " << int (third.size()) << '\n';
+		leaks();
+	}
+	{
+		print_header("push_back() & pop_back()");
+		std::vector<int> v(1, 1);
+		v.push_back(2);
+		/*
+		[ STL ]
+		size():
+		2
+		capacity():
+		2
+		*/
+		std::cout << "size(): \n" << v.size() << std::endl;
+		std::cout << "capacity(): \n" << v.capacity() << std::endl;
+		v.push_back(3);
+		/*
+		[ STL ]
+		size():
+		3
+		capacity():
+		4
+		*/
+		std::cout << "size(): \n" << v.size() << std::endl;
+		std::cout << "capacity(): \n" << v.capacity() << std::endl;
+
+		print_container(v);
+
+		v.pop_back();
+		/*
+		[ STL ]
+		size():
+		2
+		capacity():
+		4
+		*/
+		std::cout << "size(): \n" << v.size() << std::endl;
+		std::cout << "capacity(): \n" << v.capacity() << std::endl;
+
+		print_container(v);
+	}
+	{
+		print_header("insert(iterator, const value_type&)");
+		ft::vector<int> v(5, 1);
+		/* { 42 5 }
+		std::vector<int>::iterator it = v.begin();
+		v.insert(it, 42);
+		*/
+		ft::vector<int>::iterator it = v.begin() + 1;
+		ft::vector<int>::iterator return_it = v.insert(it, 42);
+		print_header("return", COLOR_B);
+		std::cout << *return_it << std::endl;
+		print_container(v);
+		print_header("size()", COLOR_B);
+		std::cout << v.size() << std::endl;
+		print_header("capacity()", COLOR_B);
+		std::cout << v.capacity() << std::endl;
+		leaks();
+	}
+	{
+		print_header("insert(iterator, size_type, value_type&)");
+		ft::vector<int> v(2, 1);
+		v.insert(v.begin() + 1, 4, 42);
+		print_container(v);
+		print_header("size()", COLOR_B);
+		std::cout << v.size() << std::endl;
+		print_header("capacity()", COLOR_B);
+		std::cout << v.capacity() << std::endl;
+		leaks();
+	}
+	{
+		print_header("insert(iterator, InputIterator, InputIterator) 1");
+		ft::vector<int> v(2, 1);
+		ft::vector<int> v2(1, 42);
+		v2.push_back(100);
+		v2.push_back(200);
+		v.insert(v.begin() + 1, v2.begin(), v2.end());
+		print_container(v);
+	}
+	{
+		print_header("insert(iterator, InputIterator, InputIterator) 2");
+		ft::vector<int> v;
+		ft::vector<int> v2(1, 42);
+		v2.push_back(100);
+		v2.push_back(200);
+		v.insert(v.begin(), v2.begin(), v2.end());
+		print_container(v);
+	}
 	print_header("leaks");
 	leaks();
 }

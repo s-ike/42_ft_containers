@@ -9,7 +9,7 @@
 #include "enable_if.hpp"
 
 namespace ft {
-	template < typename T, typename Allocator = std::allocator<T> >
+	template <typename T, typename Allocator = std::allocator<T> >
 	class vector
 	{
 	public:
@@ -61,7 +61,7 @@ namespace ft {
 			// 		alloc.construct(&first[__i], __val);
 			// }
 		}
-		template < typename InputIterator>
+		template <class InputIterator>
 		vector(InputIterator __first, InputIterator __last, const allocator_type & __alloc = allocator_type(),
 				typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
 			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
@@ -326,30 +326,152 @@ namespace ft {
             return *(__end - 1);
         }
 
-		void clear()
-		{
-			destroy_until( rend() ) ;
-		}
+        // Modifiers
+        template <class InputIterator>
+        typename ft::enable_if<!std::is_integral<InputIterator>::value, void>::type
+        assign(InputIterator __first, InputIterator __last)
+        {
+            clear();
+            for (; __first != __last; ++__first)
+                push_back(*__first);
+        }
+        void assign(size_type __n, const value_type& __val)
+        {
+            if (__n <= capacity())
+            {
+                size_type __s = size();
+                std::fill_n(__begin, std::min(__n, __s), __val);
+                if (__n > __s)
+                    std::uninitialized_fill_n(__begin + __s, __n - __s, __val);
+                else
+                    __base_destruct_at_end(__begin + __n);
+            }
+            else
+            {
+                __vdeallocate();
+                __vallocate(__n);
+                std::uninitialized_fill_n(__begin, __n, __val);
+            }
+            __end = __begin + __n;
+        }
+        void push_back(const value_type& val)
+        {
+            /*
+            // 余裕がある
+            if (this->__end_ != this->__end_cap())
+            {
+                __construct_one_at_end(__x);
+            }
+            else
+                __push_back_slow_path(__x);
+            */
+            // 予約メモリーが足りなければ拡張
+            if (size() + 1 > capacity())
+            {
+                size_type __sz = size();
+                // 1つだけ増やす
+                if (__sz == 0)
+                    __sz = 1;
+                else
+                    __sz *= 2;
+                reserve(__sz);
+            }
 
-		void push_back(const value_type& val)
-		{
-			// 予約メモリーが足りなければ拡張
-			if ( size() + 1 > capacity() )
-			{
-				size_type sz = size();
-				// 1つだけ増やす
-				if (sz == 0)
-					sz = 1;
-				else
-					sz *= 2;
-				reserve(sz);
-			}
+            // 要素を末尾に追加
+            __alloc.construct(__end, val);
+            // 有効な要素数を更新
+            ++__end;
+        }
+        void pop_back()
+        {
+            __base_destruct_at_end(__end - 1);
+        }
+        iterator insert(iterator __position, const value_type& __val)
+        {
+            // line 1745
+            // pointer __p = __begin + (__position - begin());
 
-			// 要素を末尾に追加
-			__alloc.construct(__end, val);
-			// 有効な要素数を更新
-			++__end;
-		}
+            size_type __idx = __position - begin();
+            if (size() == capacity())
+                reserve(size() == 0 ? 1 : size() * 2);
+            __alloc.construct(__begin + size(), back());
+            ++__end;
+            iterator __pos = begin() + __idx;
+            for (iterator __i = end() - 1; __i != __pos; --__i)
+                *__i = *(__i - 1);
+            *(begin() + __idx) = __val;
+            // if (__end < __end_cap)
+
+            // if (__p < __end)
+            // {
+            //     push_back(__val);
+            //     __p = __begin + (__position - begin());
+            //     for (pointer __ptr = __end - 1; __ptr != __p; --__ptr)
+            //     {
+            //         std::cout << *__ptr << std::endl;
+            //     }
+
+            // }
+            // else
+            //     push_back(__val);
+
+            // if (__end < __end_cap)
+            // {
+            //     __alloc.construct(__end, __val);
+            //     ++__end;
+            //     if (__p < __end)
+            //     {
+            //         pointer __ptr = __end;
+            //         for (; __ptr != __p; --__ptr)
+            //         {
+            //             std::cout << *__ptr << std::endl;
+            //             *__ptr = *(__ptr - 1);
+            //         }
+
+            //         // __move_range(__p, this->__end_, __p + 1);
+            //         // const_pointer __xr = pointer_traits<const_pointer>::pointer_to(__x);
+            //         // if (__p <= __xr && __xr < this->__end_)
+            //         //     ++__xr;
+            //         // *__p = *__xr;
+            //     }
+            // }
+            // else
+            // {
+            //     // allocator_type& __a = this->__alloc();
+            //     // __split_buffer<value_type, allocator_type&> __v(__recommend(size() + 1), __p - this->__begin_, __a);
+            //     // __v.push_back(__x);
+            //     // __p = __swap_out_circular_buffer(__v, __p);
+            // }
+            // return __make_iter(__p);
+            return __pos;
+        }
+        void insert(iterator __position, size_type __n, const value_type& __val)
+        {
+            size_type __idx = __position - begin();
+            if (__n > 0)
+            {
+                while (--__n)
+                {
+                    iterator __pos = begin() + __idx;
+                    insert(__pos, __val);
+                }
+            }
+        }
+        template <class InputIterator>
+        typename ft::enable_if<!std::is_integral<InputIterator>::value, void>::type
+        insert(iterator __position, InputIterator __first, InputIterator __last)
+        {
+            size_type __idx = __position - begin();
+            while (__first != __last)
+            {
+                iterator __pos = begin() + __idx;
+                insert(__pos, *--__last);
+            }
+        }
+        void clear()
+        {
+            destroy_until(rend());
+        }
 
 	private:
         void __vallocate(size_type __n)
@@ -359,7 +481,15 @@ namespace ft {
             __begin = __end = __alloc.allocate(__n);
             __end_cap = __begin + __n;
         }
-        // void __vdeallocate() _NOEXCEPT;
+        void __vdeallocate()
+        {
+            if (__begin != NULL)
+            {
+                clear();
+                __deallocate();
+                __begin = __end = __end_cap = NULL;
+            }
+        }
 
 		pointer allocate(size_type n)
 		{
