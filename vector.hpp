@@ -509,6 +509,12 @@ namespace ft {
             destroy_until(rend());
         }
 
+        // Allocator
+        allocator_type get_allocator() const
+        {
+            return __alloc;
+        }
+
 	private:
         void __vallocate(size_type __n)
         {
