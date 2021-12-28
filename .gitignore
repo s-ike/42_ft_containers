@@ -3,6 +3,7 @@
 # Dev
 test_*.cpp
 *_old.c
+test_*.txt
 
 # General
 .DS_Store
