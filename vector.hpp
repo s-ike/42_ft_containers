@@ -487,6 +487,23 @@ namespace ft {
             }
             return __first;
         }
+        void swap(vector& __x)
+        {
+            pointer __temp_begin = __x.__begin;
+            pointer __temp_end = __x.__end;
+            pointer __temp_end_cap = __x.__end_cap;
+            allocator_type __temp_alloc = __x.__alloc;
+
+            __x.__begin = __begin;
+            __x.__end = __end;
+            __x.__end_cap = __end_cap;
+            __x.__alloc = __alloc;
+
+            __begin = __temp_begin;
+            __end = __temp_end;
+            __end_cap = __temp_end_cap;
+            __alloc = __temp_alloc;
+        }
         void clear()
         {
             destroy_until(rend());
@@ -555,6 +572,12 @@ namespace ft {
             return const_iterator(__p);
         }
 	};
+
+    template <class _T, class _Allocator>
+    void swap(vector<_T, _Allocator>& __x, vector<_T, _Allocator>& __y)
+    {
+        __x.swap(__y);
+    }
 }
 
 #endif /* VECTOR_HPP */

@@ -307,8 +307,8 @@ int main()
 		print_container(v);
 		print_header("size()", COLOR_B);
 		std::cout << v.size() << std::endl;
-		print_header("capacity()", COLOR_B);
-		std::cout << v.capacity() << std::endl;
+		// print_header("capacity()", COLOR_B);
+		// std::cout << v.capacity() << std::endl;
 		leaks();
 	}
 	{
@@ -318,8 +318,8 @@ int main()
 		print_container(v);
 		print_header("size()", COLOR_B);
 		std::cout << v.size() << std::endl;
-		print_header("capacity()", COLOR_B);
-		std::cout << v.capacity() << std::endl;
+		// print_header("capacity()", COLOR_B);
+		// std::cout << v.capacity() << std::endl;
 		leaks();
 	}
 	{
@@ -361,6 +361,21 @@ int main()
 		print_header("return", COLOR_B);
 		std::cout << *return_it << std::endl;
 		print_container(v);
+	}
+	{
+		print_header("swap");
+		ft::vector<int> foo(3,100);   // three ints with a value of 100
+		ft::vector<int> bar(5,200);   // five ints with a value of 200
+
+		foo.swap(bar);
+
+		std::cout << "foo contains:\n";
+		print_container(foo);
+		std::cout << "foo capa: " << foo.capacity() << std::endl;
+
+		std::cout << "bar contains:\n";
+		print_container(bar);
+		std::cout << "bar capa: " << bar.capacity() << std::endl;
 	}
 	print_header("leaks");
 	leaks();
