@@ -579,6 +579,38 @@ namespace ft {
         }
 	};
 
+    // Non-member function overloads
+    template <class _T, class _Allocator>
+    bool operator==(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
+    {
+        return __lhs.size() == __rhs.size() && std::equal(__lhs.begin(), __lhs.end(), __rhs.begin());
+    }
+    template <class _T, class _Allocator>
+    bool operator!=(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
+    {
+        return !(__lhs == __rhs);
+    }
+    template <class _T, class _Allocator>
+    bool operator<(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
+    {
+        return std::lexicographical_compare(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
+    }
+    template <class _T, class _Allocator>
+    bool operator<=(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
+    {
+        return !(__rhs < __lhs);
+    }
+    template <class _T, class _Allocator>
+    bool operator>(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
+    {
+        return __rhs < __lhs;
+    }
+    template <class _T, class _Allocator>
+    bool operator>=(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
+    {
+        return !(__lhs < __rhs);
+    }
+
     template <class _T, class _Allocator>
     void swap(vector<_T, _Allocator>& __x, vector<_T, _Allocator>& __y)
     {
