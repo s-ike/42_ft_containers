@@ -9,172 +9,168 @@
 #include "enable_if.hpp"
 
 namespace ft {
-	template <typename T, typename Allocator = std::allocator<T> >
-	class vector
-	{
-	public:
-		typedef T										value_type;
-		typedef Allocator								allocator_type;
-		typedef value_type&								reference;
-		typedef const value_type&						const_reference;
-		typedef T*										pointer;
-		typedef const T* 								const_pointer;
-		typedef vector_iterator<pointer>				iterator;
-		typedef vector_iterator<const_pointer>			const_iterator;
-		typedef ft::reverse_iterator<iterator>			reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
-		typedef std::ptrdiff_t							difference_type;
-		typedef std::size_t								size_type;
+    template <typename _T, typename _Allocator = std::allocator<_T> >
+    class vector
+    {
+    public:
+        typedef _T                                      value_type;
+        typedef _Allocator                              allocator_type;
+        typedef value_type&                             reference;
+        typedef const value_type&                       const_reference;
+        typedef _T*                                     pointer;
+        typedef const _T*                               const_pointer;
+        typedef vector_iterator<pointer>                iterator;
+        typedef vector_iterator<const_pointer>          const_iterator;
+        typedef ft::reverse_iterator<iterator>          reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
+        typedef std::ptrdiff_t                          difference_type;
+        typedef std::size_t                             size_type;
 
-	private :
-		// 先頭の要素へのポインター
-		pointer         __begin;
-		// 最後の要素の1つ前方のポインター
-		pointer         __end;
-		// 確保したストレージの終端
-		pointer         __end_cap;
-		// アロケーターの値
-		allocator_type  __alloc;
+    private :
+        pointer         __begin;
+        pointer         __end;
+        pointer         __end_cap;
+        allocator_type  __alloc;
 
-	public:
-		// constructor
-		explicit vector(const allocator_type& __alloc = allocator_type())
-			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
-		{}
-		explicit vector(size_type __n, const value_type& __val = value_type(),
-				 const allocator_type& __alloc = allocator_type())
-			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
-		{
-			if (__n > 0)
-			{
-				__vallocate(__n);
-				std::uninitialized_fill(__begin, __begin + __n, __val);
+    public:
+        // constructor
+        explicit vector(const allocator_type& __alloc = allocator_type())
+            : __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
+        {}
+        explicit vector(size_type __n, const value_type& __val = value_type(),
+                 const allocator_type& __alloc = allocator_type())
+            : __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
+        {
+            if (__n > 0)
+            {
+                __vallocate(__n);
+                std::uninitialized_fill(__begin, __begin + __n, __val);
                 __end = __begin + __n;
-			}
+            }
 
-			// resize(__n, __val);
+            // resize(__n, __val);
 
-			// if (__n > 0)
-			// {
-			// 	allocate(__n);
-			// 	for (size_type __i = 0; __i < __n; ++__i)
-			// 		alloc.construct(&first[__i], __val);
-			// }
-		}
-		template <class InputIterator>
-		vector(InputIterator __first, InputIterator __last, const allocator_type & __alloc = allocator_type(),
-				typename ft::enable_if<!std::is_integral<InputIterator>::value, InputIterator>::type* = NULL)
-			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
-		{
-			size_type __n = static_cast<size_type>(std::distance(__first, __last));
-			if (__n > 0)
-			{
-				__vallocate(__n);
-				std::uninitialized_copy(__first, __last, __begin);
+            // if (__n > 0)
+            // {
+            //     __allocate(__n);
+            //     for (size_type __i = 0; __i < __n; ++__i)
+            //         alloc.construct(&first[__i], __val);
+            // }
+        }
+        template <class _InputIterator>
+        vector(_InputIterator __first, _InputIterator __last, const allocator_type & __alloc = allocator_type(),
+                typename ft::enable_if<!std::is_integral<_InputIterator>::value, _InputIterator>::type* = NULL)
+            : __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
+        {
+            size_type __n = static_cast<size_type>(std::distance(__first, __last));
+            if (__n > 0)
+            {
+                __vallocate(__n);
+                std::uninitialized_copy(__first, __last, __begin);
                 __end = __begin + __n;
-			}
+            }
 
-			// reserve(std::distance(__first, __last));
-			// for (InputIterator __i = __first; __i != __last; ++__i)
-			// 	push_back(*__i);
-		}
-		vector(const vector& __x)
-			: __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__x.__alloc)
-		{
-			size_type __n = __x.size();
-			if (__n > 0)
-			{
-				__vallocate(__n);
-				std::uninitialized_copy(__x.begin(), __x.end(), __begin);
+            // reserve(std::distance(__first, __last));
+            // for (InputIterator __i = __first; __i != __last; ++__i)
+            //     push_back(*__i);
+        }
+        vector(const vector& __x)
+            : __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__x.__alloc)
+        {
+            size_type __n = __x.size();
+            if (__n > 0)
+            {
+                __vallocate(__n);
+                std::uninitialized_copy(__x.begin(), __x.end(), __begin);
                 __end = __begin + __n;
-			}
+            }
 
-			// // llvm
-			// // size_type __n = __x.size();
-			// // if (__n > 0)
-			// // {
-			// // 	__vallocate(__n);
-			// // 	__construct_at_end(__x.__begin_, __x.__end_, __n);
-			// // }
+            // // llvm
+            // // size_type __n = __x.size();
+            // // if (__n > 0)
+            // // {
+            // //     __vallocate(__n);
+            // //     __construct_at_end(__x.__begin_, __x.__end_, __n);
+            // // }
 
-			// if (!__x.first)
-			// 	return;
+            // if (!__x.first)
+            //     return;
 
-			// reserve(__x.size());
-			// // コメント
-			// // pointer dest = first;
-			// // iterator src = r.begin();
-			// // for (; src != r.end(); ++src, ++dest)
-			// // {
-			// // 	std::cout << typeid(src).name() << std::endl;
-			// // 	alloc.construct(dest, *src);
-			// // }
-			// // last = first + r.size();
-			// for (size_type i = 0; i < __x.size(); i++)
-			// 	alloc.construct(&first[i], __x.first[i]);
-			// last = first + __x.size();
-		}
-		// destructor
-		~vector()
-		{
+            // reserve(__x.size());
+            // // コメント
+            // // pointer dest = first;
+            // // iterator src = r.begin();
+            // // for (; src != r.end(); ++src, ++dest)
+            // // {
+            // //     std::cout << typeid(src).name() << std::endl;
+            // //     alloc.construct(dest, *src);
+            // // }
+            // // last = first + r.size();
+            // for (size_type i = 0; i < __x.size(); i++)
+            //     alloc.construct(&first[i], __x.first[i]);
+            // last = first + __x.size();
+        }
+        // destructor
+        ~vector()
+        {
             if (__begin != NULL)
             {
                 __clear();
-			    __deallocate();
+                __deallocate();
             }
-		}
+        }
 
-		// コピー代入演算子ではアロケーターのコピーをする必要はない。
-		// 自分自身への代入への対応が必要だ。
-		// コピー代入のコピー先とコピー元の要素数が同じであるとは限らない。
+        // コピー代入演算子ではアロケーターのコピーをする必要はない。
+        // 自分自身への代入への対応が必要だ。
+        // コピー代入のコピー先とコピー元の要素数が同じであるとは限らない。
         // TODO: assginを実装してから考える
-		vector& operator=(const vector& r)
-		{
-			// 1. 自分自身への代入なら何もしない
-			if ( this == &r )
-				return *this ;
+        vector& operator=(const vector& r)
+        {
+            // 1. 自分自身への代入なら何もしない
+            if ( this == &r )
+                return *this ;
 
-			// 2. 要素数が同じならば
-			if ( size() == r.size() )
-			{	// 要素ごとにコピー代入
-				std::copy( r.begin(), r.end(), begin() ) ;
-			}
-			// 3. それ以外の場合で
-			else
-			{
-				// 予約数が十分ならば、
-				if ( capacity() >= r.size() )
-				{
-					// 有効な要素はコピー
-					std::copy( r.begin(), r.begin() + r.size(), begin() ) ;
-					// 残りはコピー構築
-					for (const_iterator src_iter = r.begin() + r.size(), src_end = r.end();
-							src_iter != src_end ; ++src_iter, ++__end )
-					{
-						__alloc.construct(__begin, *src_iter ) ;
-					}
-				}
-				// 4. 予約数が不十分ならば
-				else
-				{
-					// 要素をすべて破棄
-					destroy_all() ;
-					// 予約
-					reserve( r.size() ) ;
-					// コピー構築
-					// iterator src_iter = r.begin(), src_end = r.end(), dest_iter = begin();
-					// for (; src_iter != src_end ; ++src_iter, ++dest_iter, ++last )
-					// {
-					// 	alloc.construct( dest_iter, *src_iter ) ;
-					// }
-					for (size_type i = 0; i < r.size(); ++i, ++__end)
-					{
-						__alloc.construct(&__begin[i], r.__begin[i]);
-					}
-				}
-			}
-			return *this ;
-		}
+            // 2. 要素数が同じならば
+            if ( size() == r.size() )
+            { // 要素ごとにコピー代入
+                std::copy( r.begin(), r.end(), begin() ) ;
+            }
+            // 3. それ以外の場合で
+            else
+            {
+                // 予約数が十分ならば、
+                if ( capacity() >= r.size() )
+                {
+                    // 有効な要素はコピー
+                    std::copy( r.begin(), r.begin() + r.size(), begin() ) ;
+                    // 残りはコピー構築
+                    for (const_iterator src_iter = r.begin() + r.size(), src_end = r.end();
+                            src_iter != src_end ; ++src_iter, ++__end )
+                    {
+                        __alloc.construct(__begin, *src_iter ) ;
+                    }
+                }
+                // 4. 予約数が不十分ならば
+                else
+                {
+                    // 要素をすべて破棄
+                    __destroy_all() ;
+                    // 予約
+                    reserve( r.size() ) ;
+                    // コピー構築
+                    // iterator src_iter = r.begin(), src_end = r.end(), dest_iter = begin();
+                    // for (; src_iter != src_end ; ++src_iter, ++dest_iter, ++last )
+                    // {
+                    //     alloc.construct( dest_iter, *src_iter ) ;
+                    // }
+                    for (size_type i = 0; i < r.size(); ++i, ++__end)
+                    {
+                        __alloc.construct(&__begin[i], r.__begin[i]);
+                    }
+                }
+            }
+            return *this ;
+        }
 
         // Iterators
         iterator begin()
@@ -235,7 +231,7 @@ namespace ft {
             if (__cs > __n)
             {
                 size_type __diff = __cs - __n;
-                destroy_until(rbegin() + __diff);
+                __destroy_until(rbegin() + __diff);
                 __end = __begin + __n;
             }
             else if (__cs < __n)
@@ -284,7 +280,7 @@ namespace ft {
             for (size_type __i = 0; __i < __old_size; ++__i, ++__end)
                 __alloc.construct(&__begin[__i], __old_begin[__i]);
             for (size_type __i = 0; __i < __old_size; ++__i)
-                destroy(&__old_begin[__i]);
+                __destroy(&__old_begin[__i]);
             __alloc.deallocate(__old_begin, __old_capa);
         }
 
@@ -327,9 +323,9 @@ namespace ft {
         }
 
         // Modifiers
-        template <class InputIterator>
-        typename ft::enable_if<!std::is_integral<InputIterator>::value, void>::type
-        assign(InputIterator __first, InputIterator __last)
+        template <class _InputIterator>
+        typename ft::enable_if<!std::is_integral<_InputIterator>::value, void>::type
+        assign(_InputIterator __first, _InputIterator __last)
         {
             clear();
             for (; __first != __last; ++__first)
@@ -457,9 +453,9 @@ namespace ft {
                 }
             }
         }
-        template <class InputIterator>
-        typename ft::enable_if<!std::is_integral<InputIterator>::value, void>::type
-        insert(iterator __position, InputIterator __first, InputIterator __last)
+        template <class _InputIterator>
+        typename ft::enable_if<!std::is_integral<_InputIterator>::value, void>::type
+        insert(iterator __position, _InputIterator __first, _InputIterator __last)
         {
             size_type __idx = __position - begin();
             while (__first != __last)
@@ -506,7 +502,7 @@ namespace ft {
         }
         void clear()
         {
-            destroy_until(rend());
+            __destroy_until(rend());
         }
 
         // Allocator
@@ -515,7 +511,7 @@ namespace ft {
             return __alloc;
         }
 
-	private:
+    private:
         void __vallocate(size_type __n)
         {
             if (__n > max_size())
@@ -532,16 +528,11 @@ namespace ft {
                 __begin = __end = __end_cap = NULL;
             }
         }
-
-		pointer allocate(size_type n)
-		{
-			return __alloc.allocate(n);
-		}
         void __clear()
         {
             __base_destruct_at_end(__begin);
         }
-        // destroy_until
+        // __destroy_until
         void __base_destruct_at_end(pointer __new_last)
         {
             pointer __soon_to_be_end = __end;
@@ -549,25 +540,25 @@ namespace ft {
                 __alloc.destroy(--__soon_to_be_end);
             __end = __new_last;
         }
-		void __deallocate()
-		{
-			__alloc.deallocate(__begin, capacity());
-		}
-		void destroy( pointer ptr )
-		{
-			__alloc.destroy(ptr);
-		}
-		void destroy_until( reverse_iterator rend )
-		{
-			for (reverse_iterator riter = rbegin() ; riter != rend ; ++riter, --__end)
-				destroy( &*riter ) ;
-		}
-		void destroy_all()
-		{
-			destroy_until(rend());
-			__deallocate();
-			__begin = __end = __end_cap = NULL;
-		}
+        void __deallocate()
+        {
+            __alloc.deallocate(__begin, capacity());
+        }
+        void __destroy(pointer ptr)
+        {
+            __alloc.destroy(ptr);
+        }
+        void __destroy_until( reverse_iterator rend )
+        {
+            for (reverse_iterator riter = rbegin(); riter != rend; ++riter, --__end)
+                __destroy(&*riter);
+        }
+        void __destroy_all()
+        {
+            __destroy_until(rend());
+            __deallocate();
+            __begin = __end = __end_cap = NULL;
+        }
 
         iterator __make_iter(pointer __p)
         {
@@ -577,7 +568,7 @@ namespace ft {
         {
             return const_iterator(__p);
         }
-	};
+    };
 
     // Non-member function overloads
     template <class _T, class _Allocator>

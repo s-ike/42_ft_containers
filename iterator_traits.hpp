@@ -1,38 +1,38 @@
 #ifndef ITERATOR_TRAITS_HPP
-# define ITERATOR_TRAITS_HPP
+#define ITERATOR_TRAITS_HPP
 
-# include <iterator>
+#include <iterator>
 
 namespace ft {
-	template <class Iterator>
-	struct iterator_traits
-	{
-		typedef typename Iterator::iterator_category iterator_category;
-		typedef typename Iterator::value_type        value_type;
-		typedef typename Iterator::difference_type   difference_type;
-		typedef typename Iterator::pointer           pointer;
-		typedef typename Iterator::reference         reference;
-	};
+    template <class _Iter>
+    struct iterator_traits
+    {
+        typedef typename _Iter::iterator_category iterator_category;
+        typedef typename _Iter::value_type        value_type;
+        typedef typename _Iter::difference_type   difference_type;
+        typedef typename _Iter::pointer           pointer;
+        typedef typename _Iter::reference         reference;
+    };
 
-	template <class T>
-	struct iterator_traits<T*>
-	{
-		typedef std::random_access_iterator_tag iterator_category;
-		typedef T                               value_type;
-		typedef std::ptrdiff_t                  difference_type;
-		typedef T*                              pointer;
-		typedef T&                              reference;
-	};
+    template <class _T>
+    struct iterator_traits<_T*>
+    {
+        typedef std::random_access_iterator_tag iterator_category;
+        typedef _T                              value_type;
+        typedef std::ptrdiff_t                  difference_type;
+        typedef _T*                             pointer;
+        typedef _T&                             reference;
+    };
 
-	template <class T>
-	struct iterator_traits<const T*>
-	{
-		typedef std::random_access_iterator_tag iterator_category;
-		typedef T                               value_type;
-		typedef std::ptrdiff_t                  difference_type;
-		typedef const T*                        pointer;
-		typedef const T&                        reference;
-	};
+    template <class _T>
+    struct iterator_traits<const _T*>
+    {
+        typedef std::random_access_iterator_tag iterator_category;
+        typedef _T                              value_type;
+        typedef std::ptrdiff_t                  difference_type;
+        typedef const _T*                       pointer;
+        typedef const _T&                       reference;
+    };
 }
 
 #endif /* ITERATOR_TRAITS_HPP */
