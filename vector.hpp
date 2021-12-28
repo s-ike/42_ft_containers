@@ -241,7 +241,7 @@ namespace ft {
             else if (__cs < __n)
             {
                 reserve(__n);
-                for (; __end != __end_cap; ++__end)
+                for (; __end != __begin + __n; ++__end)
                 {
                     __alloc.construct(__end, __val);
                 }
