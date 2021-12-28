@@ -4,6 +4,7 @@
 test_*.cpp
 *_old.c
 test_*.txt
+*_test/
 
 # General
 .DS_Store

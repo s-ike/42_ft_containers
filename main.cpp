@@ -53,6 +53,24 @@ void leaks()
 #endif
 }
 
+class foo
+{
+public:
+	foo(void) { };
+	~foo(void) { };
+	void m(void) { std::cout << "foo::m called [" << this->value << "]" << std::endl; };
+	void m(void) const { std::cout << "foo::m const called [" << this->value << "]" << std::endl; };
+	foo &operator=(int src) { this->value = src; return *this; };
+	int getValue(void) const { return this->value; };
+private:
+	int	value;
+};
+std::ostream &operator<<(std::ostream &o, foo const &bar)
+{
+	o << bar.getValue();
+	return o;
+}
+
 int main()
 {
 	{
@@ -116,6 +134,43 @@ int main()
 		for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
 			*p = ++value;
 		print_container(v);
+
+		const int size = 5;
+		ft::vector<foo> vct(size);
+		ft::vector<foo>::iterator it(vct.begin());
+		ft::vector<foo>::const_iterator ite(vct.end());
+		for (int i = 1; it != ite; ++i)
+		*it++ = i;
+		std::cout << "vct.size(): " << vct.size() << std::endl;
+
+		it = vct.begin();
+		ite = vct.begin();
+
+		std::cout << *(++ite) << std::endl;
+		std::cout << *(ite++) << std::endl;
+		std::cout << *ite++ << std::endl;
+		std::cout << *++ite << std::endl;
+
+		it->m();
+		ite->m();
+
+		std::cout << *(++it) << std::endl;
+		std::cout << *(it++) << std::endl;
+		std::cout << *it++ << std::endl;
+		std::cout << *++it << std::endl;
+		std::cout << "-------" << std::endl;
+		std::cout << *(--ite) << std::endl;
+		std::cout << *(ite--) << std::endl;
+		std::cout << *--ite << std::endl;
+		std::cout << *ite-- << std::endl;
+
+		(*it).m();
+		(*ite).m();
+
+		std::cout << *(--it) << std::endl;
+		std::cout << *(it--) << std::endl;
+		std::cout << *it-- << std::endl;
+		std::cout << *--it << std::endl;
 	}
 	{
 		print_header("reverse iterator");
@@ -124,6 +179,44 @@ int main()
 		for (ft::vector<int>::reverse_iterator p = v.rbegin(); p != v.rend(); ++p)
 			*p = value--;
 		print_container(v);
+
+		const int size = 5;
+		ft::vector<foo> vct(size);
+		ft::vector<foo>::reverse_iterator it(vct.rbegin());
+		ft::vector<foo>::const_reverse_iterator ite(vct.rend());
+
+		for (int i = 1; it != ite; ++i)
+			*it++ = (i * 7);
+		std::cout << "vct.size(): " << vct.size() << std::endl;
+
+		it = vct.rbegin();
+		ite = vct.rbegin();
+
+		std::cout << *(++ite) << std::endl;
+		std::cout << *(ite++) << std::endl;
+		std::cout << *ite++ << std::endl;
+		std::cout << *++ite << std::endl;
+
+		it->m();
+		ite->m();
+
+		std::cout << *(++it) << std::endl;
+		std::cout << *(it++) << std::endl;
+		std::cout << *it++ << std::endl;
+		std::cout << *++it << std::endl;
+		std::cout << "-------" << std::endl;
+		std::cout << *(--ite) << std::endl;
+		std::cout << *(ite--) << std::endl;
+		std::cout << *--ite << std::endl;
+		std::cout << *ite-- << std::endl;
+
+		(*it).m();
+		(*ite).m();
+
+		std::cout << *(--it) << std::endl;
+		std::cout << *(it--) << std::endl;
+		std::cout << *it-- << std::endl;
+		std::cout << *--it << std::endl;
 	}
 	{
 		print_header("iterator constructor");

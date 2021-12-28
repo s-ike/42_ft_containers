@@ -33,8 +33,7 @@ namespace ft {
         template <class _T>
         vector_iterator& operator=(const vector_iterator<_T>& __x)
         {
-            if (this != &__x)
-                __i = __x.__i;
+            __i = __x.base();
             return *this;
         }
         ~vector_iterator()
