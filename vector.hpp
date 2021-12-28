@@ -120,54 +120,12 @@ namespace ft {
             }
         }
 
-        // コピー代入演算子ではアロケーターのコピーをする必要はない。
-        // 自分自身への代入への対応が必要だ。
-        // コピー代入のコピー先とコピー元の要素数が同じであるとは限らない。
-        // TODO: assginを実装してから考える
-        vector& operator=(const vector& r)
+        vector& operator=(const vector& __x)
         {
-            // 1. 自分自身への代入なら何もしない
-            if ( this == &r )
-                return *this ;
-
-            // 2. 要素数が同じならば
-            if ( size() == r.size() )
-            { // 要素ごとにコピー代入
-                std::copy( r.begin(), r.end(), begin() ) ;
-            }
-            // 3. それ以外の場合で
-            else
+            if (this != &__x)
             {
-                // 予約数が十分ならば、
-                if ( capacity() >= r.size() )
-                {
-                    // 有効な要素はコピー
-                    std::copy( r.begin(), r.begin() + r.size(), begin() ) ;
-                    // 残りはコピー構築
-                    for (const_iterator src_iter = r.begin() + r.size(), src_end = r.end();
-                            src_iter != src_end ; ++src_iter, ++__end )
-                    {
-                        __alloc.construct(__begin, *src_iter ) ;
-                    }
-                }
-                // 4. 予約数が不十分ならば
-                else
-                {
-                    // 要素をすべて破棄
-                    __destroy_all() ;
-                    // 予約
-                    reserve( r.size() ) ;
-                    // コピー構築
-                    // iterator src_iter = r.begin(), src_end = r.end(), dest_iter = begin();
-                    // for (; src_iter != src_end ; ++src_iter, ++dest_iter, ++last )
-                    // {
-                    //     alloc.construct( dest_iter, *src_iter ) ;
-                    // }
-                    for (size_type i = 0; i < r.size(); ++i, ++__end)
-                    {
-                        __alloc.construct(&__begin[i], r.__begin[i]);
-                    }
-                }
+                __alloc = __x.__alloc;
+                assign(__x.__begin, __x.__end);
             }
             return *this ;
         }
@@ -352,30 +310,16 @@ namespace ft {
         }
         void push_back(const value_type& val)
         {
-            /*
-            // 余裕がある
-            if (this->__end_ != this->__end_cap())
-            {
-                __construct_one_at_end(__x);
-            }
-            else
-                __push_back_slow_path(__x);
-            */
-            // 予約メモリーが足りなければ拡張
             if (size() + 1 > capacity())
             {
                 size_type __sz = size();
-                // 1つだけ増やす
                 if (__sz == 0)
                     __sz = 1;
                 else
                     __sz *= 2;
                 reserve(__sz);
             }
-
-            // 要素を末尾に追加
             __alloc.construct(__end, val);
-            // 有効な要素数を更新
             ++__end;
         }
         void pop_back()

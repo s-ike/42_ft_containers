@@ -168,7 +168,17 @@ int main()
 		v2 = v;
 		print_container(v);
 		print_container(v2);
-		std::cout << v2.size() << std::endl;
+		std::cout << "v2.size(): " << v2.size() << std::endl;
+	}
+	{
+		print_header("assignment 3");
+		ft::vector<int> v(10, 1);
+		ft::vector<int> v2;
+		v[1] = 42;
+		v2 = v;
+		print_container(v);
+		print_container(v2);
+		std::cout << "v2.size(): " << v2.size() << std::endl;
 	}
 	{
 		print_header("resize");
