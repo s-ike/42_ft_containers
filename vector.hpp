@@ -450,7 +450,7 @@ namespace ft {
             size_type __idx = __position - begin();
             if (__n > 0)
             {
-                while (--__n)
+                while (__n--)
                 {
                     iterator __pos = begin() + __idx;
                     insert(__pos, __val);
