@@ -119,7 +119,7 @@ namespace ft {
                 __deallocate();
             }
         }
-
+        // operator=
         vector& operator=(const vector& __x)
         {
             if (this != &__x)
@@ -173,32 +173,18 @@ namespace ft {
         {
             return std::min(__alloc.max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max()));
         }
-        /*
-        vector<_Tp, _Allocator>::resize(size_type __sz, const_reference __x)
-        {
-            size_type __cs = size();
-            if (__cs < __sz)
-                this->__append(__sz - __cs, __x);
-            else if (__cs > __sz)
-                this->__destruct_at_end(this->__begin_ + __sz);
-        }
-        */
         void resize(size_type __n, value_type __val = value_type())
         {
             size_type __cs = size();
             if (__cs > __n)
             {
-                size_type __diff = __cs - __n;
-                __destroy_until(rbegin() + __diff);
-                __end = __begin + __n;
+                __base_destruct_at_end(__begin + __n);
             }
             else if (__cs < __n)
             {
                 reserve(__n);
-                for (; __end != __begin + __n; ++__end)
-                {
-                    __alloc.construct(__end, __val);
-                }
+                std::uninitialized_fill_n(__end, __n - __cs, __val);
+                __end = __begin + __n;
             }
         }
         size_type capacity() const
