@@ -47,15 +47,6 @@ namespace ft {
                 std::uninitialized_fill(__begin, __begin + __n, __val);
                 __end = __begin + __n;
             }
-
-            // resize(__n, __val);
-
-            // if (__n > 0)
-            // {
-            //     __allocate(__n);
-            //     for (size_type __i = 0; __i < __n; ++__i)
-            //         alloc.construct(&first[__i], __val);
-            // }
         }
         template <class _InputIterator>
         vector(_InputIterator __first, _InputIterator __last, const allocator_type & __alloc = allocator_type(),
@@ -69,10 +60,6 @@ namespace ft {
                 std::uninitialized_copy(__first, __last, __begin);
                 __end = __begin + __n;
             }
-
-            // reserve(std::distance(__first, __last));
-            // for (InputIterator __i = __first; __i != __last; ++__i)
-            //     push_back(*__i);
         }
         vector(const vector& __x)
             : __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__x.__alloc)
@@ -84,31 +71,6 @@ namespace ft {
                 std::uninitialized_copy(__x.begin(), __x.end(), __begin);
                 __end = __begin + __n;
             }
-
-            // // llvm
-            // // size_type __n = __x.size();
-            // // if (__n > 0)
-            // // {
-            // //     __vallocate(__n);
-            // //     __construct_at_end(__x.__begin_, __x.__end_, __n);
-            // // }
-
-            // if (!__x.first)
-            //     return;
-
-            // reserve(__x.size());
-            // // コメント
-            // // pointer dest = first;
-            // // iterator src = r.begin();
-            // // for (; src != r.end(); ++src, ++dest)
-            // // {
-            // //     std::cout << typeid(src).name() << std::endl;
-            // //     alloc.construct(dest, *src);
-            // // }
-            // // last = first + r.size();
-            // for (size_type i = 0; i < __x.size(); i++)
-            //     alloc.construct(&first[i], __x.first[i]);
-            // last = first + __x.size();
         }
         // destructor
         ~vector()
