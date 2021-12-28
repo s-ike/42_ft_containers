@@ -26,6 +26,10 @@
 #define COLOR_B_CYAN	"\033[1;36m"
 #define COLOR_B_WHITE	"\033[1;37m"
 
+#ifdef TEST
+#define ft std
+#endif
+
 template <class T>
 void print_container(T& container)
 {
@@ -42,9 +46,11 @@ void print_header(const std::string& str, const std::string& color = COLOR_B_CYA
 
 void leaks()
 {
+#ifndef NO_LEAKS
 	print_header("leaks Report", COLOR_B);
 	if (system("leaks -q " PRG_NAME))
 		std::cout << COLOR_RED << "LEAK!" << COLOR_RESET << std::endl;
+#endif
 }
 
 int main()
@@ -332,6 +338,28 @@ int main()
 		v2.push_back(100);
 		v2.push_back(200);
 		v.insert(v.begin(), v2.begin(), v2.end());
+		print_container(v);
+	}
+	{
+		print_header("erase(iterator)");
+		ft::vector<int> v(5);
+		int value = 0;
+		for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
+			*p = ++value;
+		print_container(v);
+		v.erase(v.begin() + 1);
+		print_container(v);
+	}
+	{
+		print_header("erase(iterator, iterator)");
+		ft::vector<int> v(5);
+		int value = 0;
+		for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
+			*p = ++value;
+		print_container(v);
+		ft::vector<int>::iterator return_it = v.erase(v.begin() + 1, v.begin() + 3);
+		print_header("return", COLOR_B);
+		std::cout << *return_it << std::endl;
 		print_container(v);
 	}
 	print_header("leaks");

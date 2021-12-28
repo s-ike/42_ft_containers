@@ -148,7 +148,7 @@ namespace ft {
 					// 有効な要素はコピー
 					std::copy( r.begin(), r.begin() + r.size(), begin() ) ;
 					// 残りはコピー構築
-					for (   auto src_iter = r.begin() + r.size(), src_end = r.end() ;
+					for (const_iterator src_iter = r.begin() + r.size(), src_end = r.end();
 							src_iter != src_end ; ++src_iter, ++__end )
 					{
 						__alloc.construct(__begin, *src_iter ) ;
@@ -467,6 +467,25 @@ namespace ft {
                 iterator __pos = begin() + __idx;
                 insert(__pos, *--__last);
             }
+        }
+        iterator erase(iterator __position)
+        {
+            if (__position == end())
+                return __position;
+            for (iterator __i = __position + 1; __i != end(); ++__i)
+                *(__i - 1) = *__i;
+            __alloc.destroy(&*(end() - 1));
+            --__end;
+            return __position;
+        }
+        iterator erase(iterator __first, iterator __last)
+        {
+            while (__first != __last)
+            {
+                erase(__first);
+                --__last;
+            }
+            return __first;
         }
         void clear()
         {
