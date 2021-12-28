@@ -157,32 +157,16 @@ namespace ft {
         {
             return __begin == __end;
         }
-        /*
-        template <class _Tp, class _Allocator>
-        void
-        vector<_Tp, _Allocator>::reserve(size_type __n)
+        void reserve(size_type __n)
         {
-            if (__n > capacity())
-            {
-                if (__n > max_size())
-                    this->__throw_length_error();
-                allocator_type& __a = this->__alloc();
-                __split_buffer<value_type, allocator_type&> __v(__n, size(), __a);
-                __swap_out_circular_buffer(__v);
-            }
-        }
-        */
-        void reserve(size_type __sz)
-        {
-            if (__sz <= capacity())
+            if (__n <= capacity())
                 return ;
 
             pointer __old_begin = __begin;
             size_type __old_size = size();
             size_type __old_capa = capacity();
 
-            __vallocate(__sz);
-
+            __vallocate(__n);
             for (size_type __i = 0; __i < __old_size; ++__i, ++__end)
                 __alloc.construct(&__begin[__i], __old_begin[__i]);
             for (size_type __i = 0; __i < __old_size; ++__i)
@@ -444,12 +428,6 @@ namespace ft {
         {
             for (reverse_iterator riter = rbegin(); riter != rend; ++riter, --__end)
                 __destroy(&*riter);
-        }
-        void __destroy_all()
-        {
-            __destroy_until(rend());
-            __deallocate();
-            __begin = __end = __end_cap = NULL;
         }
 
         iterator __make_iter(pointer __p)
