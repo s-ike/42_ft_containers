@@ -13,9 +13,6 @@ namespace ft {
                                typename ft::iterator_traits<_Iter>::pointer,
                                typename ft::iterator_traits<_Iter>::reference>
     {
-    private:
-        _Iter __t; // no longer used as of LWG #2360, not removed due to ABI break
-
     protected:
         _Iter current;
 
@@ -27,19 +24,18 @@ namespace ft {
         typedef typename ft::iterator_traits<_Iter>::iterator_category iterator_category;
         typedef typename ft::iterator_traits<_Iter>::value_type        value_type;
 
-        reverse_iterator() : __t(), current() {}
-
-        explicit reverse_iterator(_Iter __x) : __t(__x), current(__x) {}
-
+        reverse_iterator() : current()
+        {}
+        explicit reverse_iterator(_Iter __x) : current(__x)
+        {}
         template <class _Up>
         reverse_iterator(const reverse_iterator<_Up>& __u)
-            : __t(__u.base()), current(__u.base())
-        { }
-
+            : current(__u.base())
+        {}
         template <class _Up>
         reverse_iterator& operator=(const reverse_iterator<_Up>& __u)
         {
-            __t = current = __u.base();
+            current = __u.base();
             return *this;
         }
 
