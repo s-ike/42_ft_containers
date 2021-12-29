@@ -142,7 +142,7 @@ namespace ft {
             size_type __cs = size();
             if (__cs > __n)
             {
-                __base_destruct_at_end(__begin + __n);
+                __destruct_at_end(__begin + __n);
             }
             else if (__cs < __n)
             {
@@ -229,7 +229,7 @@ namespace ft {
                 }
                 else
                 {
-                    __base_destruct_at_end(__begin + __new_size);
+                    __destruct_at_end(__begin + __new_size);
                     std::copy(__first, __last, __begin);
                 }
             }
@@ -250,7 +250,7 @@ namespace ft {
                 if (__n > __s)
                     std::uninitialized_fill_n(__begin + __s, __n - __s, __val);
                 else
-                    __base_destruct_at_end(__begin + __n);
+                    __destruct_at_end(__begin + __n);
             }
             else
             {
@@ -276,7 +276,7 @@ namespace ft {
         }
         void pop_back()
         {
-            __base_destruct_at_end(__end - 1);
+            __destruct_at_end(__end - 1);
         }
         iterator insert(iterator __position, const value_type& __val)
         {
@@ -380,9 +380,9 @@ namespace ft {
         }
         void __clear()
         {
-            __base_destruct_at_end(__begin);
+            __destruct_at_end(__begin);
         }
-        void __base_destruct_at_end(pointer __new_last)
+        void __destruct_at_end(pointer __new_last)
         {
             pointer __soon_to_be_end = __end;
             while (__new_last != __soon_to_be_end)
