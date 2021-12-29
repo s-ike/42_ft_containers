@@ -2,6 +2,28 @@
 #define ALGORITHM_HPP
 
 namespace ft {
+    // equal
+
+    template <class _InputIterator1, class _InputIterator2, class _BinaryPredicate>
+    bool
+    equal(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _BinaryPredicate __pred)
+    {
+        for (; __first1 != __last1; ++__first1, ++__first2)
+            if (!__pred(*__first1, *__first2))
+                return false;
+        return true;
+    }
+
+    template <class _InputIterator1, class _InputIterator2>
+    bool
+    equal(_InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2)
+    {
+        for (; __first1 != __last1; ++__first1, ++__first2)
+            if (!(*__first1 == *__first2))
+                return false;
+        return true;
+    }
+
     // lexicographical_compare
 
     template <class _InputIterator1, class _InputIterator2, class _Compare>

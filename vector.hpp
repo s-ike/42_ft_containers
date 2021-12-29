@@ -412,7 +412,7 @@ namespace ft {
     template <class _T, class _Allocator>
     bool operator==(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
     {
-        return __lhs.size() == __rhs.size() && std::equal(__lhs.begin(), __lhs.end(), __rhs.begin());
+        return __lhs.size() == __rhs.size() && ft::equal(__lhs.begin(), __lhs.end(), __rhs.begin());
     }
     template <class _T, class _Allocator>
     bool operator!=(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
