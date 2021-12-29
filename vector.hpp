@@ -10,7 +10,7 @@
 #include "is_integral.hpp"
 
 namespace ft {
-    template <typename _T, typename _Allocator = std::allocator<_T> >
+    template <class _T, class _Allocator = std::allocator<_T> >
     class vector
     {
     public:
@@ -162,7 +162,7 @@ namespace ft {
         void reserve(size_type __n)
         {
             if (__n <= capacity())
-                return ;
+                return;
 
             pointer __old_begin = __begin;
             size_type __old_size = size();
