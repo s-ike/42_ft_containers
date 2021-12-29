@@ -278,9 +278,6 @@ namespace ft {
         }
         iterator insert(iterator __position, const value_type& __val)
         {
-            // line 1745
-            // pointer __p = __begin + (__position - begin());
-
             size_type __idx = __position - begin();
             if (size() == capacity())
                 reserve(size() == 0 ? 1 : size() * 2);
@@ -290,49 +287,6 @@ namespace ft {
             for (iterator __i = end() - 1; __i != __pos; --__i)
                 *__i = *(__i - 1);
             *(begin() + __idx) = __val;
-            // if (__end < __end_cap)
-
-            // if (__p < __end)
-            // {
-            //     push_back(__val);
-            //     __p = __begin + (__position - begin());
-            //     for (pointer __ptr = __end - 1; __ptr != __p; --__ptr)
-            //     {
-            //         std::cout << *__ptr << std::endl;
-            //     }
-
-            // }
-            // else
-            //     push_back(__val);
-
-            // if (__end < __end_cap)
-            // {
-            //     __alloc.construct(__end, __val);
-            //     ++__end;
-            //     if (__p < __end)
-            //     {
-            //         pointer __ptr = __end;
-            //         for (; __ptr != __p; --__ptr)
-            //         {
-            //             std::cout << *__ptr << std::endl;
-            //             *__ptr = *(__ptr - 1);
-            //         }
-
-            //         // __move_range(__p, this->__end_, __p + 1);
-            //         // const_pointer __xr = pointer_traits<const_pointer>::pointer_to(__x);
-            //         // if (__p <= __xr && __xr < this->__end_)
-            //         //     ++__xr;
-            //         // *__p = *__xr;
-            //     }
-            // }
-            // else
-            // {
-            //     // allocator_type& __a = this->__alloc();
-            //     // __split_buffer<value_type, allocator_type&> __v(__recommend(size() + 1), __p - this->__begin_, __a);
-            //     // __v.push_back(__x);
-            //     // __p = __swap_out_circular_buffer(__v, __p);
-            // }
-            // return __make_iter(__p);
             return __pos;
         }
         void insert(iterator __position, size_type __n, const value_type& __val)
