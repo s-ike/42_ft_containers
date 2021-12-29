@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <exception>
+#include "algorithm.hpp"
 #include "reverse_iterator.hpp"
 #include "vector_iterator.hpp"
 #include "enable_if.hpp"
@@ -421,7 +422,7 @@ namespace ft {
     template <class _T, class _Allocator>
     bool operator<(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
     {
-        return std::lexicographical_compare(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
+        return ft::lexicographical_compare(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
     }
     template <class _T, class _Allocator>
     bool operator<=(const vector<_T, _Allocator>& __lhs, const vector<_T, _Allocator>& __rhs)
