@@ -19,8 +19,8 @@ namespace ft {
         typedef const value_type&                       const_reference;
         typedef _T*                                     pointer;
         typedef const _T*                               const_pointer;
-        typedef vector_iterator<pointer>                iterator;
-        typedef vector_iterator<const_pointer>          const_iterator;
+        typedef ft::vector_iterator<pointer>            iterator;
+        typedef ft::vector_iterator<const_pointer>      const_iterator;
         typedef ft::reverse_iterator<iterator>          reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
         typedef std::ptrdiff_t                          difference_type;
@@ -89,7 +89,7 @@ namespace ft {
                 __alloc = __x.__alloc;
                 assign(__x.__begin, __x.__end);
             }
-            return *this ;
+            return *this;
         }
 
         // Iterators
