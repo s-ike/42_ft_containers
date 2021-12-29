@@ -131,7 +131,7 @@ namespace ft {
         // Capacity
         size_type size() const
         {
-            return end() - begin() ;
+            return static_cast<size_type>(__end - __begin);
         }
         size_type max_size() const
         {
