@@ -99,9 +99,6 @@ namespace ft {
         {
             return __i;
         }
-
-    private:
-        // template <class _Tp, class _Alloc> friend class vector;
     };
 
     template <class _Iter>
