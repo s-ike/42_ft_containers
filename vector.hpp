@@ -7,6 +7,7 @@
 #include "reverse_iterator.hpp"
 #include "vector_iterator.hpp"
 #include "enable_if.hpp"
+#include "is_integral.hpp"
 
 namespace ft {
     template <typename _T, typename _Allocator = std::allocator<_T> >
@@ -49,8 +50,9 @@ namespace ft {
             }
         }
         template <class _InputIterator>
-        vector(_InputIterator __first, _InputIterator __last, const allocator_type & __alloc = allocator_type(),
-                typename ft::enable_if<!std::is_integral<_InputIterator>::value, _InputIterator>::type* = NULL)
+        vector(_InputIterator __first,
+               typename ft::enable_if<!ft::is_integral<_InputIterator>::value, _InputIterator>::type __last,
+               const allocator_type & __alloc = allocator_type())
             : __begin(NULL), __end(NULL), __end_cap(NULL), __alloc(__alloc)
         {
             size_type __n = static_cast<size_type>(std::distance(__first, __last));
@@ -214,7 +216,7 @@ namespace ft {
 
         // Modifiers
         template <class _InputIterator>
-        typename ft::enable_if<!std::is_integral<_InputIterator>::value, void>::type
+        typename ft::enable_if<!ft::is_integral<_InputIterator>::value, void>::type
         assign(_InputIterator __first, _InputIterator __last)
         {
             size_type __new_size = static_cast<size_type>(std::distance(__first, __last));
@@ -302,7 +304,7 @@ namespace ft {
             }
         }
         template <class _InputIterator>
-        typename ft::enable_if<!std::is_integral<_InputIterator>::value, void>::type
+        typename ft::enable_if<!ft::is_integral<_InputIterator>::value, void>::type
         insert(iterator __position, _InputIterator __first, _InputIterator __last)
         {
             size_type __idx = __position - begin();
