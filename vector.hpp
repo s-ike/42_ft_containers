@@ -378,7 +378,7 @@ namespace ft {
         }
         void clear()
         {
-            __destroy_until(rend());
+            __clear();
         }
 
         // Allocator
@@ -408,7 +408,6 @@ namespace ft {
         {
             __base_destruct_at_end(__begin);
         }
-        // __destroy_until
         void __base_destruct_at_end(pointer __new_last)
         {
             pointer __soon_to_be_end = __end;
@@ -424,12 +423,6 @@ namespace ft {
         {
             __alloc.destroy(ptr);
         }
-        void __destroy_until( reverse_iterator rend )
-        {
-            for (reverse_iterator riter = rbegin(); riter != rend; ++riter, --__end)
-                __destroy(&*riter);
-        }
-
         iterator __make_iter(pointer __p)
         {
             return iterator(__p);
