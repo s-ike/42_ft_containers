@@ -217,9 +217,27 @@ namespace ft {
         typename ft::enable_if<!std::is_integral<_InputIterator>::value, void>::type
         assign(_InputIterator __first, _InputIterator __last)
         {
-            clear();
-            for (; __first != __last; ++__first)
-                push_back(*__first);
+            size_type __n = static_cast<size_type>(std::distance(__first, __last));
+            if (__n > capacity())
+            {
+                clear();
+                reserve(__n);
+                std::uninitialized_copy(__first, __last, __begin);
+            }
+            else
+            {
+                if (__n <= size())
+                {
+                    __base_destruct_at_end(__begin + __n);
+                    std::copy(__first, __last, __begin);
+                }
+                else
+                {
+                    clear();
+                    std::uninitialized_copy(__first, __last, __begin);
+                }
+            }
+            __end = __begin + __n;
         }
         void assign(size_type __n, const value_type& __val)
         {
