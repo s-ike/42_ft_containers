@@ -289,6 +289,17 @@ int main()
 		leaks();
 	}
 	{
+		print_header("capacity, empty, reserve");
+		ft::vector<int> v;
+		std::cout << "capacity():\n";
+		std::cout << v.capacity() << std::endl;
+		std::cout << "empty():\n";
+		std::cout << std::boolalpha << v.empty() << std::endl;
+		v.reserve(42);
+		std::cout << "v.reserve(42)\n" "capacity():\n";
+		std::cout << v.capacity() << std::endl;
+	}
+	{
 		print_header("Element access");
 		ft::vector<int> v(10, 1);
 		v[0] = 42;
@@ -399,10 +410,6 @@ int main()
 	{
 		print_header("insert(iterator, const value_type&)");
 		ft::vector<int> v(5, 1);
-		/* { 42 5 }
-		std::vector<int>::iterator it = v.begin();
-		v.insert(it, 42);
-		*/
 		ft::vector<int>::iterator it = v.begin() + 1;
 		ft::vector<int>::iterator return_it = v.insert(it, 42);
 		print_header("return", COLOR_B);
@@ -410,8 +417,6 @@ int main()
 		print_container(v);
 		print_header("size()", COLOR_B);
 		std::cout << v.size() << std::endl;
-		// print_header("capacity()", COLOR_B);
-		// std::cout << v.capacity() << std::endl;
 		leaks();
 	}
 	{
@@ -421,8 +426,6 @@ int main()
 		print_container(v);
 		print_header("size()", COLOR_B);
 		std::cout << v.size() << std::endl;
-		// print_header("capacity()", COLOR_B);
-		// std::cout << v.capacity() << std::endl;
 		leaks();
 	}
 	{
