@@ -1,7 +1,10 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <stack>
+#include <deque>
 #include "vector.hpp"
+#include "stack.hpp"
 
 #define PRG_NAME "a.out"
 
@@ -558,5 +561,48 @@ int main(int argc, char **argv)
 	if (has_arg == false || test_vectors[2])
 	{
 		print_header("stack", COLOR_B_GREEN);
+		{
+			print_header("constructor");
+			std::deque<int> mydeque(3,100);
+			ft::stack<int, std::deque<int> > s(mydeque);
+			std::cout << s.top() << std::endl;
+		}
+		{
+			print_header("empty, top");
+			ft::stack<int> s;
+			std::cout << s.empty() << std::endl;
+			s.push(42);
+			std::cout << s.empty() << std::endl;
+			std::cout << s.top() << std::endl;
+		}
+		{
+			print_header("push, pop");
+			ft::stack<int> mystack;
+
+			for (int i=0; i<5; ++i) mystack.push(i);
+
+			std::cout << "Popping out elements...";
+			while (!mystack.empty())
+			{
+				std::cout << ' ' << mystack.top();
+				mystack.pop();
+			}
+			std::cout << '\n';
+		}
+		{
+			print_header("relational operators");
+			ft::stack<int> foo;
+			foo.push(42);
+			ft::stack<int> bar;
+			bar.push(21);
+			bar.push(100);
+
+			if (foo==bar) std::cout << "foo and bar are equal\n";
+			if (foo!=bar) std::cout << "foo and bar are not equal\n";
+			if (foo< bar) std::cout << "foo is less than bar\n";
+			if (foo> bar) std::cout << "foo is greater than bar\n";
+			if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+			if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+		}
 	}
 }
