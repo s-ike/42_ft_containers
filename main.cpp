@@ -562,13 +562,14 @@ int main(int argc, char **argv)
 	{
 		print_header("stack", COLOR_B_GREEN);
 		{
-			print_header("constructor");
+			print_header("constructor, top, size");
 			std::deque<int> mydeque(3,100);
 			ft::stack<int, std::deque<int> > s(mydeque);
-			std::cout << s.top() << std::endl;
+			std::cout << "s.top(): " << s.top() << std::endl;
+			std::cout << "s.size(): " << s.size() << std::endl;
 		}
 		{
-			print_header("empty, top");
+			print_header("empty");
 			ft::stack<int> s;
 			std::cout << s.empty() << std::endl;
 			s.push(42);
