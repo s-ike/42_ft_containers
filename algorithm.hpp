@@ -2,7 +2,10 @@
 #define ALGORITHM_HPP
 
 namespace ft {
-    // equal
+
+    /* ********************************************************************** */
+    /*   equal                                                                */
+    /* ********************************************************************** */
 
     template <class _InputIterator1, class _InputIterator2, class _BinaryPredicate>
     bool
@@ -24,7 +27,9 @@ namespace ft {
         return true;
     }
 
-    // lexicographical_compare
+    /* ********************************************************************** */
+    /*   lexicographical_compare                                              */
+    /* ********************************************************************** */
 
     template <class _InputIterator1, class _InputIterator2, class _Compare>
     bool
