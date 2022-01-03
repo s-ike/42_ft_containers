@@ -1,6 +1,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <map>
 #include <stack>
 #include <deque>
 #include "vector.hpp"
@@ -556,6 +557,10 @@ int main(int argc, char **argv)
 	if (has_arg == false || test_vectors[1])
 	{
 		print_header("map", COLOR_B_GREEN);
+		{
+			std::map<char,int> mymap;
+			std::cout << mymap.empty() << std::endl;
+		}
 	}
 	// stack
 	if (has_arg == false || test_vectors[2])
