@@ -30,7 +30,8 @@ namespace ft {
             : first(__a), second(__b)
         {}
 
-        pair& operator=(const pair& __pr) {
+        pair& operator=(const pair& __pr)
+        {
             first = __pr.first;
             second = __pr.second;
             return *this;

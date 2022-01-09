@@ -6,6 +6,7 @@
 #include <deque>
 #include "vector.hpp"
 #include "stack.hpp"
+#include "map.hpp"
 
 #define PRG_NAME "a.out"
 
@@ -558,8 +559,24 @@ int main(int argc, char **argv)
 	{
 		print_header("map", COLOR_B_GREEN);
 		{
-			std::map<char,int> mymap;
-			std::cout << mymap.empty() << std::endl;
+			ft::map<char, int> mymap;
+			std::cout << mymap.size() << std::endl;
+		}
+		{
+			print_header("std");
+			std::map<int, int> mymap;
+			std::map<int, int>::iterator begin = mymap.begin();
+			std::cout << (*begin).first << "," << (*begin).second << std::endl;
+			// ++begin;
+			// std::cout << (*begin).first << "," << (*begin).second << std::endl;
+		}
+		{
+			print_header("ft");
+			ft::map<int, int> mymap;
+			ft::pair<int, int> data = ft::make_pair(42, 42);
+			mymap.insert(data);
+			ft::map<int, int>::iterator begin = mymap.begin();
+			std::cout << (*begin).first << std::endl;
 		}
 	}
 	// stack

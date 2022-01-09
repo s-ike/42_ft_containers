@@ -2,10 +2,11 @@
 #define TREE_HPP
 
 #include <iostream>
-#include "tree_iterator.hpp"
+#include "iterator_traits.hpp"
+#include "utility.hpp"
 
 namespace ft {
-    template <typename _T>
+    template <class _T>
     struct node
     {
         _T                  data;
@@ -13,6 +14,129 @@ namespace ft {
         struct node<_T>*    left;
         struct node<_T>*    right;
         std::size_t         height;
+
+        node()
+            : data(NULL), parent(NULL), left(NULL), right(NULL), height(0)
+        {}
+        node(const _T& __data)
+            : data(__data), parent(NULL), left(NULL), right(NULL), height(0)
+        {}
+
+        node<_T>* min_node(node<_T>* __node) const
+        {
+            node<_T>* __current = __node;
+
+            while (__current->left != NULL)
+                __current = __current->left;
+            return __current;
+        }
+        node<_T>* max_node(node<_T>* __node) const
+        {
+            node<_T>* __current = __node;
+
+            while (__current->right != NULL)
+                __current = __current->right;
+            return __current;
+        }
+        // TODO: 最大値を探したとき
+        node<_T>* next_node(node<_T>* __node) const
+        {
+            if (__node->right != NULL)
+                return min_node(__node->right);
+
+            node<_T>* __p = __node->parent;
+            while (__p != NULL && __node == __p->right)
+            {
+                __node = __p;
+                __p = __p->parent;
+            }
+            return __p;
+        }
+        // TODO: 最小値を探したとき
+        node<_T>* prev_node(node<_T>* __node) const
+        {
+            if (__node->left != NULL)
+                return max_node(__node->left);
+
+            node<_T>* __p = __node->parent;
+            while (__p != NULL && __node == __p->left)
+            {
+                __node = __p;
+                __p = __p->parent;
+            }
+            return __p;
+        }
+    };
+
+    template <class _T>
+    class tree_iterator : public std::iterator<std::bidirectional_iterator_tag, _T>
+    {
+    public:
+        typedef typename ft::iterator_traits<_T>::value_type        value_type;
+        typedef typename ft::iterator_traits<_T>::difference_type   difference_type;
+        typedef typename ft::iterator_traits<_T>::pointer           pointer;
+        typedef typename ft::iterator_traits<_T>::reference         reference;
+        typedef typename ft::iterator_traits<_T>::iterator_category iterator_category;
+
+    private:
+        typedef node<value_type>    __node_type;
+        __node_type* __i;
+
+    public:
+        tree_iterator()
+            : __i(NULL)
+        {}
+        explicit tree_iterator(__node_type* __x)
+            : __i(__x)
+        {}
+        template <class _Iter>
+        tree_iterator(const tree_iterator<_Iter>& __x)
+            : __i(__x.base())
+        {}
+        template <class _Iter>
+        tree_iterator& operator=(const tree_iterator<_Iter>& __x)
+        {
+            __i = __x.base();
+            return *this;
+        }
+        ~tree_iterator()
+        {}
+
+        reference operator*() const
+        {
+            return __i->data;
+        }
+        pointer operator->() const
+        {
+            return &__i->data;
+        }
+        tree_iterator& operator++()
+        {
+            __i = __i->next_node(__i);
+            return *this;
+        }
+        tree_iterator operator++(int)
+        {
+            tree_iterator __tmp(*this);
+            ++(*this);
+            return __tmp;
+        }
+        tree_iterator& operator--()
+        {
+            __i = __i->prev_node(__i);
+            return *this;
+        }
+        tree_iterator operator--(int)
+        {
+            tree_iterator __tmp(*this);
+            --(*this);
+            return __tmp;
+        }
+
+        __node_type* base() const
+        {
+            return __i;
+        }
     };
 
     template <class _T, class _Compare, class _Allocator = std::allocator<_T> >
@@ -50,11 +174,15 @@ namespace ft {
             __clear(__root);
             __root = NULL;
         }
+        iterator begin()
+        {
+            return iterator(__root->min_node(__root));
+        }
         size_type size() const
         {
             return __size;
         }
-        node_type* insert(_T __data)
+        node_type* insert(const value_type& __data)
         {
             return __root = __insert_node(__root, __data);
         }
@@ -87,14 +215,13 @@ namespace ft {
         }
 
     private:
-        node_type* __new_node(_T __data)
+        node_type* __new_node(const _T& __data)
         {
             node_type* __node = __alloc.allocate(1);
-            __alloc.construct(__node);
+            __alloc.construct(__node, __data);
             __node->left = NULL;
             __node->right = NULL;
             __node->parent = NULL;
-            __node->data = __data;
             __node->height = 1; // new node is initially added at leaf
             return __node;
         }
@@ -163,7 +290,7 @@ namespace ft {
             // return new root
             return __y;
         }
-        node_type* __insert_node(node_type* __node, _T __data)
+        node_type* __insert_node(node_type* __node, const _T& __data)
         {
             /* 1. Perform the normal BST insertion */
             if (__node == NULL)
