@@ -256,7 +256,7 @@ namespace ft {
         // Iterators
         iterator begin() {return __tree_.begin();}
         // const_iterator begin() const {return __tree_.begin();}
-        // iterator end() {return __tree_.end();}
+        iterator end() {return __tree_.end();}
         // const_iterator end() const {return __tree_.end();}
 
         // Capacity

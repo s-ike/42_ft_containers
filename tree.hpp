@@ -16,7 +16,7 @@ namespace ft {
         std::size_t         height;
 
         node()
-            : data(NULL), parent(NULL), left(NULL), right(NULL), height(0)
+            : data(), parent(NULL), left(NULL), right(NULL), height(0)
         {}
         node(const _T& __data)
             : data(__data), parent(NULL), left(NULL), right(NULL), height(0)
@@ -38,7 +38,6 @@ namespace ft {
                 __current = __current->right;
             return __current;
         }
-        // TODO: 最大値を探したとき
         node<_T>* next_node(node<_T>* __node) const
         {
             if (__node->right != NULL)
@@ -52,7 +51,6 @@ namespace ft {
             }
             return __p;
         }
-        // TODO: 最小値を探したとき
         node<_T>* prev_node(node<_T>* __node) const
         {
             if (__node->left != NULL)
@@ -138,6 +136,16 @@ namespace ft {
             return __i;
         }
     };
+    template <class _Iter1, class _Iter2>
+    bool operator==(const tree_iterator<_Iter1>& __x, const tree_iterator<_Iter2>& __y)
+    {
+        return __x.base() == __y.base();
+    }
+    template <class _Iter1, class _Iter2>
+    bool operator!=(const tree_iterator<_Iter1>& __x, const tree_iterator<_Iter2>& __y)
+    {
+        return !(__x == __y);
+    }
 
     template <class _T, class _Compare, class _Allocator = std::allocator<_T> >
     class tree
@@ -157,26 +165,48 @@ namespace ft {
         typedef typename allocator_type::template
             rebind<node_type>::other    __node_allocator;
 
-        node_type*          __root;
+        node_type*          __end_;
+        node_type*          __root_;
         size_type           __size;
         value_compare       __comp;
-        __node_allocator    __alloc;
+        __node_allocator    __alloc_;
 
     public:
         explicit tree(const allocator_type& __alloc = allocator_type())
-            : __root(NULL), __size(0), __comp(value_compare()), __alloc(__node_allocator(__alloc))
-        {}
+            : __end_(NULL), __root_(NULL), __size(0), __comp(value_compare()), __alloc_(__node_allocator(__alloc))
+        {
+            __end_ = __alloc_.allocate(1);
+            __alloc_.construct(__end_);
+            __end_->left = NULL;
+            __end_->right = NULL;
+            __end_->parent = NULL;
+            __end_->height = 0;
+        }
         explicit tree(const _Compare& __comp, const allocator_type& __alloc = allocator_type())
-            : __root(NULL), __size(0), __comp(__comp), __alloc(__node_allocator(__alloc))
-        {}
+            : __end_(NULL), __root_(NULL), __size(0), __comp(__comp), __alloc_(__node_allocator(__alloc))
+        {
+            __end_ = __alloc_.allocate(1);
+            __alloc_.construct(__end_);
+            __end_->left = NULL;
+            __end_->right = NULL;
+            __end_->parent = NULL;
+            __end_->height = 0;
+        }
         ~tree()
         {
-            __clear(__root);
-            __root = NULL;
+            __clear(__root_);
+            __root_ = NULL;
+            __alloc_.destroy(__end_);
+            __alloc_.deallocate(__end_, 1);
+            __end_ = NULL;
         }
         iterator begin()
         {
-            return iterator(__root->min_node(__root));
+            return iterator(__root_->min_node(__root_));
+        }
+        iterator end()
+        {
+            return iterator(__end_);
         }
         size_type size() const
         {
@@ -184,16 +214,22 @@ namespace ft {
         }
         node_type* search(const value_type& __data)
         {
-            return __search_node(__root, __data);
+            return __search_node(__root_, __data);
         }
         node_type* insert(const value_type& __data)
         {
-            __root = __insert_node(__root, __data);
-            return __search_node(__root, __data);
+            __root_ = __insert_node(__root_, __data);
+            __end_->left = __root_;
+            if (__root_)
+                __root_->parent = __end_;
+            return __search_node(__root_, __data);
         }
         void erase(_T __data)
         {
-            __root = __erase_node(__root, __data);
+            __root_ = __erase_node(__root_, __data);
+            __end_->left = __root_;
+            if (__root_)
+                __root_->parent = __end_;
         }
 
         void print_from_root(node_type* __root) const
@@ -207,7 +243,7 @@ namespace ft {
         }
         void print_all_in_order() const
         {
-            print_in_order(__root);
+            print_in_order(__root_);
         }
         void print_in_order(node_type* __root) const
         {
@@ -233,8 +269,8 @@ namespace ft {
         }
         node_type* __new_node(const _T& __data)
         {
-            node_type* __node = __alloc.allocate(1);
-            __alloc.construct(__node, __data);
+            node_type* __node = __alloc_.allocate(1);
+            __alloc_.construct(__node, __data);
             __node->left = NULL;
             __node->right = NULL;
             __node->parent = NULL;
@@ -394,8 +430,8 @@ namespace ft {
         }
         void __delete_node(node_type* __node)
         {
-            __alloc.destroy(__node);
-            __alloc.deallocate(__node, 1);
+            __alloc_.destroy(__node);
+            __alloc_.deallocate(__node, 1);
             --__size;
         }
         node_type* __erase_node(node_type* __node, _T __data)

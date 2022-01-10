@@ -588,6 +588,45 @@ int main(int argc, char **argv)
 			std::cout << "[ insert(2) ]" << std::endl;
 			ft::map<int, int>::iterator itr2 = mymap.insert(itr, ft::make_pair(200, 200));
 			std::cout << (*itr2).first << std::endl;
+
+			for (ft::map<int, int>::iterator i = mymap.begin(); i != mymap.end(); ++i)
+			{
+				std::cout << (*i).first << ',' << (*i).second << std::endl;
+			}
+		}
+		{
+			print_header("ft 2");
+			ft::map<int, int> mymap;
+			ft::pair<int, int> data = ft::make_pair(42, 42);
+			std::cout << "[ insert(1) 1 ]" << std::endl;
+			ft::pair<ft::map<int, int>::iterator, bool> re = mymap.insert(data);
+			ft::map<int, int>::iterator itr = re.first;
+			std::cout << "[ insert(1) 2 ]" << std::endl;
+			mymap.insert(ft::make_pair(100, 100));
+			// itr = re.first;
+			std::cout << "[ iterator ]" << std::endl;
+			std::cout << (*itr).first << std::endl;
+			++itr;
+			std::cout << (*itr).first << std::endl;
+			++itr;
+			std::cout << (*itr).first << std::endl;
+
+			// 最大値のイテレータを++
+			std::cout << "[ iterator 2 ]" << std::endl;
+			re = mymap.insert(ft::make_pair(200, 200));
+			itr = re.first;
+			std::cout << (*itr).first << std::endl;
+			++itr;
+			std::cout << (*itr).first << std::endl;
+
+			// 最小値のイテレータを--
+			std::cout << "[ iterator 3 ]" << std::endl;
+			re = mymap.insert(ft::make_pair(1, 1));
+			itr = re.first;
+			std::cout << (*itr).first << std::endl;
+			--itr;
+			// segmentation fault
+			// std::cout << (*itr).first << std::endl;
 		}
 	}
 	// stack
