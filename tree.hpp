@@ -78,23 +78,23 @@ namespace ft {
 
     private:
         typedef node<value_type>    __node_type;
-        __node_type* __i;
+        __node_type* __i_;
 
     public:
         tree_iterator()
-            : __i(NULL)
+            : __i_(NULL)
         {}
         explicit tree_iterator(__node_type* __x)
-            : __i(__x)
+            : __i_(__x)
         {}
         template <class _Iter>
         tree_iterator(const tree_iterator<_Iter>& __x)
-            : __i(__x.base())
+            : __i_(__x.base())
         {}
         template <class _Iter>
         tree_iterator& operator=(const tree_iterator<_Iter>& __x)
         {
-            __i = __x.base();
+            __i_ = __x.base();
             return *this;
         }
         ~tree_iterator()
@@ -102,15 +102,15 @@ namespace ft {
 
         reference operator*() const
         {
-            return __i->data;
+            return __i_->data;
         }
         pointer operator->() const
         {
-            return &__i->data;
+            return &__i_->data;
         }
         tree_iterator& operator++()
         {
-            __i = __i->next_node(__i);
+            __i_ = __i_->next_node(__i_);
             return *this;
         }
         tree_iterator operator++(int)
@@ -121,7 +121,7 @@ namespace ft {
         }
         tree_iterator& operator--()
         {
-            __i = __i->prev_node(__i);
+            __i_ = __i_->prev_node(__i_);
             return *this;
         }
         tree_iterator operator--(int)
@@ -133,7 +133,7 @@ namespace ft {
 
         __node_type* base() const
         {
-            return __i;
+            return __i_;
         }
     };
     template <class _Iter1, class _Iter2>
@@ -167,13 +167,13 @@ namespace ft {
 
         node_type*          __end_;
         node_type*          __root_;
-        size_type           __size;
-        value_compare       __comp;
+        size_type           __size_;
+        value_compare       __comp_;
         __node_allocator    __alloc_;
 
     public:
         explicit tree(const allocator_type& __alloc = allocator_type())
-            : __end_(NULL), __root_(NULL), __size(0), __comp(value_compare()), __alloc_(__node_allocator(__alloc))
+            : __end_(NULL), __root_(NULL), __size_(0), __comp_(value_compare()), __alloc_(__node_allocator(__alloc))
         {
             __end_ = __alloc_.allocate(1);
             __alloc_.construct(__end_);
@@ -183,7 +183,7 @@ namespace ft {
             __end_->height = 0;
         }
         explicit tree(const _Compare& __comp, const allocator_type& __alloc = allocator_type())
-            : __end_(NULL), __root_(NULL), __size(0), __comp(__comp), __alloc_(__node_allocator(__alloc))
+            : __end_(NULL), __root_(NULL), __size_(0), __comp_(__comp), __alloc_(__node_allocator(__alloc))
         {
             __end_ = __alloc_.allocate(1);
             __alloc_.construct(__end_);
@@ -210,7 +210,7 @@ namespace ft {
         }
         size_type size() const
         {
-            return __size;
+            return __size_;
         }
         node_type* search(const value_type& __data)
         {
@@ -260,9 +260,9 @@ namespace ft {
         {
             if (__node == NULL)
                 return NULL;
-            if (__comp(__data.first, __node->data.first))
+            if (__comp_(__data.first, __node->data.first))
                 return __search_node(__node->left, __data);
-            else if (__comp(__node->data.first, __data.first))
+            else if (__comp_(__node->data.first, __data.first))
                 return __search_node(__node->right, __data);
             else
                 return __node;
@@ -349,19 +349,19 @@ namespace ft {
             {
                 std::cout << "new node: (" << __data.first << ',' << __data.second << ')' << std::endl;
                 __node = __new_node(__data);
-                ++__size;
+                ++__size_;
                 std::cout << "new node done" << std::endl;
                 return __node;
             }
 
-            if (__comp(__data.first, __node->data.first))
+            if (__comp_(__data.first, __node->data.first))
             // if (__data.first < __node->data.first)
             {
                 // std::cout << "else if (" << __data.first << " < " << __node->data.first << ")" << std::endl;
                 __node->left = __insert_node(__node->left, __data);
                 __node->left->parent = __node;
             }
-            else if (__comp(__node->data.first, __data.first))
+            else if (__comp_(__node->data.first, __data.first))
             // else if (__data.first > __node->data.first)
             {
                 // std::cout << "else if (" << __data.first << " > " << __node->data.first << ")" << std::endl;
@@ -383,17 +383,17 @@ namespace ft {
             // If this node becomes unbalanced, then there are 4 cases
 
             // Left Left Case
-            if (__balance > 1 && __comp(__data.first, __node->left->data.first))
+            if (__balance > 1 && __comp_(__data.first, __node->left->data.first))
             // if (__balance > 1 && __data.first < __node->left->data.first)
                 return __right_rotate(__node);
 
             // Right Right Case
-            if (__balance < -1 && __comp(__node->right->data.first, __data.first))
+            if (__balance < -1 && __comp_(__node->right->data.first, __data.first))
             // if (__balance < -1 && __data.first > __node->right->data.first)
                 return __left_rotate(__node);
 
             // Left Right Case
-            if (__balance > 1 && __comp(__node->left->data.first, __data.first))
+            if (__balance > 1 && __comp_(__node->left->data.first, __data.first))
             // if (__balance > 1 && __data.first > __node->left->data.first)
             {
                 __node->left = __left_rotate(__node->left);
@@ -401,7 +401,7 @@ namespace ft {
             }
 
             // Right Left Case
-            if (__balance < -1 && __comp(__data.first, __node->right->data.first))
+            if (__balance < -1 && __comp_(__data.first, __node->right->data.first))
             // if (__balance < -1 && __data.first < __node->right->data.first)
             {
                 __node->right = __right_rotate(__node->right);
@@ -432,7 +432,7 @@ namespace ft {
         {
             __alloc_.destroy(__node);
             __alloc_.deallocate(__node, 1);
-            --__size;
+            --__size_;
         }
         node_type* __erase_node(node_type* __node, _T __data)
         {
