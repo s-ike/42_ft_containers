@@ -590,9 +590,20 @@ int main(int argc, char **argv)
 			std::cout << (*itr2).first << std::endl;
 
 			for (ft::map<int, int>::iterator i = mymap.begin(); i != mymap.end(); ++i)
-			{
 				std::cout << (*i).first << ',' << (*i).second << std::endl;
-			}
+		}
+		{
+			print_header("insert 3");
+			ft::map<char, int> mymap;
+			ft::pair<ft::map<char, int>::iterator, bool> re = mymap.insert(ft::make_pair('a', 1));
+			mymap.insert(ft::make_pair('b', 2));
+			re = mymap.insert(ft::make_pair('c', 3));
+			mymap.insert(ft::make_pair('d', 4));
+
+			ft::map<char, int> anothermap;
+			anothermap.insert(mymap.begin(), re.first);
+			for (ft::map<char, int>::iterator i = anothermap.begin(); i != anothermap.end(); ++i)
+				std::cout << (*i).first << ',' << (*i).second << std::endl;
 		}
 		{
 			print_header("ft 2");

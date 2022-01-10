@@ -257,7 +257,7 @@ namespace ft {
         iterator begin() {return __tree_.begin();}
         // const_iterator begin() const {return __tree_.begin();}
         iterator end() {return __tree_.end();}
-        // const_iterator end() const {return __tree_.end();}
+        const_iterator end() const {return __tree_.end();}
 
         // Capacity
         bool      empty() const {
@@ -282,12 +282,12 @@ namespace ft {
             (void)__position;
             return insert(__val).first;
         }
-        // template <class _InputIterator>
-        // void insert(_InputIterator __first, _InputIterator __last)
-        // {
-        //     for (const_iterator __e = end(); __first != __last; ++__first)
-        //         insert(__e.__i_, *__first);
-        // }
+        template <class _InputIterator>
+        void insert(_InputIterator __first, _InputIterator __last)
+        {
+            for (; __first != __last; ++__first)
+                insert(*__first);
+        }
     };
 }
 
