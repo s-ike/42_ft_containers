@@ -182,9 +182,14 @@ namespace ft {
         {
             return __size;
         }
+        node_type* search(const value_type& __data)
+        {
+            return __search_node(__root, __data);
+        }
         node_type* insert(const value_type& __data)
         {
-            return __root = __insert_node(__root, __data);
+            __root = __insert_node(__root, __data);
+            return __search_node(__root, __data);
         }
         void erase(_T __data)
         {
@@ -215,6 +220,17 @@ namespace ft {
         }
 
     private:
+        node_type* __search_node(node_type* __node, const value_type& __data)
+        {
+            if (__node == NULL)
+                return NULL;
+            if (__comp(__data.first, __node->data.first))
+                return __search_node(__node->left, __data);
+            else if (__comp(__node->data.first, __data.first))
+                return __search_node(__node->right, __data);
+            else
+                return __node;
+        }
         node_type* __new_node(const _T& __data)
         {
             node_type* __node = __alloc.allocate(1);
@@ -389,6 +405,7 @@ namespace ft {
                 return __node;
 
             // If the key to be deleted is smaller than the root's key, then it lies in left subtree
+            // TODO: use comp
             if (__data.first < __node->data.first)
             {
                 __node->left = __erase_node(__node->left, __data);

@@ -269,13 +269,25 @@ namespace ft {
         }
 
         // Modifiers
-        // ft::pair<iterator, bool> insert(const value_type& __val)
-        void insert(const value_type& __val)
+        ft::pair<iterator, bool> insert(const value_type& __val)
         {
-            __tree_.insert(__val);
-            // ft::pair<iterator, bool> re(ft::make_pair(iterator(__tree_.begin()), true));
-            // return re;
+            typename __base::node_type* __re = __tree_.search(__val);
+            if (__re)
+                return (ft::make_pair(iterator(__re), false));
+            __re = __tree_.insert(__val);
+            return (ft::make_pair(iterator(__re), true));
         }
+        iterator insert(iterator __position, const value_type& __val)
+        {
+            (void)__position;
+            return insert(__val).first;
+        }
+        // template <class _InputIterator>
+        // void insert(_InputIterator __first, _InputIterator __last)
+        // {
+        //     for (const_iterator __e = end(); __first != __last; ++__first)
+        //         insert(__e.__i_, *__first);
+        // }
     };
 }
 
