@@ -263,10 +263,38 @@ namespace ft {
         }
 
         // Iterators
-        iterator begin() {return __tree_.begin();}
-        const_iterator begin() const {return __tree_.begin();}
-        iterator end() {return __tree_.end();}
-        const_iterator end() const {return __tree_.end();}
+        iterator begin()
+        {
+            return __tree_.begin();
+        }
+        const_iterator begin() const
+        {
+            return __tree_.begin();
+        }
+        iterator end()
+        {
+            return __tree_.end();
+        }
+        const_iterator end() const
+        {
+            return __tree_.end();
+        }
+        reverse_iterator rbegin()
+        {
+            return reverse_iterator(end());
+        }
+        const_reverse_iterator rbegin() const
+        {
+            return const_reverse_iterator(end());
+        }
+        reverse_iterator rend()
+        {
+            return reverse_iterator(begin());
+        }
+        const_reverse_iterator rend() const
+        {
+            return const_reverse_iterator(begin());
+        }
 
         // Capacity
         bool      empty() const {

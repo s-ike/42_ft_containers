@@ -622,6 +622,10 @@ int main(int argc, char **argv)
 			anothermap.insert(mymap.begin(), re.first);
 			for (ft::map<char, int>::iterator i = anothermap.begin(); i != anothermap.end(); ++i)
 				std::cout << (*i).first << ',' << (*i).second << std::endl;
+
+			print_header("reverse_iterator");
+			for (ft::map<char, int>::reverse_iterator i = anothermap.rbegin(); i != anothermap.rend(); ++i)
+				std::cout << (*i).first << ',' << (*i).second << std::endl;
 		}
 		{
 			print_header("ft 2");
