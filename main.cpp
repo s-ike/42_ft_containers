@@ -563,14 +563,6 @@ int main(int argc, char **argv)
 			std::cout << mymap.size() << std::endl;
 		}
 		{
-			print_header("std");
-			std::map<int, int> mymap;
-			std::map<int, int>::iterator begin = mymap.begin();
-			std::cout << (*begin).first << "," << (*begin).second << std::endl;
-			// ++begin;
-			// std::cout << (*begin).first << "," << (*begin).second << std::endl;
-		}
-		{
 			print_header("ft");
 			ft::map<int, int> mymap;
 			ft::pair<int, int> data = ft::make_pair(42, 42);
@@ -641,25 +633,32 @@ int main(int argc, char **argv)
 			std::cout << (*itr).first << std::endl;
 			++itr;
 			std::cout << (*itr).first << std::endl;
-			++itr;
-			std::cout << (*itr).first << std::endl;
+			// 範囲外
+			// ++itr;
+			// std::cout << (*itr).first << std::endl;
 
 			// 最大値のイテレータを++
 			std::cout << "[ iterator 2 ]" << std::endl;
 			re = mymap.insert(ft::make_pair(200, 200));
 			itr = re.first;
 			std::cout << (*itr).first << std::endl;
-			++itr;
-			std::cout << (*itr).first << std::endl;
+			// 範囲外
+			// ++itr;
+			// std::cout << (*itr).first << std::endl;
 
 			// 最小値のイテレータを--
 			std::cout << "[ iterator 3 ]" << std::endl;
 			re = mymap.insert(ft::make_pair(1, 1));
 			itr = re.first;
 			std::cout << (*itr).first << std::endl;
-			--itr;
-			// segmentation fault
+			// 範囲外（segmentation fault）
+			// --itr;
 			// std::cout << (*itr).first << std::endl;
+		}
+		{
+			print_header("max_size");
+			std::map<int, int> mymap;
+			std::cout << "max_size: " << mymap.max_size() << std::endl;
 		}
 	}
 	// stack

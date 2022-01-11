@@ -304,6 +304,10 @@ namespace ft {
         {
             return __tree_.size();
         }
+        size_type max_size() const
+        {
+            return __tree_.max_size();
+        }
 
         // Modifiers
         ft::pair<iterator, bool> insert(const value_type& __val)

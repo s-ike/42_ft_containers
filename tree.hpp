@@ -155,8 +155,9 @@ namespace ft {
         typedef _Compare    value_compare;
         typedef _Allocator  allocator_type;
 
-        typedef typename allocator_type::size_type  size_type;
-        typedef node<value_type>                    node_type;
+        typedef typename allocator_type::size_type          size_type;
+        typedef typename allocator_type::difference_type    difference_type;
+        typedef node<value_type>                            node_type;
 
         typedef ft::tree_iterator<_T*>          iterator;
         typedef ft::tree_iterator<const _T*>    const_iterator;
@@ -227,6 +228,7 @@ namespace ft {
             return *this;
         }
 
+        // Iterators
         iterator begin()
         {
             return iterator(__root_->min_node(__root_));
@@ -243,10 +245,17 @@ namespace ft {
         {
             return const_iterator(__end_);
         }
+
+        // Capacity
         size_type size() const
         {
             return __size_;
         }
+        size_type max_size() const
+        {
+            return std::min(__alloc_.max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max()));
+        }
+
         node_type* search(const value_type& __data)
         {
             return __search_node(__root_, __data);
@@ -382,10 +391,10 @@ namespace ft {
             /* 1. Perform the normal BST insertion */
             if (__node == NULL)
             {
-                std::cout << "new node: (" << __data.first << ',' << __data.second << ')' << std::endl;
+                // std::cout << "new node: (" << __data.first << ',' << __data.second << ')' << std::endl;
                 __node = __new_node(__data);
                 ++__size_;
-                std::cout << "new node done" << std::endl;
+                // std::cout << "new node done" << std::endl;
                 return __node;
             }
 
