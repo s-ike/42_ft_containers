@@ -192,6 +192,17 @@ namespace ft {
             __end_->parent = NULL;
             __end_->height = 0;
         }
+        // Used in map copy constructor
+        tree(const tree& __x)
+            : __end_(NULL), __root_(NULL), __size_(0), __comp_(__x.__comp_), __alloc_(__x.__alloc_)
+        {
+            __end_ = __alloc_.allocate(1);
+            __alloc_.construct(__end_);
+            __end_->left = NULL;
+            __end_->right = NULL;
+            __end_->parent = NULL;
+            __end_->height = 0;
+        }
         ~tree()
         {
             __clear(__root_);
@@ -204,9 +215,17 @@ namespace ft {
         {
             return iterator(__root_->min_node(__root_));
         }
+        const_iterator begin() const
+        {
+            return const_iterator(__root_->min_node(__root_));
+        }
         iterator end()
         {
             return iterator(__end_);
+        }
+        const_iterator end() const
+        {
+            return const_iterator(__end_);
         }
         size_type size() const
         {

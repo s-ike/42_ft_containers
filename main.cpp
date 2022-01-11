@@ -591,6 +591,16 @@ int main(int argc, char **argv)
 
 			for (ft::map<int, int>::iterator i = mymap.begin(); i != mymap.end(); ++i)
 				std::cout << (*i).first << ',' << (*i).second << std::endl;
+
+			print_header("range constructor");
+			ft::map<int, int> newmap(mymap.begin(), mymap.end());
+			for (ft::map<int, int>::iterator i = newmap.begin(); i != newmap.end(); ++i)
+				std::cout << (*i).first << ',' << (*i).second << std::endl;
+
+			print_header("copy constructor");
+			ft::map<int, int> copymap(mymap);
+			for (ft::map<int, int>::iterator i = copymap.begin(); i != copymap.end(); ++i)
+				std::cout << (*i).first << ',' << (*i).second << std::endl;
 		}
 		{
 			print_header("insert 3");

@@ -237,25 +237,24 @@ namespace ft {
         explicit map(const key_compare& __comp = key_compare(),
                      const allocator_type& __alloc = allocator_type())
             : __tree_(__comp, __alloc)
-            // : __tree_(__vc(__comp), __alloc), __base::allocator_type(__alloc)
         {}
-        // map()
-        //     _NOEXCEPT_(
-        //         is_nothrow_default_constructible<allocator_type>::value &&
-        //         is_nothrow_default_constructible<key_compare>::value &&
-        //         is_nothrow_copy_constructible<key_compare>::value)
-        //     : __tree_(__vc(key_compare())) {}
-
-        // _LIBCPP_INLINE_VISIBILITY
-        // explicit map(const key_compare& __comp)
-        //     _NOEXCEPT_(
-        //         is_nothrow_default_constructible<allocator_type>::value &&
-        //         is_nothrow_copy_constructible<key_compare>::value)
-        //     : __tree_(__vc(__comp)) {}
+        template <class _InputIterator>
+        map(_InputIterator __first, _InputIterator __last,
+            const key_compare& __comp = key_compare(),
+            const allocator_type& __alloc = allocator_type())
+            : __tree_(__comp, __alloc)
+        {
+            insert(__first, __last);
+        }
+        map(const map& __x)
+            : __tree_(__x.__tree_)
+        {
+            insert(__x.begin(), __x.end());
+        }
 
         // Iterators
         iterator begin() {return __tree_.begin();}
-        // const_iterator begin() const {return __tree_.begin();}
+        const_iterator begin() const {return __tree_.begin();}
         iterator end() {return __tree_.end();}
         const_iterator end() const {return __tree_.end();}
 
