@@ -601,6 +601,14 @@ int main(int argc, char **argv)
 			ft::map<int, int> copymap(mymap);
 			for (ft::map<int, int>::iterator i = copymap.begin(); i != copymap.end(); ++i)
 				std::cout << (*i).first << ',' << (*i).second << std::endl;
+
+			print_header("assignment");
+			std::cout << "mymap.insert(1, 1)\n";
+			mymap.insert(ft::make_pair(1, 1));
+			std::cout << "copymap = mymap\n";
+			copymap = mymap;
+			for (ft::map<int, int>::iterator i = copymap.begin(); i != copymap.end(); ++i)
+				std::cout << (*i).first << ',' << (*i).second << std::endl;
 		}
 		{
 			print_header("insert 3");

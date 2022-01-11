@@ -251,6 +251,16 @@ namespace ft {
         {
             insert(__x.begin(), __x.end());
         }
+        ~map()
+        {}
+        map& operator=(const map& __x)
+        {
+            if (this != &__x)
+            {
+                __tree_ = __x.__tree_;
+            }
+            return *this;
+        }
 
         // Iterators
         iterator begin() {return __tree_.begin();}

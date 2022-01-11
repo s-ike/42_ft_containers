@@ -211,6 +211,22 @@ namespace ft {
             __alloc_.deallocate(__end_, 1);
             __end_ = NULL;
         }
+        // Used in map assignment
+        tree& operator=(const tree& __x)
+        {
+            if (this != &__x)
+            {
+                __clear(__root_);
+                __root_ = NULL;
+
+                __comp_ = __x.__comp_;
+                __alloc_ = __x.__alloc_;
+                for (iterator __itr = __x.begin(); __itr != __x.end(); ++__itr)
+                    insert(*__itr);
+            }
+            return *this;
+        }
+
         iterator begin()
         {
             return iterator(__root_->min_node(__root_));
