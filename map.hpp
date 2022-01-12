@@ -309,6 +309,15 @@ namespace ft {
             return __tree_.max_size();
         }
 
+        // Element access
+        mapped_type& operator[](const key_type& __k)
+        {
+            iterator __itr = find(__k);
+            if (__itr == end())
+                __itr = insert(value_type(__k, mapped_type())).first;
+            return (*__itr).second;
+        }
+
         // Modifiers
         ft::pair<iterator, bool> insert(const value_type& __val)
         {
@@ -328,6 +337,16 @@ namespace ft {
         {
             for (; __first != __last; ++__first)
                 insert(*__first);
+        }
+
+        // Operations
+        iterator find(const key_type& __k)
+        {
+            return iterator(__tree_.find(__k));
+        }
+        const_iterator find(const key_type& __k) const
+        {
+            return const_iterator(__tree_.find(__k));
         }
     };
 }

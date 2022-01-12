@@ -660,6 +660,18 @@ int main(int argc, char **argv)
 			std::map<int, int> mymap;
 			std::cout << "max_size: " << mymap.max_size() << std::endl;
 		}
+		{
+			print_header("operator[]");
+			ft::map<int, std::string> mymap;
+			mymap[42] = "42";
+			mymap[100] = "hello";
+			mymap[200] = "world";
+			mymap[200] = "hoge";
+			mymap[300] = mymap[42];
+			mymap[400] = mymap[400];
+			for (ft::map<int, std::string>::iterator i = mymap.begin(); i != mymap.end(); ++i)
+				std::cout << (*i).first << ',' << (*i).second << std::endl;
+		}
 	}
 	// stack
 	if (has_arg == false || test_vectors[2])

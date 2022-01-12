@@ -256,9 +256,25 @@ namespace ft {
             return std::min(__alloc_.max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max()));
         }
 
-        node_type* search(const value_type& __data)
+        node_type* search(const value_type& __data) const
         {
             return __search_node(__root_, __data);
+        }
+        template <class _Key>
+        iterator find(const _Key& __k)
+        {
+            node_type* __find = __find_node(__root_, __k);
+            if (__find && !__comp_(__k, __find->data.first))
+                return iterator(__find);
+            return end();
+        }
+        template <class _Key>
+        const_iterator find(const _Key& __k) const
+        {
+            node_type* __find = __find_node(__root_, __k);
+            if (__find && !__comp_(__k, __find->data.first))
+                return const_iterator(__find);
+            return end();
         }
         node_type* insert(const value_type& __data)
         {
@@ -300,7 +316,7 @@ namespace ft {
         }
 
     private:
-        node_type* __search_node(node_type* __node, const value_type& __data)
+        node_type* __search_node(node_type* __node, const value_type& __data) const
         {
             if (__node == NULL)
                 return NULL;
@@ -308,6 +324,18 @@ namespace ft {
                 return __search_node(__node->left, __data);
             else if (__comp_(__node->data.first, __data.first))
                 return __search_node(__node->right, __data);
+            else
+                return __node;
+        }
+        template <class _Key>
+        node_type* __find_node(node_type* __node, const _Key& __k) const
+        {
+            if (__node == NULL)
+                return NULL;
+            if (__comp_(__k, __node->data.first))
+                return __find_node(__node->left, __k);
+            else if (__comp_(__node->data.first, __k))
+                return __find_node(__node->right, __k);
             else
                 return __node;
         }
