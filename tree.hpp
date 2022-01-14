@@ -311,6 +311,14 @@ namespace ft {
             erase(__i);
             return 1;
         }
+        void swap(tree& __t)
+        {
+            __swap(__root_, __t.__root_);
+            __swap(__end_, __t.__end_);
+            __swap(__size_, __t.__size_);
+            __swap(__comp_, __t.__comp_);
+            __swap(__alloc_, __t.__alloc_);
+        }
 
         // Debug
         void print_from_root(node_type* __root) const
@@ -641,6 +649,13 @@ namespace ft {
             }
 
             return __node;
+        }
+        template <class _U>
+        void __swap(_U& __x, _U& __y)
+        {
+            _U __temp = __x;
+            __x = __y;
+            __y = __temp;
         }
 
         void __print(node_type* __root) const

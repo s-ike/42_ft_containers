@@ -44,10 +44,10 @@ void print_container(T& container)
 	std::cout << '}' << std::endl;
 }
 
-template <class T, class U>
-void print_map(ft::map<T, U>& mymap)
+template <class T>
+void print_map(T& mymap)
 {
-	for (typename ft::map<T, U>::iterator i = mymap.begin(); i != mymap.end(); ++i)
+	for (typename T::iterator i = mymap.begin(); i != mymap.end(); ++i)
 		std::cout << i->first << ',' << i->second << std::endl;
 }
 
@@ -702,6 +702,21 @@ int main(int argc, char **argv)
 			mymap.erase(itr, mymap.end());
 			print_map(mymap);
 			leaks();
+		}
+		{
+			print_header("swap");
+			ft::map<char, int> foo,bar;
+			foo['x'] = 100;
+			foo['y'] = 200;
+
+			bar['a'] = 11;
+			bar['b'] = 22;
+			bar['c'] = 33;
+
+			foo.swap(bar);
+
+			print_map(foo);
+			print_map(bar);
 		}
 		print_header("leaks");
 		leaks();

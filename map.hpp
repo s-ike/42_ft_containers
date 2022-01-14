@@ -350,6 +350,10 @@ namespace ft {
         {
             __tree_.erase(__first, __last);
         }
+        void swap(map& __x)
+        {
+            __tree_.swap(__x.__tree_);
+        }
 
         // Operations
         iterator find(const key_type& __k)
