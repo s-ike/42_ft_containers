@@ -338,6 +338,18 @@ namespace ft {
             for (; __first != __last; ++__first)
                 insert(*__first);
         }
+        void erase(iterator __position)
+        {
+            __tree_.erase(__position);
+        }
+        size_type erase(const key_type& __k)
+        {
+            return __tree_.erase_unique(__k);
+        }
+        void erase(iterator __first, iterator __last)
+        {
+            __tree_.erase(__first, __last);
+        }
 
         // Operations
         iterator find(const key_type& __k)
@@ -348,6 +360,11 @@ namespace ft {
         {
             return const_iterator(__tree_.find(__k));
         }
+
+        // void debug() const
+        // {
+        //     __tree_.print_all_in_order();
+        // }
     };
 }
 

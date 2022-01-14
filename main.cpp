@@ -44,6 +44,13 @@ void print_container(T& container)
 	std::cout << '}' << std::endl;
 }
 
+template <class T, class U>
+void print_map(ft::map<T, U>& mymap)
+{
+	for (typename ft::map<T, U>::iterator i = mymap.begin(); i != mymap.end(); ++i)
+		std::cout << i->first << ',' << i->second << std::endl;
+}
+
 void print_header(const std::string& str, const std::string& color = COLOR_B_CYAN)
 {
 	std::cout << color << "\n[ " << str << " ]" COLOR_RESET << std::endl;
@@ -670,8 +677,34 @@ int main(int argc, char **argv)
 			mymap[300] = mymap[42];
 			mymap[400] = mymap[400];
 			for (ft::map<int, std::string>::iterator i = mymap.begin(); i != mymap.end(); ++i)
-				std::cout << (*i).first << ',' << (*i).second << std::endl;
+				std::cout << i->first << ',' << i->second << std::endl;
 		}
+		{
+			print_header("erase");
+			ft::map<char, int> mymap;
+			ft::map<char, int>::iterator itr;
+			mymap['a'] = 1;
+			mymap['b'] = 2;
+			mymap['c'] = 3;
+			mymap['d'] = 4;
+			mymap['e'] = 5;
+			mymap['f'] = 6;
+			print_map(mymap);
+			std::cout << "erase(find('b')) (erasing by iterator)" << std::endl;
+			itr = mymap.find('b');
+			mymap.erase(itr);
+			print_map(mymap);
+			std::cout << "erase('c') (erasing by key)" << std::endl;
+			mymap.erase('c');
+			print_map(mymap);
+			std::cout << "erase(find('e')-end()) (erasing by range)" << std::endl;
+			itr = mymap.find('e');
+			mymap.erase(itr, mymap.end());
+			print_map(mymap);
+			leaks();
+		}
+		print_header("leaks");
+		leaks();
 	}
 	// stack
 	if (has_arg == false || test_vectors[2])

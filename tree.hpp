@@ -276,6 +276,8 @@ namespace ft {
                 return const_iterator(__find);
             return end();
         }
+
+        // Modifiers
         node_type* insert(const value_type& __data)
         {
             __root_ = __insert_node(__root_, __data);
@@ -291,7 +293,26 @@ namespace ft {
             if (__root_)
                 __root_->parent = __end_;
         }
+        void erase(iterator __p)
+        {
+            erase(*__p);
+        }
+        void erase(iterator __f, iterator __l)
+        {
+            while (__f != __l)
+                erase(__f++);
+        }
+        template <class _Key>
+        size_type erase_unique(const _Key& __k)
+        {
+            iterator __i = find(__k);
+            if (__i == end())
+                return 0;
+            erase(__i);
+            return 1;
+        }
 
+        // Debug
         void print_from_root(node_type* __root) const
         {
             if(__root != NULL)
@@ -533,31 +554,55 @@ namespace ft {
                 // node with only one child or no child
                 if ((__node->left == NULL) || (__node->right == NULL))
                 {
-                    node_type* __temp = __node->left ? __node->left : __node->right;
+                    node_type* __child = __node->left ? __node->left : __node->right;
 
                     // No child case
-                    if (__temp == NULL)
+                    if (__child == NULL)
                     {
-                        __temp = __node;
+                        __delete_node(__node);
                         __node = NULL;
                     }
                     else // One child case
                     {
-                        node_type* __p = __node->parent;
-                        *__node = *__temp; // Copy
-                        __node->parent = __p;
+                        node_type* __target = __node;
+                        __child->parent = __target->parent;
+                        if (__target->parent->right == __target)
+                            __target->parent->right = __child;
+                        else if (__target->parent->left == __target)
+                            __target->parent->left = __child;
+                        __delete_node(__target);
+                        __node = __child;
                     }
-                    __delete_node(__temp);
                 }
                 else
                 {
-                    node_type* __temp = __min_node(__node->right);
+                    node_type* __new = __min_node(__node->right);
+                    node_type* __target = __node;
 
-                    // Copy the inorder successor's data to this node
-                    __node->data = __temp->data;
-
-                    // Delete the inorder successor
-                    __node->right = __erase_node(__node->right, __temp->data);
+                    // set the parent node of __new
+                    if (__new->parent->left == __new)
+                        __new->parent->left = NULL;
+                    else if (__new->parent->right == __new)
+                        __new->parent->right = NULL;
+                    // set __new
+                    if (__target->left)
+                        __new->left = __target->left;
+                    if (__target->right)
+                        __new->right = __target->right;
+                    __new->height = __target->height;
+                    __new->parent = __target->parent;
+                    // set the parent of __new child nodes
+                    if (__new->left)
+                        __new->left->parent = __new;
+                    if (__new->right)
+                        __new->right->parent = __new;
+                    // set the child of the parent node of __new
+                    if (__target->parent->left == __target)
+                        __target->parent->left = __new;
+                    else if (__target->parent->right == __target)
+                        __target->parent->right = __new;
+                    __delete_node(__target);
+                    __node = __new;
                 }
             }
 
