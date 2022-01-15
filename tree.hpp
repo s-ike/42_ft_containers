@@ -332,6 +332,28 @@ namespace ft {
             return __comp_;
         }
 
+        // Operations
+        template <class _Key>
+        iterator lower_bound(const _Key& __k)
+        {
+            return __lower_bound(__k);
+        }
+        template <class _Key>
+        const_iterator lower_bound(const _Key& __k) const
+        {
+            return __lower_bound(__k);
+        }
+        template <class _Key>
+        iterator upper_bound(const _Key& __k)
+        {
+            return __upper_bound(__k);
+        }
+        template <class _Key>
+        const_iterator upper_bound(const _Key& __k) const
+        {
+            return __upper_bound(__k);
+        }
+
         // Debug
         void print_from_root(node_type* __root) const
         {
@@ -668,6 +690,75 @@ namespace ft {
             _U __temp = __x;
             __x = __y;
             __y = __temp;
+        }
+
+        template <class _Key>
+        iterator __lower_bound(const _Key& __k)
+        {
+            node_type* __result = __end_;
+            node_type* __node = __root_;
+            while (__node != NULL)
+            {
+                if (!__comp_(__node->data.first, __k))
+                {
+                    __result = __node;
+                    __node = __node->left;
+                }
+                else
+                    __node = __node->right;
+            }
+            return iterator(__result);
+        }
+        template <class _Key>
+        const_iterator __lower_bound(const _Key& __k) const
+        {
+            node_type* __result = __end_;
+            node_type* __node = __root_;
+            while (__node != NULL)
+            {
+                if (!__comp_(__node->data.first, __k))
+                {
+                    __result = __node;
+                    __node = __node->left;
+                }
+                else
+                    __node = __node->right;
+            }
+            return const_iterator(__result);
+        }
+        template <class _Key>
+        iterator __upper_bound(const _Key& __k)
+        {
+            node_type* __result = __end_;
+            node_type* __node = __root_;
+            while (__node != NULL)
+            {
+                if (__comp_(__k, __node->data.first))
+                {
+                    __result = __node;
+                    __node = __node->left;
+                }
+                else
+                    __node = __node->right;
+            }
+            return iterator(__result);
+        }
+        template <class _Key>
+        const_iterator __upper_bound(const _Key& __k) const
+        {
+            node_type* __result = __end_;
+            node_type* __node = __root_;
+            while (__node != NULL)
+            {
+                if (__comp_(__k, __node->data.first))
+                {
+                    __result = __node;
+                    __node = __node->left;
+                }
+                else
+                    __node = __node->right;
+            }
+            return const_iterator(__result);
         }
 
         void __print(node_type* __root) const

@@ -382,6 +382,22 @@ namespace ft {
         {
             return find(__k) == end() ? 0 : 1;
         }
+        iterator lower_bound(const key_type& __k)
+        {
+            return __tree_.lower_bound(__k);
+        }
+        const_iterator lower_bound(const key_type& __k) const
+        {
+            return __tree_.lower_bound(__k);
+        }
+        iterator upper_bound(const key_type& __k)
+        {
+            return __tree_.upper_bound(__k);
+        }
+        const_iterator upper_bound (const key_type& __k) const
+        {
+            return __tree_.upper_bound(__k);
+        }
 
         // void debug() const
         // {
