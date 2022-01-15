@@ -378,6 +378,10 @@ namespace ft {
         {
             return const_iterator(__tree_.find(__k));
         }
+        size_type count(const key_type& __k) const
+        {
+            return find(__k) == end() ? 0 : 1;
+        }
 
         // void debug() const
         // {
