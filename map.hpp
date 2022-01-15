@@ -398,6 +398,14 @@ namespace ft {
         {
             return __tree_.upper_bound(__k);
         }
+        pair<const_iterator, const_iterator> equal_range(const key_type& __k) const
+        {
+            return __tree_.equal_range(__k);
+        }
+        pair<iterator, iterator> equal_range(const key_type& __k)
+        {
+            return __tree_.equal_range(__k);
+        }
 
         // void debug() const
         // {

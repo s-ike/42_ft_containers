@@ -353,6 +353,20 @@ namespace ft {
         {
             return __upper_bound(__k);
         }
+        template <class _Key>
+        pair<typename tree<_T, _Compare, _Allocator>::iterator,
+             typename tree<_T, _Compare, _Allocator>::iterator>
+        equal_range(const _Key& __k)
+        {
+            return __equal_range(__k);
+        }
+        template <class _Key>
+        pair<typename tree<_T, _Compare, _Allocator>::const_iterator,
+             typename tree<_T, _Compare, _Allocator>::const_iterator>
+        equal_range(const _Key& __k) const
+        {
+            return __equal_range(__k);
+        }
 
         // Debug
         void print_from_root(node_type* __root) const
@@ -759,6 +773,60 @@ namespace ft {
                     __node = __node->right;
             }
             return const_iterator(__result);
+        }
+        template <class _Key>
+        pair<typename tree<_T, _Compare, _Allocator>::iterator,
+             typename tree<_T, _Compare, _Allocator>::iterator>
+        __equal_range(const _Key& __k)
+        {
+            typedef pair<iterator, iterator> _Pp;
+            node_type* __result = __end_;
+            node_type* __node = __root_;
+            while (__node != NULL)
+            {
+                if (__comp_(__k, __node->data.first))
+                {
+                    __result = __node;
+                    __node = __node->left;
+                }
+                else if (__comp_(__node->data.first, __k))
+                    __node = __node->right;
+                else
+                {
+                    return _Pp(iterator(__node),
+                                iterator(
+                                    __node->right != NULL ? __min_node(__node->right)
+                                        : __result));
+                }
+            }
+            return _Pp(iterator(__result), iterator(__result));
+        }
+        template <class _Key>
+        pair<typename tree<_T, _Compare, _Allocator>::const_iterator,
+             typename tree<_T, _Compare, _Allocator>::const_iterator>
+        __equal_range(const _Key& __k) const
+        {
+            typedef pair<const_iterator, const_iterator> _Pp;
+            node_type* __result = __end_;
+            node_type* __node = __root_;
+            while (__node != NULL)
+            {
+                if (__comp_(__k, __node->data.first))
+                {
+                    __result = __node;
+                    __node = __node->left;
+                }
+                else if (__comp_(__node->data.first, __k))
+                    __node = __node->right;
+                else
+                {
+                    return _Pp(const_iterator(__node),
+                                const_iterator(
+                                    __node->right != NULL ? __min_node(__node->right)
+                                        : __result));
+                }
+            }
+            return _Pp(const_iterator(__result), const_iterator(__result));
         }
 
         void __print(node_type* __root) const
