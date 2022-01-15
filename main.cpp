@@ -705,7 +705,7 @@ int main(int argc, char **argv)
 		}
 		{
 			print_header("swap");
-			ft::map<char, int> foo,bar;
+			ft::map<char, int> foo, bar;
 			foo['x'] = 100;
 			foo['y'] = 200;
 
@@ -715,7 +715,26 @@ int main(int argc, char **argv)
 
 			foo.swap(bar);
 
+			print_header("foo", COLOR_NORMAL);
 			print_map(foo);
+			print_header("bar", COLOR_NORMAL);
+			print_map(bar);
+		}
+		{
+			print_header("swap (non-member)");
+			ft::map<char, int> foo, bar;
+			foo['x']=100;
+			foo['y']=200;
+
+			bar['a']=11;
+			bar['b']=22;
+			bar['c']=33;
+
+			swap(foo,bar);
+
+			print_header("foo", COLOR_NORMAL);
+			print_map(foo);
+			print_header("bar", COLOR_NORMAL);
 			print_map(bar);
 		}
 		print_header("leaks");

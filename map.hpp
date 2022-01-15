@@ -370,6 +370,14 @@ namespace ft {
         //     __tree_.print_all_in_order();
         // }
     };
+
+    // Non-member function overloads
+    template <class _Key, class _Tp, class _Compare, class _Allocator>
+    void swap(map<_Key, _Tp, _Compare, _Allocator>& __x,
+              map<_Key, _Tp, _Compare, _Allocator>& __y)
+    {
+        __x.swap(__y);
+    }
 }
 
 #endif /* MAP_HPP */
