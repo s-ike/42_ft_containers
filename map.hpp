@@ -359,6 +359,16 @@ namespace ft {
             __tree_.clear();
         }
 
+        // Observers
+        key_compare key_comp() const
+        {
+            return __tree_.key_comp();
+        }
+        value_compare value_comp() const
+        {
+            return value_compare(__tree_.key_comp());
+        }
+
         // Operations
         iterator find(const key_type& __k)
         {

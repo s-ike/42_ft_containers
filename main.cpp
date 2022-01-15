@@ -730,19 +730,55 @@ int main(int argc, char **argv)
 
 			mymap.clear();
 			std::cout << "clear(); size=" << mymap.size() << std::endl;
-			mymap[1000]=1101;
-			mymap[2000]=2202;
+			mymap[1000] = 1101;
+			mymap[2000] = 2202;
 			print_map(mymap);
+		}
+		{
+			print_header("key_comp");
+			ft::map<char, int> mymap;
+
+			ft::map<char, int>::key_compare mycomp = mymap.key_comp();
+
+			mymap['a'] = 100;
+			mymap['b'] = 200;
+			mymap['c'] = 300;
+
+			std::cout << "mymap contains:\n";
+
+			char highest = mymap.rbegin()->first;     // key value of last element
+
+			ft::map<char, int>::iterator it = mymap.begin();
+			do {
+				std::cout << it->first << " => " << it->second << '\n';
+			} while ( mycomp((*it++).first, highest) );
+		}
+		{
+			print_header("value_comp");
+			ft::map<char, int> mymap;
+
+			mymap['x'] = 1001;
+			mymap['y'] = 2002;
+			mymap['z'] = 3003;
+
+			std::cout << "mymap contains:\n";
+
+			ft::pair<char, int> highest = *mymap.rbegin();          // last element
+
+			ft::map<char, int>::iterator it = mymap.begin();
+			do {
+				std::cout << it->first << " => " << it->second << '\n';
+			} while ( mymap.value_comp()(*it++, highest) );
 		}
 		{
 			print_header("swap (non-member)");
 			ft::map<char, int> foo, bar;
-			foo['x']=100;
-			foo['y']=200;
+			foo['x'] = 100;
+			foo['y'] = 200;
 
-			bar['a']=11;
-			bar['b']=22;
-			bar['c']=33;
+			bar['a'] = 11;
+			bar['b'] = 22;
+			bar['c'] = 33;
 
 			swap(foo,bar);
 

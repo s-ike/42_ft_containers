@@ -152,7 +152,7 @@ namespace ft {
     {
     public:
         typedef _T          value_type;
-        typedef _Compare    value_compare;
+        typedef _Compare    key_compare;
         typedef _Allocator  allocator_type;
 
         typedef typename allocator_type::size_type          size_type;
@@ -169,12 +169,12 @@ namespace ft {
         node_type*          __end_;
         node_type*          __root_;
         size_type           __size_;
-        value_compare       __comp_;
+        key_compare         __comp_;
         __node_allocator    __alloc_;
 
     public:
         explicit tree(const allocator_type& __alloc = allocator_type())
-            : __end_(NULL), __root_(NULL), __size_(0), __comp_(value_compare()), __alloc_(__node_allocator(__alloc))
+            : __end_(NULL), __root_(NULL), __size_(0), __comp_(key_compare()), __alloc_(__node_allocator(__alloc))
         {
             __end_ = __alloc_.allocate(1);
             __alloc_.construct(__end_);
@@ -324,6 +324,12 @@ namespace ft {
             __clear(__root_);
             __root_ = NULL;
             __end_->left = __root_;
+        }
+
+        // Observers
+        key_compare key_comp() const
+        {
+            return __comp_;
         }
 
         // Debug
