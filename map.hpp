@@ -354,6 +354,10 @@ namespace ft {
         {
             __tree_.swap(__x.__tree_);
         }
+        void clear()
+        {
+            __tree_.clear();
+        }
 
         // Operations
         iterator find(const key_type& __k)

@@ -721,6 +721,20 @@ int main(int argc, char **argv)
 			print_map(bar);
 		}
 		{
+			print_header("clear");
+			ft::map<int, int> mymap;
+
+			for (size_t i = 0; i < 100; i++)
+				mymap[i] = i;
+			print_map(mymap);
+
+			mymap.clear();
+			std::cout << "clear(); size=" << mymap.size() << std::endl;
+			mymap[1000]=1101;
+			mymap[2000]=2202;
+			print_map(mymap);
+		}
+		{
 			print_header("swap (non-member)");
 			ft::map<char, int> foo, bar;
 			foo['x']=100;

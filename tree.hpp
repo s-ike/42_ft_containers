@@ -319,6 +319,12 @@ namespace ft {
             __swap(__comp_, __t.__comp_);
             __swap(__alloc_, __t.__alloc_);
         }
+        void clear()
+        {
+            __clear(__root_);
+            __root_ = NULL;
+            __end_->left = __root_;
+        }
 
         // Debug
         void print_from_root(node_type* __root) const
