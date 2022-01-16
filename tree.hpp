@@ -368,6 +368,12 @@ namespace ft {
             return __equal_range(__k);
         }
 
+        // Allocator
+        allocator_type get_allocator() const
+        {
+            return allocator_type(__alloc_);
+        }
+
         // Debug
         void print_from_root(node_type* __root) const
         {

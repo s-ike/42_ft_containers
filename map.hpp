@@ -407,6 +407,12 @@ namespace ft {
             return __tree_.equal_range(__k);
         }
 
+        // Allocator
+        allocator_type get_allocator() const
+        {
+            return allocator_type(__tree_.get_allocator());
+        }
+
         // void debug() const
         // {
         //     __tree_.print_all_in_order();

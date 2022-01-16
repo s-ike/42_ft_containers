@@ -874,6 +874,37 @@ int main(int argc, char **argv)
 			std::cout << "upper bound points to: ";
 			std::cout << ret2.second->first << " => " << ret2.second->second << '\n';
 		}
+		{
+			print_header("get_allocator");
+			int psize;
+			ft::map<char, int> mymap;
+			ft::pair<const char, int>* p;
+
+			// allocate an array of 5 elements using mymap's allocator:
+			p = mymap.get_allocator().allocate(5);
+
+			// assign some values to array
+			psize = sizeof(ft::map<char, int>::value_type) * 5;
+
+			std::cout << "The allocated array has a size of " << psize << " bytes.\n";
+
+			mymap.get_allocator().deallocate(p, 5);
+			leaks();
+		}
+		{
+			print_header("get_allocator 2");
+			ft::map<int, char> m;
+			ft::pair<const int, char>* p = m.get_allocator().allocate(2);
+
+			p[0].second = 'a';
+			p[1].second = 'b';
+
+			std::cout << p[0].second << std::endl;
+			std::cout << p[1].second << std::endl;
+
+			m.get_allocator().deallocate(p, 2);
+			leaks();
+		}
 		print_header("leaks");
 		leaks();
 	}
