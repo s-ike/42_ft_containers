@@ -565,7 +565,7 @@ namespace ft {
 
             return __node;
         }
-        node_type* __min_node(node_type* __node)
+        node_type* __min_node(node_type* __node) const
         {
             node_type* __current = __node;
 
