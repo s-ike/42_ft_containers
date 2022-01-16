@@ -421,6 +421,43 @@ namespace ft {
 
     // Non-member function overloads
     template <class _Key, class _Tp, class _Compare, class _Allocator>
+    bool operator==(const map<_Key, _Tp, _Compare, _Allocator>& __lhs,
+                    const map<_Key, _Tp, _Compare, _Allocator>& __rhs)
+    {
+        return __lhs.size() == __rhs.size() && std::equal(__lhs.begin(), __lhs.end(), __rhs.begin());
+    }
+    template <class _Key, class _Tp, class _Compare, class _Allocator>
+    bool operator!=(const map<_Key, _Tp, _Compare, _Allocator>& __lhs,
+                    const map<_Key, _Tp, _Compare, _Allocator>& __rhs)
+    {
+        return !(__lhs == __rhs);
+    }
+    template <class _Key, class _Tp, class _Compare, class _Allocator>
+    bool operator<(const map<_Key, _Tp, _Compare, _Allocator>& __lhs,
+                   const map<_Key, _Tp, _Compare, _Allocator>& __rhs)
+    {
+        return ft::lexicographical_compare(__lhs.begin(), __lhs.end(), __rhs.begin(), __rhs.end());
+    }
+    template <class _Key, class _Tp, class _Compare, class _Allocator>
+    bool operator<=(const map<_Key, _Tp, _Compare, _Allocator>& __lhs,
+                    const map<_Key, _Tp, _Compare, _Allocator>& __rhs)
+    {
+        return !(__rhs < __lhs);
+    }
+    template <class _Key, class _Tp, class _Compare, class _Allocator>
+    bool operator>(const map<_Key, _Tp, _Compare, _Allocator>& __lhs,
+                   const map<_Key, _Tp, _Compare, _Allocator>& __rhs)
+    {
+        return __rhs < __lhs;
+    }
+    template <class _Key, class _Tp, class _Compare, class _Allocator>
+    bool operator>=(const map<_Key, _Tp, _Compare, _Allocator>& __lhs,
+                    const map<_Key, _Tp, _Compare, _Allocator>& __rhs)
+    {
+        return !(__lhs < __rhs);
+    }
+
+    template <class _Key, class _Tp, class _Compare, class _Allocator>
     void swap(map<_Key, _Tp, _Compare, _Allocator>& __x,
               map<_Key, _Tp, _Compare, _Allocator>& __y)
     {
