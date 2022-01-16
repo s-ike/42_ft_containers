@@ -231,11 +231,11 @@ namespace ft {
         // Iterators
         iterator begin()
         {
-            return iterator(__root_->min_node(__root_));
+            return iterator(__end_->min_node(__end_));
         }
         const_iterator begin() const
         {
-            return const_iterator(__root_->min_node(__root_));
+            return const_iterator(__end_->min_node(__end_));
         }
         iterator end()
         {
