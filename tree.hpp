@@ -9,11 +9,11 @@ namespace ft {
     template <class _T>
     struct node
     {
-        _T                  data;
-        struct node<_T>*    parent;
-        struct node<_T>*    left;
-        struct node<_T>*    right;
-        std::size_t         height;
+        _T          data;
+        node<_T>*   parent;
+        node<_T>*   left;
+        node<_T>*   right;
+        std::size_t height;
 
         node()
             : data(), parent(NULL), left(NULL), right(NULL), height(0)
@@ -66,25 +66,27 @@ namespace ft {
         }
     };
 
+    // _T = ft::pair<const _Key, _Tp>
     template <class _T>
     class tree_iterator : public std::iterator<std::bidirectional_iterator_tag, _T>
     {
     public:
-        typedef typename ft::iterator_traits<_T>::value_type        value_type;
-        typedef typename ft::iterator_traits<_T>::difference_type   difference_type;
-        typedef typename ft::iterator_traits<_T>::pointer           pointer;
-        typedef typename ft::iterator_traits<_T>::reference         reference;
-        typedef typename ft::iterator_traits<_T>::iterator_category iterator_category;
+        typedef typename ft::iterator_traits<_T*>::value_type        value_type;
+        typedef typename ft::iterator_traits<_T*>::difference_type   difference_type;
+        typedef typename ft::iterator_traits<_T*>::pointer           pointer;
+        typedef typename ft::iterator_traits<_T*>::reference         reference;
+        typedef typename ft::iterator_traits<_T*>::iterator_category iterator_category;
+
+        typedef node<value_type>    _node_type;
 
     private:
-        typedef node<value_type>    __node_type;
-        __node_type* __i_;
+        _node_type* __i_;
 
     public:
         tree_iterator()
             : __i_(NULL)
         {}
-        explicit tree_iterator(__node_type* __x)
+        explicit tree_iterator(_node_type* __x)
             : __i_(__x)
         {}
         template <class _Iter>
@@ -131,7 +133,7 @@ namespace ft {
             return __tmp;
         }
 
-        __node_type* base() const
+        _node_type* base() const
         {
             return __i_;
         }
@@ -147,6 +149,7 @@ namespace ft {
         return !(__x == __y);
     }
 
+    // _T = ft::pair<const _Key, _Tp>
     template <class _T, class _Compare, class _Allocator = std::allocator<_T> >
     class tree
     {
@@ -159,8 +162,8 @@ namespace ft {
         typedef typename allocator_type::difference_type    difference_type;
         typedef node<value_type>                            node_type;
 
-        typedef ft::tree_iterator<_T*>          iterator;
-        typedef ft::tree_iterator<const _T*>    const_iterator;
+        typedef ft::tree_iterator<_T>          iterator;
+        typedef ft::tree_iterator<const _T>    const_iterator;
 
     private:
         typedef typename allocator_type::template
