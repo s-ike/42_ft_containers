@@ -664,7 +664,7 @@ int main(int argc, char **argv)
 		}
 		{
 			print_header("max_size");
-			std::map<int, int> mymap;
+			ft::map<int, int> mymap;
 			std::cout << "max_size: " << mymap.max_size() << std::endl;
 		}
 		{
@@ -828,7 +828,7 @@ int main(int argc, char **argv)
 		}
 		{
 			ft::map<char, int> mymap;
-			ft::map<char, int>::const_iterator itlow, itup;
+			ft::map<char, int>::iterator itlow, itup;
 
 			mymap['a'] = 20;
 			mymap['b'] = 40;
@@ -907,7 +907,7 @@ int main(int argc, char **argv)
 		}
 		{
 			print_header("relational operators");
-			std::map<char, int> foo, bar;
+			ft::map<char, int> foo, bar;
 			foo['a'] = 100;
 			foo['b'] = 200;
 			bar['a'] = 10;
@@ -920,6 +920,14 @@ int main(int argc, char **argv)
 			if (foo> bar) std::cout << "foo is greater than bar\n";
 			if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
 			if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+		}
+		{
+			print_header("const_iterator");
+			ft::map<char, int> m;
+			m['a'] = 100;
+			m['b'] = 200;
+			for (ft::map<char, int>::const_iterator it1 = m.begin(); it1 != m.end(); ++it1)
+				std::cout << ".";
 		}
 		print_header("leaks");
 		leaks();

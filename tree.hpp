@@ -66,16 +66,16 @@ namespace ft {
         }
     };
 
-    // _T = ft::pair<const _Key, _Tp>
-    template <class _T>
-    class tree_iterator : public std::iterator<std::bidirectional_iterator_tag, _T>
+    // _Tp = ft::pair<const _Key, _T>
+    template <class _Tp>
+    class tree_iterator
     {
     public:
-        typedef typename ft::iterator_traits<_T*>::value_type        value_type;
-        typedef typename ft::iterator_traits<_T*>::difference_type   difference_type;
-        typedef typename ft::iterator_traits<_T*>::pointer           pointer;
-        typedef typename ft::iterator_traits<_T*>::reference         reference;
-        typedef typename ft::iterator_traits<_T*>::iterator_category iterator_category;
+        typedef std::bidirectional_iterator_tag     iterator_category;
+        typedef _Tp                                 value_type;
+        typedef std::ptrdiff_t                      difference_type;
+        typedef value_type&                         reference;
+        typedef value_type*                         pointer;
 
         typedef node<value_type>    _node_type;
 
@@ -89,12 +89,10 @@ namespace ft {
         explicit tree_iterator(_node_type* __x)
             : __i_(__x)
         {}
-        template <class _Iter>
-        tree_iterator(const tree_iterator<_Iter>& __x)
+        tree_iterator(const tree_iterator& __x)
             : __i_(__x.base())
         {}
-        template <class _Iter>
-        tree_iterator& operator=(const tree_iterator<_Iter>& __x)
+        tree_iterator& operator=(const tree_iterator& __x)
         {
             __i_ = __x.base();
             return *this;
@@ -110,6 +108,7 @@ namespace ft {
         {
             return &__i_->data;
         }
+
         tree_iterator& operator++()
         {
             __i_ = __i_->next_node(__i_);
@@ -133,21 +132,100 @@ namespace ft {
             return __tmp;
         }
 
+        bool operator==(const tree_iterator& __x) const
+        {
+            return base() == __x.base();
+        }
+        bool operator!=(const tree_iterator& __x) const
+        {
+            return !(base() == __x.base());
+        }
+
         _node_type* base() const
         {
             return __i_;
         }
     };
-    template <class _Iter1, class _Iter2>
-    bool operator==(const tree_iterator<_Iter1>& __x, const tree_iterator<_Iter2>& __y)
+
+    template <class _Tp>
+    class tree_const_iterator
     {
-        return __x.base() == __y.base();
-    }
-    template <class _Iter1, class _Iter2>
-    bool operator!=(const tree_iterator<_Iter1>& __x, const tree_iterator<_Iter2>& __y)
-    {
-        return !(__x == __y);
-    }
+    public:
+        typedef std::bidirectional_iterator_tag     iterator_category;
+        typedef _Tp                                 value_type;
+        typedef std::ptrdiff_t                      difference_type;
+        typedef const value_type&                   reference;
+        typedef const value_type*                   pointer;
+
+        typedef node<value_type>    _node_type;
+
+    private:
+        _node_type* __i_;
+
+    public:
+        tree_const_iterator()
+            : __i_(NULL)
+        {}
+        explicit tree_const_iterator(_node_type* __x)
+            : __i_(__x)
+        {}
+        tree_const_iterator(const tree_iterator<_Tp>& __x)
+            : __i_(__x.base())
+        {}
+        tree_const_iterator& operator=(const tree_const_iterator& __x)
+        {
+            __i_ = __x.base();
+            return *this;
+        }
+        ~tree_const_iterator()
+        {}
+
+        reference operator*() const
+        {
+            return __i_->data;
+        }
+        pointer operator->() const
+        {
+            return &__i_->data;
+        }
+
+        tree_const_iterator& operator++()
+        {
+            __i_ = __i_->next_node(__i_);
+            return *this;
+        }
+        tree_const_iterator operator++(int)
+        {
+            tree_const_iterator __tmp(*this);
+            ++(*this);
+            return __tmp;
+        }
+        tree_const_iterator& operator--()
+        {
+            __i_ = __i_->prev_node(__i_);
+            return *this;
+        }
+        tree_const_iterator operator--(int)
+        {
+            tree_const_iterator __tmp(*this);
+            --(*this);
+            return __tmp;
+        }
+
+        bool operator==(const tree_const_iterator& __x) const
+        {
+            return base() == __x.base();
+        }
+        bool operator!=(const tree_const_iterator& __x) const
+        {
+            return !(base() == __x.base());
+        }
+
+        _node_type* base() const
+        {
+            return __i_;
+        }
+    };
 
     // _T = ft::pair<const _Key, _Tp>
     template <class _T, class _Compare, class _Allocator = std::allocator<_T> >
@@ -163,7 +241,7 @@ namespace ft {
         typedef node<value_type>                            node_type;
 
         typedef ft::tree_iterator<_T>          iterator;
-        typedef ft::tree_iterator<const _T>    const_iterator;
+        typedef ft::tree_const_iterator<_T>    const_iterator;
 
     private:
         typedef typename allocator_type::template
@@ -225,7 +303,7 @@ namespace ft {
 
                 __comp_ = __x.__comp_;
                 __alloc_ = __x.__alloc_;
-                for (iterator __itr = __x.begin(); __itr != __x.end(); ++__itr)
+                for (const_iterator __itr = __x.begin(); __itr != __x.end(); ++__itr)
                     insert(*__itr);
             }
             return *this;
