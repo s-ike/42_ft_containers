@@ -6,44 +6,46 @@
 #include "utility.hpp"
 
 namespace ft {
-    template <class _T>
-    struct node
+    template <class _Tp>
+    struct __node
     {
-        _T          data;
-        node<_T>*   parent;
-        node<_T>*   left;
-        node<_T>*   right;
-        std::size_t height;
+        typedef __node* __node_pointer;
 
-        node()
+        _Tp             data;
+        __node_pointer  parent;
+        __node_pointer  left;
+        __node_pointer  right;
+        std::size_t     height;
+
+        __node()
             : data(), parent(NULL), left(NULL), right(NULL), height(0)
         {}
-        node(const _T& __data)
+        __node(const _Tp& __data)
             : data(__data), parent(NULL), left(NULL), right(NULL), height(0)
         {}
 
-        node<_T>* min_node(node<_T>* __node) const
+        __node_pointer min_node(__node_pointer __node) const
         {
-            node<_T>* __current = __node;
+            __node_pointer __current = __node;
 
             while (__current->left != NULL)
                 __current = __current->left;
             return __current;
         }
-        node<_T>* max_node(node<_T>* __node) const
+        __node_pointer max_node(__node_pointer __node) const
         {
-            node<_T>* __current = __node;
+            __node_pointer __current = __node;
 
             while (__current->right != NULL)
                 __current = __current->right;
             return __current;
         }
-        node<_T>* next_node(node<_T>* __node) const
+        __node_pointer next_node(__node_pointer __node) const
         {
             if (__node->right != NULL)
                 return min_node(__node->right);
 
-            node<_T>* __p = __node->parent;
+            __node_pointer __p = __node->parent;
             while (__p != NULL && __node == __p->right)
             {
                 __node = __p;
@@ -51,12 +53,12 @@ namespace ft {
             }
             return __p;
         }
-        node<_T>* prev_node(node<_T>* __node) const
+        __node_pointer prev_node(__node_pointer __node) const
         {
             if (__node->left != NULL)
                 return max_node(__node->left);
 
-            node<_T>* __p = __node->parent;
+            __node_pointer __p = __node->parent;
             while (__p != NULL && __node == __p->left)
             {
                 __node = __p;
@@ -68,7 +70,7 @@ namespace ft {
 
     // _Tp = ft::pair<const _Key, _T>
     template <class _Tp>
-    class tree_iterator
+    class __tree_iterator
     {
     public:
         typedef std::bidirectional_iterator_tag     iterator_category;
@@ -77,27 +79,27 @@ namespace ft {
         typedef value_type&                         reference;
         typedef value_type*                         pointer;
 
-        typedef node<value_type>    _node_type;
+        typedef __node<value_type>  _node_type;
 
     private:
         _node_type* __i_;
 
     public:
-        tree_iterator()
+        __tree_iterator()
             : __i_(NULL)
         {}
-        explicit tree_iterator(_node_type* __x)
+        explicit __tree_iterator(_node_type* __x)
             : __i_(__x)
         {}
-        tree_iterator(const tree_iterator& __x)
+        __tree_iterator(const __tree_iterator& __x)
             : __i_(__x.base())
         {}
-        tree_iterator& operator=(const tree_iterator& __x)
+        __tree_iterator& operator=(const __tree_iterator& __x)
         {
             __i_ = __x.base();
             return *this;
         }
-        ~tree_iterator()
+        ~__tree_iterator()
         {}
 
         reference operator*() const
@@ -109,34 +111,34 @@ namespace ft {
             return &__i_->data;
         }
 
-        tree_iterator& operator++()
+        __tree_iterator& operator++()
         {
             __i_ = __i_->next_node(__i_);
             return *this;
         }
-        tree_iterator operator++(int)
+        __tree_iterator operator++(int)
         {
-            tree_iterator __tmp(*this);
+            __tree_iterator __tmp(*this);
             ++(*this);
             return __tmp;
         }
-        tree_iterator& operator--()
+        __tree_iterator& operator--()
         {
             __i_ = __i_->prev_node(__i_);
             return *this;
         }
-        tree_iterator operator--(int)
+        __tree_iterator operator--(int)
         {
-            tree_iterator __tmp(*this);
+            __tree_iterator __tmp(*this);
             --(*this);
             return __tmp;
         }
 
-        bool operator==(const tree_iterator& __x) const
+        bool operator==(const __tree_iterator& __x) const
         {
             return base() == __x.base();
         }
-        bool operator!=(const tree_iterator& __x) const
+        bool operator!=(const __tree_iterator& __x) const
         {
             return !(base() == __x.base());
         }
@@ -148,7 +150,7 @@ namespace ft {
     };
 
     template <class _Tp>
-    class tree_const_iterator
+    class __tree_const_iterator
     {
     public:
         typedef std::bidirectional_iterator_tag     iterator_category;
@@ -157,27 +159,27 @@ namespace ft {
         typedef const value_type&                   reference;
         typedef const value_type*                   pointer;
 
-        typedef node<value_type>    _node_type;
+        typedef __node<value_type>  _node_type;
 
     private:
         _node_type* __i_;
 
     public:
-        tree_const_iterator()
+        __tree_const_iterator()
             : __i_(NULL)
         {}
-        explicit tree_const_iterator(_node_type* __x)
+        explicit __tree_const_iterator(_node_type* __x)
             : __i_(__x)
         {}
-        tree_const_iterator(const tree_iterator<_Tp>& __x)
+        __tree_const_iterator(const __tree_iterator<_Tp>& __x)
             : __i_(__x.base())
         {}
-        tree_const_iterator& operator=(const tree_const_iterator& __x)
+        __tree_const_iterator& operator=(const __tree_const_iterator& __x)
         {
             __i_ = __x.base();
             return *this;
         }
-        ~tree_const_iterator()
+        ~__tree_const_iterator()
         {}
 
         reference operator*() const
@@ -189,34 +191,34 @@ namespace ft {
             return &__i_->data;
         }
 
-        tree_const_iterator& operator++()
+        __tree_const_iterator& operator++()
         {
             __i_ = __i_->next_node(__i_);
             return *this;
         }
-        tree_const_iterator operator++(int)
+        __tree_const_iterator operator++(int)
         {
-            tree_const_iterator __tmp(*this);
+            __tree_const_iterator __tmp(*this);
             ++(*this);
             return __tmp;
         }
-        tree_const_iterator& operator--()
+        __tree_const_iterator& operator--()
         {
             __i_ = __i_->prev_node(__i_);
             return *this;
         }
-        tree_const_iterator operator--(int)
+        __tree_const_iterator operator--(int)
         {
-            tree_const_iterator __tmp(*this);
+            __tree_const_iterator __tmp(*this);
             --(*this);
             return __tmp;
         }
 
-        bool operator==(const tree_const_iterator& __x) const
+        bool operator==(const __tree_const_iterator& __x) const
         {
             return base() == __x.base();
         }
-        bool operator!=(const tree_const_iterator& __x) const
+        bool operator!=(const __tree_const_iterator& __x) const
         {
             return !(base() == __x.base());
         }
@@ -227,21 +229,21 @@ namespace ft {
         }
     };
 
-    // _T = ft::pair<const _Key, _Tp>
-    template <class _T, class _Compare, class _Allocator = std::allocator<_T> >
-    class tree
+    // _Tp = ft::pair<const _Key, _Tp>
+    template <class _Tp, class _Compare, class _Allocator = std::allocator<_Tp> >
+    class __tree
     {
     public:
-        typedef _T          value_type;
+        typedef _Tp         value_type;
         typedef _Compare    key_compare;
         typedef _Allocator  allocator_type;
 
         typedef typename allocator_type::size_type          size_type;
         typedef typename allocator_type::difference_type    difference_type;
-        typedef node<value_type>                            node_type;
+        typedef __node<value_type>                          node_type;
 
-        typedef ft::tree_iterator<_T>          iterator;
-        typedef ft::tree_const_iterator<_T>    const_iterator;
+        typedef ft::__tree_iterator<_Tp>        iterator;
+        typedef ft::__tree_const_iterator<_Tp>  const_iterator;
 
     private:
         typedef typename allocator_type::template
@@ -254,7 +256,7 @@ namespace ft {
         __node_allocator    __alloc_;
 
     public:
-        explicit tree(const allocator_type& __alloc = allocator_type())
+        explicit __tree(const allocator_type& __alloc = allocator_type())
             : __end_(NULL), __root_(NULL), __size_(0), __comp_(key_compare()), __alloc_(__node_allocator(__alloc))
         {
             __end_ = __alloc_.allocate(1);
@@ -264,7 +266,7 @@ namespace ft {
             __end_->parent = NULL;
             __end_->height = 0;
         }
-        explicit tree(const _Compare& __comp, const allocator_type& __alloc = allocator_type())
+        explicit __tree(const _Compare& __comp, const allocator_type& __alloc = allocator_type())
             : __end_(NULL), __root_(NULL), __size_(0), __comp_(__comp), __alloc_(__node_allocator(__alloc))
         {
             __end_ = __alloc_.allocate(1);
@@ -275,7 +277,7 @@ namespace ft {
             __end_->height = 0;
         }
         // Used in map copy constructor
-        tree(const tree& __x)
+        __tree(const __tree& __x)
             : __end_(NULL), __root_(NULL), __size_(0), __comp_(__x.__comp_), __alloc_(__x.__alloc_)
         {
             __end_ = __alloc_.allocate(1);
@@ -288,7 +290,7 @@ namespace ft {
             for (const_iterator __itr = __x.begin(); __itr != __x.end(); ++__itr)
                 insert(*__itr);
         }
-        ~tree()
+        ~__tree()
         {
             __clear(__root_);
             __root_ = NULL;
@@ -297,7 +299,7 @@ namespace ft {
             __end_ = NULL;
         }
         // Used in map assignment
-        tree& operator=(const tree& __x)
+        __tree& operator=(const __tree& __x)
         {
             if (this != &__x)
             {
@@ -370,7 +372,7 @@ namespace ft {
                 __root_->parent = __end_;
             return __search_node(__root_, __data);
         }
-        void erase(_T __data)
+        void erase(_Tp __data)
         {
             __root_ = __erase_node(__root_, __data);
             __end_->left = __root_;
@@ -395,7 +397,7 @@ namespace ft {
             erase(__i);
             return 1;
         }
-        void swap(tree& __t)
+        void swap(__tree& __t)
         {
             __swap(__root_, __t.__root_);
             __swap(__end_, __t.__end_);
@@ -438,15 +440,15 @@ namespace ft {
             return __upper_bound(__k);
         }
         template <class _Key>
-        pair<typename tree<_T, _Compare, _Allocator>::iterator,
-             typename tree<_T, _Compare, _Allocator>::iterator>
+        pair<typename __tree<_Tp, _Compare, _Allocator>::iterator,
+             typename __tree<_Tp, _Compare, _Allocator>::iterator>
         equal_range(const _Key& __k)
         {
             return __equal_range(__k);
         }
         template <class _Key>
-        pair<typename tree<_T, _Compare, _Allocator>::const_iterator,
-             typename tree<_T, _Compare, _Allocator>::const_iterator>
+        pair<typename __tree<_Tp, _Compare, _Allocator>::const_iterator,
+             typename __tree<_Tp, _Compare, _Allocator>::const_iterator>
         equal_range(const _Key& __k) const
         {
             return __equal_range(__k);
@@ -506,7 +508,7 @@ namespace ft {
             else
                 return __node;
         }
-        node_type* __new_node(const _T& __data)
+        node_type* __new_node(const _Tp& __data)
         {
             node_type* __node = __alloc_.allocate(1);
             __alloc_.construct(__node, __data);
@@ -581,7 +583,7 @@ namespace ft {
             // return new root
             return __y;
         }
-        node_type* __insert_node(node_type* __node, const _T& __data)
+        node_type* __insert_node(node_type* __node, const _Tp& __data)
         {
             /* 1. Perform the normal BST insertion */
             if (__node == NULL)
@@ -673,7 +675,7 @@ namespace ft {
             __alloc_.deallocate(__node, 1);
             --__size_;
         }
-        node_type* __erase_node(node_type* __node, _T __data)
+        node_type* __erase_node(node_type* __node, _Tp __data)
         {
             /* 1: PERFORM STANDARD BST DELETE */
             if (__node == NULL)
@@ -865,8 +867,8 @@ namespace ft {
             return const_iterator(__result);
         }
         template <class _Key>
-        pair<typename tree<_T, _Compare, _Allocator>::iterator,
-             typename tree<_T, _Compare, _Allocator>::iterator>
+        pair<typename __tree<_Tp, _Compare, _Allocator>::iterator,
+             typename __tree<_Tp, _Compare, _Allocator>::iterator>
         __equal_range(const _Key& __k)
         {
             typedef pair<iterator, iterator> _Pp;
@@ -892,8 +894,8 @@ namespace ft {
             return _Pp(iterator(__result), iterator(__result));
         }
         template <class _Key>
-        pair<typename tree<_T, _Compare, _Allocator>::const_iterator,
-             typename tree<_T, _Compare, _Allocator>::const_iterator>
+        pair<typename __tree<_Tp, _Compare, _Allocator>::const_iterator,
+             typename __tree<_Tp, _Compare, _Allocator>::const_iterator>
         __equal_range(const _Key& __k) const
         {
             typedef pair<const_iterator, const_iterator> _Pp;
