@@ -284,6 +284,9 @@ namespace ft {
             __end_->right = NULL;
             __end_->parent = NULL;
             __end_->height = 0;
+
+            for (const_iterator __itr = __x.begin(); __itr != __x.end(); ++__itr)
+                insert(*__itr);
         }
         ~tree()
         {
