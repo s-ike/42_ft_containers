@@ -79,24 +79,25 @@ namespace ft {
         typedef value_type&                         reference;
         typedef value_type*                         pointer;
 
-        typedef __node<value_type>  _node_type;
+        typedef __node<value_type>  __node_type;
+        typedef __node_type*        __node_pointer;
 
     private:
-        _node_type* __i_;
+        __node_pointer __ptr_;
 
     public:
         __tree_iterator()
-            : __i_(NULL)
+            : __ptr_(NULL)
         {}
-        explicit __tree_iterator(_node_type* __x)
-            : __i_(__x)
+        explicit __tree_iterator(__node_pointer __x)
+            : __ptr_(__x)
         {}
         __tree_iterator(const __tree_iterator& __x)
-            : __i_(__x.base())
+            : __ptr_(__x.base())
         {}
         __tree_iterator& operator=(const __tree_iterator& __x)
         {
-            __i_ = __x.base();
+            __ptr_ = __x.base();
             return *this;
         }
         ~__tree_iterator()
@@ -104,16 +105,16 @@ namespace ft {
 
         reference operator*() const
         {
-            return __i_->data;
+            return __ptr_->data;
         }
         pointer operator->() const
         {
-            return &__i_->data;
+            return &__ptr_->data;
         }
 
         __tree_iterator& operator++()
         {
-            __i_ = __i_->next_node(__i_);
+            __ptr_ = __ptr_->next_node(__ptr_);
             return *this;
         }
         __tree_iterator operator++(int)
@@ -124,7 +125,7 @@ namespace ft {
         }
         __tree_iterator& operator--()
         {
-            __i_ = __i_->prev_node(__i_);
+            __ptr_ = __ptr_->prev_node(__ptr_);
             return *this;
         }
         __tree_iterator operator--(int)
@@ -143,9 +144,9 @@ namespace ft {
             return !(base() == __x.base());
         }
 
-        _node_type* base() const
+        __node_pointer base() const
         {
-            return __i_;
+            return __ptr_;
         }
     };
 
@@ -159,24 +160,27 @@ namespace ft {
         typedef const value_type&                   reference;
         typedef const value_type*                   pointer;
 
-        typedef __node<value_type>  _node_type;
+        typedef __node<value_type>  __node_type;
+        typedef __node_type*        __node_pointer;
 
     private:
-        _node_type* __i_;
+        typedef __tree_iterator<value_type> __non_const_iterator;
+
+        __node_pointer __ptr_;
 
     public:
         __tree_const_iterator()
-            : __i_(NULL)
+            : __ptr_(NULL)
         {}
-        explicit __tree_const_iterator(_node_type* __x)
-            : __i_(__x)
+        explicit __tree_const_iterator(__node_pointer __x)
+            : __ptr_(__x)
         {}
-        __tree_const_iterator(const __tree_iterator<_Tp>& __x)
-            : __i_(__x.base())
+        __tree_const_iterator(const __non_const_iterator& __x)
+            : __ptr_(__x.base())
         {}
         __tree_const_iterator& operator=(const __tree_const_iterator& __x)
         {
-            __i_ = __x.base();
+            __ptr_ = __x.base();
             return *this;
         }
         ~__tree_const_iterator()
@@ -184,16 +188,16 @@ namespace ft {
 
         reference operator*() const
         {
-            return __i_->data;
+            return __ptr_->data;
         }
         pointer operator->() const
         {
-            return &__i_->data;
+            return &__ptr_->data;
         }
 
         __tree_const_iterator& operator++()
         {
-            __i_ = __i_->next_node(__i_);
+            __ptr_ = __ptr_->next_node(__ptr_);
             return *this;
         }
         __tree_const_iterator operator++(int)
@@ -204,7 +208,7 @@ namespace ft {
         }
         __tree_const_iterator& operator--()
         {
-            __i_ = __i_->prev_node(__i_);
+            __ptr_ = __ptr_->prev_node(__ptr_);
             return *this;
         }
         __tree_const_iterator operator--(int)
@@ -223,9 +227,9 @@ namespace ft {
             return !(base() == __x.base());
         }
 
-        _node_type* base() const
+        __node_pointer base() const
         {
-            return __i_;
+            return __ptr_;
         }
     };
 
