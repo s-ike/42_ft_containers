@@ -662,19 +662,14 @@ namespace ft {
                 return __node;
 
             // If the key to be deleted is smaller than the root's key, then it lies in left subtree
-            // TODO: use comp
-            if (__data.first < __node->data.first)
+            if (__comp_(__data.first, __node->data.first))  // std::less -> if (__data.first < __node->data.first)
             {
                 __node->left = __erase_node(__node->left, __data);
-                // if (__node->left)
-                //     __node->left->parent = __node;
             }
             // If the key to be deleted is greater than the root's key, then it lies in right subtree
-            else if (__data.first > __node->data.first)
+            else if (__comp_(__node->data.first, __data.first)) // std::less -> if (__node->data.first < __data.first)
             {
                 __node->right = __erase_node(__node->right, __data);
-                // if (__node->right)
-                //     __node->right->parent = __node;
             }
             //  if key is same as root's key, then this is the node to be deleted
             else
