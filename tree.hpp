@@ -263,34 +263,18 @@ namespace ft {
         explicit __tree(const allocator_type& __alloc = allocator_type())
             : __end_(NULL), __root_(NULL), __size_(0), __comp_(key_compare()), __alloc_(__node_allocator(__alloc))
         {
-            __end_ = __alloc_.allocate(1);
-            __alloc_.construct(__end_);
-            __end_->left = NULL;
-            __end_->right = NULL;
-            __end_->parent = NULL;
-            __end_->height = 0;
+            __init_tree();
         }
         explicit __tree(const _Compare& __comp, const allocator_type& __alloc = allocator_type())
             : __end_(NULL), __root_(NULL), __size_(0), __comp_(__comp), __alloc_(__node_allocator(__alloc))
         {
-            __end_ = __alloc_.allocate(1);
-            __alloc_.construct(__end_);
-            __end_->left = NULL;
-            __end_->right = NULL;
-            __end_->parent = NULL;
-            __end_->height = 0;
+            __init_tree();
         }
         // Used in map copy constructor
         __tree(const __tree& __x)
             : __end_(NULL), __root_(NULL), __size_(0), __comp_(__x.__comp_), __alloc_(__x.__alloc_)
         {
-            __end_ = __alloc_.allocate(1);
-            __alloc_.construct(__end_);
-            __end_->left = NULL;
-            __end_->right = NULL;
-            __end_->parent = NULL;
-            __end_->height = 0;
-
+            __init_tree();
             for (const_iterator __itr = __x.begin(); __itr != __x.end(); ++__itr)
                 insert(*__itr);
         }
@@ -489,6 +473,15 @@ namespace ft {
         }
 
     private:
+        void __init_tree()
+        {
+            __end_ = __alloc_.allocate(1);
+            __alloc_.construct(__end_);
+            __end_->left = NULL;
+            __end_->right = NULL;
+            __end_->parent = NULL;
+            __end_->height = 0;
+        }
         node_type* __search_node(node_type* __node, const value_type& __data) const
         {
             if (__node == NULL)
@@ -532,7 +525,6 @@ namespace ft {
         {
             if (__node == NULL)
                 return 0;
-            // std::cout << "left: " << __height(__node->left) << ", right: " << __height(__node->right) << std::endl;
             return __height(__node->left) - __height(__node->right);
         }
         /*
@@ -558,7 +550,6 @@ namespace ft {
             __y->height = std::max(__height(__y->left), __height(__y->right)) + 1;
             __x->height = std::max(__height(__x->left), __height(__x->right)) + 1;
 
-            // return new root
             return __x;
         }
         /*
@@ -584,7 +575,6 @@ namespace ft {
             __x->height = std::max(__height(__x->left), __height(__x->right)) + 1;
             __y->height = std::max(__height(__y->left), __height(__y->right)) + 1;
 
-            // return new root
             return __y;
         }
         node_type* __insert_node(node_type* __node, const _Tp& __data)
@@ -592,24 +582,18 @@ namespace ft {
             /* 1. Perform the normal BST insertion */
             if (__node == NULL)
             {
-                // std::cout << "new node: (" << __data.first << ',' << __data.second << ')' << std::endl;
                 __node = __new_node(__data);
                 ++__size_;
-                // std::cout << "new node done" << std::endl;
                 return __node;
             }
 
-            if (__comp_(__data.first, __node->data.first))
-            // if (__data.first < __node->data.first)
+            if (__comp_(__data.first, __node->data.first))  // std::less -> if (__data.first < __node->data.first)
             {
-                // std::cout << "else if (" << __data.first << " < " << __node->data.first << ")" << std::endl;
                 __node->left = __insert_node(__node->left, __data);
                 __node->left->parent = __node;
             }
-            else if (__comp_(__node->data.first, __data.first))
-            // else if (__data.first > __node->data.first)
+            else if (__comp_(__node->data.first, __data.first)) // std::less -> if (__node->data.first < __data.first)
             {
-                // std::cout << "else if (" << __data.first << " > " << __node->data.first << ")" << std::endl;
                 __node->right = __insert_node(__node->right, __data);
                 __node->right->parent = __node;
             }
@@ -619,27 +603,21 @@ namespace ft {
             /* 2. Update height of this ancestor node */
             __node->height = 1 + std::max(__height(__node->left), __height(__node->right));
 
-             /* 3. Get the balance factor of this ancestor
-                   node to check whether this node became
-                   unbalanced */
+             /* 3. Get the balance factor of this ancestor node to check whether this node became unbalanced */
             int __balance = __get_balance(__node);
-            // std::cout << "debug balance: " << __balance << std::endl;
 
             // If this node becomes unbalanced, then there are 4 cases
 
             // Left Left Case
             if (__balance > 1 && __comp_(__data.first, __node->left->data.first))
-            // if (__balance > 1 && __data.first < __node->left->data.first)
                 return __right_rotate(__node);
 
             // Right Right Case
             if (__balance < -1 && __comp_(__node->right->data.first, __data.first))
-            // if (__balance < -1 && __data.first > __node->right->data.first)
                 return __left_rotate(__node);
 
             // Left Right Case
             if (__balance > 1 && __comp_(__node->left->data.first, __data.first))
-            // if (__balance > 1 && __data.first > __node->left->data.first)
             {
                 __node->left = __left_rotate(__node->left);
                 return __right_rotate(__node);
@@ -647,7 +625,6 @@ namespace ft {
 
             // Right Left Case
             if (__balance < -1 && __comp_(__data.first, __node->right->data.first))
-            // if (__balance < -1 && __data.first < __node->right->data.first)
             {
                 __node->right = __right_rotate(__node->right);
                 return __left_rotate(__node);
@@ -669,7 +646,6 @@ namespace ft {
             {
                 __clear(__node->left);
                 __clear(__node->right);
-                // std::cout << "delete: " << __node->data.first << std::endl;
                 __delete_node(__node);
             }
         }
