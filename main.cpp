@@ -48,7 +48,7 @@ template <class T>
 void print_map(T& mymap)
 {
 	for (typename T::iterator i = mymap.begin(); i != mymap.end(); ++i)
-		std::cout << i->first << ',' << i->second << std::endl;
+		std::cout << i->first << " => " << i->second << std::endl;
 }
 
 void print_header(const std::string& str, const std::string& color = COLOR_B_CYAN)
@@ -566,101 +566,82 @@ int main(int argc, char **argv)
 	{
 		print_header("map", COLOR_B_GREEN);
 		{
-			ft::map<char, int> mymap;
-			std::cout << mymap.size() << std::endl;
+			print_header("constructor");
+			ft::map<char, int> first;	// empty
+			first['a'] = 10;
+			first['b'] = 30;
+			first['c'] = 50;
+			first['d'] = 70;
+
+			ft::map<char, int> second(first.begin(),first.end());	// range
+			ft::map<char, int> third(first);	// copy
+			std::cout << "first:\n";
+			print_map(first);
+			std::cout << "second:\n";
+			print_map(second);
+			std::cout << "third:\n";
+			print_map(third);
 		}
 		{
-			print_header("ft");
-			ft::map<int, int> mymap;
-			ft::pair<int, int> data = ft::make_pair(42, 42);
-			std::cout << "[ insert(1) 1 ]" << std::endl;
-			ft::pair<ft::map<int, int>::iterator, bool> re = mymap.insert(data);
-			ft::map<int, int>::iterator itr = re.first;
-			std::cout << "re.first: " << (*itr).first << std::endl;
-			std::cout << "re.second: " << re.second << std::endl;
-			std::cout << "[ insert(1) 2 ]" << std::endl;
-			re = mymap.insert(ft::make_pair(100, 100));
-			itr = re.first;
-			std::cout << "re.first: " << (*itr).first << std::endl;
-			std::cout << "re.second: " << re.second << std::endl;
+			print_header("constructor 2");
+			ft::map<char, int, std::greater<char> > first;	// empty
+			first['a'] = 10;
+			first['b'] = 30;
+			first['c'] = 50;
+			first['d'] = 70;
 
-			std::cout << "[ insert(2) ]" << std::endl;
-			ft::map<int, int>::iterator itr2 = mymap.insert(itr, ft::make_pair(200, 200));
-			std::cout << (*itr2).first << std::endl;
-
-			for (ft::map<int, int>::iterator i = mymap.begin(); i != mymap.end(); ++i)
-				std::cout << (*i).first << ',' << (*i).second << std::endl;
-
-			print_header("range constructor");
-			ft::map<int, int> newmap(mymap.begin(), mymap.end());
-			for (ft::map<int, int>::iterator i = newmap.begin(); i != newmap.end(); ++i)
-				std::cout << (*i).first << ',' << (*i).second << std::endl;
-
-			print_header("copy constructor");
-			ft::map<int, int> copymap(mymap);
-			for (ft::map<int, int>::iterator i = copymap.begin(); i != copymap.end(); ++i)
-				std::cout << (*i).first << ',' << (*i).second << std::endl;
-
-			print_header("assignment");
-			std::cout << "mymap.insert(1, 1)\n";
-			mymap.insert(ft::make_pair(1, 1));
-			std::cout << "copymap = mymap\n";
-			copymap = mymap;
-			for (ft::map<int, int>::iterator i = copymap.begin(); i != copymap.end(); ++i)
-				std::cout << (*i).first << ',' << (*i).second << std::endl;
+			ft::map<char, int, std::greater<char> > second(first.begin(),first.end());	// range
+			ft::map<char, int, std::greater<char> > third(first);	// copy
+			std::cout << "first:\n";
+			print_map(first);
+			std::cout << "second:\n";
+			print_map(second);
+			std::cout << "third:\n";
+			print_map(third);
 		}
 		{
-			print_header("insert 3");
-			ft::map<char, int> mymap;
-			ft::pair<ft::map<char, int>::iterator, bool> re = mymap.insert(ft::make_pair('a', 1));
-			mymap.insert(ft::make_pair('b', 2));
-			re = mymap.insert(ft::make_pair('c', 3));
-			mymap.insert(ft::make_pair('d', 4));
+			print_header("operator=, size");
+			ft::map<char, int> first;
+			ft::map<char, int> second;
 
-			ft::map<char, int> anothermap;
-			anothermap.insert(mymap.begin(), re.first);
-			for (ft::map<char, int>::iterator i = anothermap.begin(); i != anothermap.end(); ++i)
-				std::cout << (*i).first << ',' << (*i).second << std::endl;
+			first['x'] = 8;
+			first['y'] = 16;
+			first['z'] = 32;
 
+			second = first;                // second now contains 3 ints
+			first = ft::map<char, int>();  // and first is now empty
+
+			std::cout << "Size of first: " << first.size() << '\n';
+			std::cout << "Size of second: " << second.size() << '\n';
+		}
+		{
 			print_header("reverse_iterator");
-			for (ft::map<char, int>::reverse_iterator i = anothermap.rbegin(); i != anothermap.rend(); ++i)
-				std::cout << (*i).first << ',' << (*i).second << std::endl;
+			ft::map<char, int> mymap;
+
+			mymap['x'] = 100;
+			mymap['y'] = 200;
+			mymap['z'] = 300;
+
+			ft::map<char, int>::reverse_iterator rit;
+			for (rit=mymap.rbegin(); rit != mymap.rend(); ++rit)
+				std::cout << rit->first << " => " << rit->second << '\n';
 		}
 		{
-			print_header("ft 2");
+			print_header("empty");
 			ft::map<int, int> mymap;
-			ft::pair<int, int> data = ft::make_pair(42, 42);
-			std::cout << "[ insert(1) 1 ]" << std::endl;
-			ft::pair<ft::map<int, int>::iterator, bool> re = mymap.insert(data);
-			ft::map<int, int>::iterator itr = re.first;
-			std::cout << "[ insert(1) 2 ]" << std::endl;
-			mymap.insert(ft::make_pair(100, 100));
-			// itr = re.first;
-			std::cout << "[ iterator ]" << std::endl;
-			std::cout << (*itr).first << std::endl;
-			++itr;
-			std::cout << (*itr).first << std::endl;
-			// 範囲外
-			// ++itr;
-			// std::cout << (*itr).first << std::endl;
 
-			// 最大値のイテレータを++
-			std::cout << "[ iterator 2 ]" << std::endl;
-			re = mymap.insert(ft::make_pair(200, 200));
-			itr = re.first;
-			std::cout << (*itr).first << std::endl;
-			// 範囲外
-			// ++itr;
-			// std::cout << (*itr).first << std::endl;
+			std::cout << "mymap is ";
+			if (mymap.empty() == true)
+				std::cout << "empty" << std::endl;
+			else
+				std::cout << "not empty" << std::endl;
 
-			// 最小値のイテレータを--
-			std::cout << "[ iterator 3 ]" << std::endl;
-			re = mymap.insert(ft::make_pair(1, 1));
-			itr = re.first;
-			std::cout << (*itr).first << std::endl;
-			// 範囲外（segmentation fault）
-			// --itr;
-			// std::cout << (*itr).first << std::endl;
+			mymap[0] = 0;
+			std::cout << "mymap[0] = 0;\nmymap is ";
+			if (mymap.empty() == true)
+				std::cout << "empty" << std::endl;
+			else
+				std::cout << "not empty" << std::endl;
 		}
 		{
 			print_header("max_size");
@@ -670,7 +651,7 @@ int main(int argc, char **argv)
 		{
 			print_header("operator[]");
 			ft::map<int, std::string> mymap;
-			mymap[42] = "42";
+			mymap[42] = "forty-two";
 			mymap[100] = "hello";
 			mymap[200] = "world";
 			mymap[200] = "hoge";
@@ -678,6 +659,49 @@ int main(int argc, char **argv)
 			mymap[400] = mymap[400];
 			for (ft::map<int, std::string>::iterator i = mymap.begin(); i != mymap.end(); ++i)
 				std::cout << i->first << ',' << i->second << std::endl;
+		}
+		{
+			print_header("insert");
+			ft::map<char, int> mymap;
+
+			print_header("first insert function version (single parameter)", COLOR_NORMAL);
+			mymap.insert(ft::pair<char, int>('a', 100));
+			mymap.insert(ft::pair<char, int>('z', 200));
+
+			ft::pair<ft::map<char, int>::iterator, bool> ret;
+			ret = mymap.insert(ft::make_pair('z', 500));
+			if (ret.second == false) {
+				std::cout
+					<< "element 'z' already existed with a value of "
+					<< ret.first->second
+					<< '\n';
+			}
+
+			print_header("second insert function version (with hint position)", COLOR_NORMAL);
+			ft::map<char, int>::iterator it = mymap.begin();
+			mymap.insert(it, ft::pair<char, int>('b', 300));
+			mymap.insert(it, ft::pair<char, int>('c', 400));
+
+			print_header("third insert function version (range insertion)", COLOR_NORMAL);
+			ft::map<char, int> anothermap;
+			anothermap.insert(mymap.begin(), mymap.find('c'));
+
+			/*
+			mymap contains:
+			a => 100
+			b => 300
+			c => 400
+			z => 200
+			anothermap contains:
+			a => 100
+			b => 300
+			*/
+			std::cout << "mymap contains:\n";
+			print_map(mymap);
+			std::cout << "anothermap contains:\n";
+			print_map(anothermap);
+
+			leaks();
 		}
 		{
 			print_header("erase");
@@ -690,17 +714,21 @@ int main(int argc, char **argv)
 			mymap['e'] = 5;
 			mymap['f'] = 6;
 			print_map(mymap);
-			std::cout << "erase(find('b')) (erasing by iterator)" << std::endl;
+
+			print_header("erase(find('b')) (erasing by iterator)", COLOR_NORMAL);
 			itr = mymap.find('b');
 			mymap.erase(itr);
 			print_map(mymap);
-			std::cout << "erase('c') (erasing by key)" << std::endl;
+
+			print_header("erase('c') (erasing by key)", COLOR_NORMAL);
 			mymap.erase('c');
 			print_map(mymap);
-			std::cout << "erase(find('e')-end()) (erasing by range)" << std::endl;
+
+			print_header("erase(find('e')-end()) (erasing by range)", COLOR_NORMAL);
 			itr = mymap.find('e');
 			mymap.erase(itr, mymap.end());
 			print_map(mymap);
+
 			leaks();
 		}
 		{
@@ -746,7 +774,7 @@ int main(int argc, char **argv)
 
 			std::cout << "mymap contains:\n";
 
-			char highest = mymap.rbegin()->first;     // key value of last element
+			char highest = mymap.rbegin()->first;	// key value of last element
 
 			ft::map<char, int>::iterator it = mymap.begin();
 			do {
@@ -763,7 +791,7 @@ int main(int argc, char **argv)
 
 			std::cout << "mymap contains:\n";
 
-			ft::pair<char, int> highest = *mymap.rbegin();          // last element
+			ft::pair<char, int> highest = *mymap.rbegin();	// last element
 
 			ft::map<char, int>::iterator it = mymap.begin();
 			do {
@@ -823,12 +851,12 @@ int main(int argc, char **argv)
 			mymap.erase(itlow, itup);        // erases [itlow,itup)
 
 			// print content:
-			for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+			for (ft::map<char,int>::iterator it = mymap.begin(); it != mymap.end(); ++it)
 				std::cout << it->first << " => " << it->second << '\n';
 		}
 		{
 			ft::map<char, int> mymap;
-			ft::map<char, int>::iterator itlow, itup;
+			ft::map<char, int>::const_iterator itlow, itup;
 
 			mymap['a'] = 20;
 			mymap['b'] = 40;
@@ -840,11 +868,12 @@ int main(int argc, char **argv)
 			itlow = mymap.lower_bound('b');  // itlow points to b
 			itup = mymap.upper_bound('d');   // itup points to e (not d!)
 
-			mymap.erase(itlow, itup);        // erases [itlow,itup)
+			// C++98ではerase(const_iterator, const_iterator)がない
+			// mymap.erase(itlow, itup);        // erases [itlow,itup)
 
 			// print content:
-			for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-				std::cout << it->first << " => " << it->second << '\n';
+			for (; itlow != itup; ++itlow)
+				std::cout << itlow->first << " => " << itlow->second << '\n';
 		}
 		{
 			print_header("equal_range");
@@ -914,12 +943,30 @@ int main(int argc, char **argv)
 			bar['z'] = 1000;
 
 			// foo ({{a,100},{b,200}}) vs bar ({a,10},{z,1000}}):
-			if (foo==bar) std::cout << "foo and bar are equal\n";
-			if (foo!=bar) std::cout << "foo and bar are not equal\n";
-			if (foo< bar) std::cout << "foo is less than bar\n";
-			if (foo> bar) std::cout << "foo is greater than bar\n";
-			if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
-			if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+			if (foo == bar) std::cout << "foo and bar are equal\n";
+			if (foo != bar) std::cout << "foo and bar are not equal\n";
+			if (foo <  bar) std::cout << "foo is less than bar\n";
+			if (foo >  bar) std::cout << "foo is greater than bar\n";
+			if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
+			if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
+		}
+		{
+			print_header("swap (non-member function)");
+			ft::map<char, int> foo, bar;
+
+			foo['x'] = 100;
+			foo['y'] = 200;
+
+			bar['a'] = 11;
+			bar['b'] = 22;
+			bar['c'] = 33;
+
+			swap(foo,bar);
+
+			std::cout << "foo contains:\n";
+			print_map(foo);
+			std::cout << "bar contains:\n";
+			print_map(bar);
 		}
 		{
 			print_header("const_iterator");
