@@ -102,8 +102,7 @@ namespace ft {
             if (this != &__x)
             {
                 __alloc_ = __x.__alloc_;
-                // TODO: iterator
-                assign(__x.__begin_, __x.__end_);
+                assign(__x.begin(), __x.end());
             }
             return *this;
         }

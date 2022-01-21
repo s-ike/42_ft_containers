@@ -272,7 +272,8 @@ int main(int argc, char **argv)
 		{
 			print_header("assignment");
 			ft::vector<int> v(10, 1);
-			ft::vector<int> v2(v);
+			ft::vector<int> v2;
+			v2 = v;
 			v2[1] = 42;
 			print_container(v);
 			print_container(v2);
@@ -281,8 +282,8 @@ int main(int argc, char **argv)
 			print_header("assignment 2");
 			ft::vector<int> v(10, 1);
 			ft::vector<int> v2(9, 2);
-			v[1] = 42;
 			v2 = v;
+			v2[1] = 42;
 			print_container(v);
 			print_container(v2);
 			std::cout << "v2.size(): " << v2.size() << std::endl;
@@ -290,9 +291,9 @@ int main(int argc, char **argv)
 		{
 			print_header("assignment 3");
 			ft::vector<int> v(10, 1);
-			ft::vector<int> v2;
-			v[1] = 42;
+			ft::vector<int> v2(20, 2);
 			v2 = v;
+			v2[1] = 42;
 			print_container(v);
 			print_container(v2);
 			std::cout << "v2.size(): " << v2.size() << std::endl;
