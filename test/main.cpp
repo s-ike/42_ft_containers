@@ -681,8 +681,11 @@ int main(int argc, char **argv)
 			*/
 			std::cout << "mymap contains:\n";
 			print_map(mymap);
+			std::cout << "mymap.size(): " << mymap.size() << std::endl;
+
 			std::cout << "anothermap contains:\n";
 			print_map(anothermap);
+			std::cout << "anothermap.size(): " << anothermap.size() << std::endl;
 
 			leaks();
 		}
@@ -711,6 +714,8 @@ int main(int argc, char **argv)
 			itr = mymap.find('e');
 			mymap.erase(itr, mymap.end());
 			print_map(mymap);
+
+			std::cout << "mymap.size(): " << mymap.size() << std::endl;
 
 			leaks();
 		}
