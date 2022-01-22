@@ -11,6 +11,7 @@
 # include "../stack.hpp"
 # include "../map.hpp"
 #endif
+# include <vector>
 
 #define PRG_NAME "a.out"
 
@@ -100,25 +101,26 @@ int main(int argc, char **argv)
 		{
 			print_header("default constructor");
 			ft::vector<int> v;
-			std::cout << v.size() << std::endl;
-			std::cout << v.capacity() << std::endl;
-			v.push_back(21);
-			std::cout << v.size() << std::endl;
-			std::cout << v.capacity() << std::endl;
-			v.push_back(42);
-			std::cout << v.size() << std::endl;
-			std::cout << v.capacity() << std::endl;
-			v.push_back(84);
-			std::cout << v.size() << std::endl;
-			std::cout << v.capacity() << std::endl;
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			v.push_back(0);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			v.push_back(10);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			v.push_back(100);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
 			print_container(v);
 		}
 		{
 			print_header("size constructor");
 			ft::vector<int> v(5);
+			print_container(v);
 			int value = 0;
-			for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
-				*p = ++value;
+			for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
+				*itr = ++value;
 			print_container(v);
 		}
 		{
@@ -133,38 +135,77 @@ int main(int argc, char **argv)
 			}
 		}
 		{
-			// ft::vector<int> v;
-			// std::cout << v.size() << std::endl;
 			print_header("size & value constructor");
 			ft::vector<int> v(10, 1) ;
+			print_container(v);
 			v[2] = 99 ;
 			v.resize(5) ;
 			print_container(v);
 			v.push_back(42);
 			print_container(v);
 
-			print_header("size", COLOR_B);
+			print_header("size");
 			std::cout << v.size() << std::endl;
-			print_header("capa", COLOR_B);
+
+			print_header("capacity");
 			std::cout << v.capacity() << std::endl;
-			print_header("max_size", COLOR_B);
-			std::cout << v.max_size() << std::endl;
 			leaks();
+		}
+		{
+			print_header("range constructor");
+			ft::vector<int> second(4, 100);
+			ft::vector<int> third(second.begin(), second.end());
+			print_container(third);
+
+			print_header("copy constructor");
+			ft::vector<int> fourth(third);
+			print_container(fourth);
+
+			leaks();
+		}
+		{
+			print_header("operator=");
+			ft::vector<int> v(10, 1);
+			ft::vector<int> v2;
+			v2 = v;
+			v2[1] = 42;
+			print_container(v);
+			print_container(v2);
+		}
+		{
+			print_header("operator= 2");
+			ft::vector<int> v(10, 1);
+			ft::vector<int> v2(9, 2);
+			v2 = v;
+			v2[1] = 42;
+			print_container(v);
+			print_container(v2);
+			std::cout << "v2.size(): " << v2.size() << std::endl;
+		}
+		{
+			print_header("operator= 3");
+			ft::vector<int> v(10, 1);
+			ft::vector<int> v2(20, 2);
+			v2 = v;
+			v2[1] = 42;
+			print_container(v);
+			print_container(v2);
+			std::cout << "v2.size(): " << v2.size() << std::endl;
 		}
 		{
 			print_header("iterator");
 			ft::vector<int> v(5);
 			int value = 0;
-			for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
-				*p = ++value;
+			for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
+				*itr = ++value;
 			print_container(v);
 
 			const int size = 5;
 			ft::vector<foo> vct(size);
 			ft::vector<foo>::iterator it(vct.begin());
 			ft::vector<foo>::const_iterator ite(vct.end());
-			for (int i = 1; it != ite; ++i)
-			*it++ = i;
+			for (int i = 0; it != ite; ++i)
+				*it++ = i;
 			std::cout << "vct.size(): " << vct.size() << std::endl;
 
 			it = vct.begin();
@@ -209,7 +250,7 @@ int main(int argc, char **argv)
 			ft::vector<foo>::reverse_iterator it(vct.rbegin());
 			ft::vector<foo>::const_reverse_iterator ite(vct.rend());
 
-			for (int i = 1; it != ite; ++i)
+			for (int i = 0; it != ite; ++i)
 				*it++ = (i * 7);
 			std::cout << "vct.size(): " << vct.size() << std::endl;
 
@@ -243,60 +284,9 @@ int main(int argc, char **argv)
 			std::cout << *--it << std::endl;
 		}
 		{
-			print_header("iterator constructor");
-			std::array<int, 5> v = {100, 2, 3, 4, 5};
-			ft::vector<int> v2(std::begin(v), std::end(v));
-			print_container(v2);
-			leaks();
-		}
-		{
-			print_header("iterator constructor 2");
-			ft::vector<int> v(5, 10);
-			ft::vector<int> v2(std::begin(v), std::end(v));
-			print_container(v2);
-			leaks();
-		}
-		{
-			print_header("copy constructor");
-			ft::vector<int> v(5);
-			int value = 0;
-			for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
-				*p = ++value;
-			ft::vector<int> v2(v);
-			v2.push_back(42);
-
-			print_container(v);
-			print_container(v2);
-			leaks();
-		}
-		{
-			print_header("assignment");
-			ft::vector<int> v(10, 1);
-			ft::vector<int> v2;
-			v2 = v;
-			v2[1] = 42;
-			print_container(v);
-			print_container(v2);
-		}
-		{
-			print_header("assignment 2");
-			ft::vector<int> v(10, 1);
-			ft::vector<int> v2(9, 2);
-			v2 = v;
-			v2[1] = 42;
-			print_container(v);
-			print_container(v2);
-			std::cout << "v2.size(): " << v2.size() << std::endl;
-		}
-		{
-			print_header("assignment 3");
-			ft::vector<int> v(10, 1);
-			ft::vector<int> v2(20, 2);
-			v2 = v;
-			v2[1] = 42;
-			print_container(v);
-			print_container(v2);
-			std::cout << "v2.size(): " << v2.size() << std::endl;
+			print_header("max_size");
+			ft::vector<int> v;
+			std::cout << v.max_size() << std::endl;
 		}
 		{
 			print_header("resize");
@@ -325,11 +315,12 @@ int main(int argc, char **argv)
 			std::cout << v.capacity() << std::endl;
 		}
 		{
-			print_header("Element access");
+			print_header("element access");
 			ft::vector<int> v(10, 1);
 			v[0] = 42;
 			v.at(1) = 100;
-			print_container(v);
+			std::cout << v.at(0) << std::endl;
+			std::cout << v[1] << std::endl;
 
 			print_header("element access error", COLOR_B);
 			try
@@ -345,8 +336,8 @@ int main(int argc, char **argv)
 			print_header("front() & back()");
 			ft::vector<int> v(5);
 			int value = 0;
-			for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
-				*p = ++value;
+			for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
+				*itr = ++value;
 			print_container(v);
 			std::cout << "front(): \n";
 			std::cout << v.front() << '\n';
@@ -373,24 +364,27 @@ int main(int argc, char **argv)
 			leaks();
 		}
 		{
-			print_header("assign (cplusplus.com)");
+			print_header("assign (cplusplus.com example)");
 			ft::vector<int> first;
 			ft::vector<int> second;
 			ft::vector<int> third;
 
-			first.assign (7,100);             // 7 ints with a value of 100
+			first.assign (7, 100);             // 7 ints with a value of 100
 
 			ft::vector<int>::iterator it;
-			it=first.begin()+1;
+			it = first.begin() + 1;
 
-			second.assign (it,first.end()-1); // the 5 central values of first
+			second.assign(it, first.end() - 1); // the 5 central values of first
 
-			int myints[] = {1776,7,4};
-			third.assign (myints,myints+3);   // assigning from array.
+			int myints[] = {1776, 7, 4};
+			third.assign(myints, myints + 3);   // assigning from array.
 
-			std::cout << "Size of first: " << int (first.size()) << '\n';
-			std::cout << "Size of second: " << int (second.size()) << '\n';
-			std::cout << "Size of third: " << int (third.size()) << '\n';
+			std::cout << "Size of first: "
+				<< int (first.size()) << '\n';
+			std::cout << "Size of second: "
+				<< int (second.size()) << '\n';
+			std::cout << "Size of third: "
+				<< int (third.size()) << '\n';
 			leaks();
 		}
 		{
@@ -437,11 +431,9 @@ int main(int argc, char **argv)
 			ft::vector<int> v(5, 1);
 			ft::vector<int>::iterator it = v.begin() + 1;
 			ft::vector<int>::iterator return_it = v.insert(it, 42);
-			print_header("return", COLOR_B);
-			std::cout << *return_it << std::endl;
+			std::cout << "return: " << *return_it << std::endl;
 			print_container(v);
-			print_header("size()", COLOR_B);
-			std::cout << v.size() << std::endl;
+			std::cout << "size(): " << v.size() << std::endl;
 			leaks();
 		}
 		{
@@ -449,8 +441,7 @@ int main(int argc, char **argv)
 			ft::vector<int> v(2, 1);
 			v.insert(v.begin() + 1, 4, 42);
 			print_container(v);
-			print_header("size()", COLOR_B);
-			std::cout << v.size() << std::endl;
+			std::cout << "size(): " << v.size() << std::endl;
 			leaks();
 		}
 		{
@@ -472,11 +463,53 @@ int main(int argc, char **argv)
 			print_container(v);
 		}
 		{
+			print_header("insert & iterator");
+			{
+				std::cout << "[ STL ]\n";
+				std::vector<int> v(1, 42);
+				std::vector<int>::iterator itr = v.begin();
+				v.insert(v.begin(), 100);
+				print_container(v);
+				std::cout << *itr << std::endl;
+				std::cout << *++itr << std::endl;
+			}
+			{
+				std::cout << "[ ft ]\n";
+				ft::vector<int> v(1, 42);
+				ft::vector<int>::iterator itr = v.begin();
+				v.insert(v.begin(), 100);
+				print_container(v);
+				std::cout << *itr << std::endl;
+				std::cout << *++itr << std::endl;
+			}
+		}
+		{
+			print_header("insert & iterator 2");
+			{
+				std::cout << "[ STL ]\n";
+				std::vector<int> v(1, 42);
+				std::vector<int>::iterator itr = v.begin();
+				v.insert(v.begin(), 3, 100);
+				print_container(v);
+				std::cout << *itr << std::endl;
+				std::cout << *++itr << std::endl;
+			}
+			{
+				std::cout << "[ ft ]\n";
+				ft::vector<int> v(1, 42);
+				ft::vector<int>::iterator itr = v.begin();
+				v.insert(v.begin(), 3, 100);
+				print_container(v);
+				std::cout << *itr << std::endl;
+				std::cout << *++itr << std::endl;
+			}
+		}
+		{
 			print_header("erase(iterator)");
 			ft::vector<int> v(5);
 			int value = 0;
-			for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
-				*p = ++value;
+			for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
+				*itr = ++value;
 			print_container(v);
 			v.erase(v.begin() + 1);
 			print_container(v);
