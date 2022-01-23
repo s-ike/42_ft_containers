@@ -22,14 +22,18 @@ namespace ft {
         class value_compare
             : public std::binary_function<value_type, value_type, bool>
         {
-            friend class map;
+        // NOTE: not allowed in subject
+        //     friend class map;
 
-        protected:
+        // protected:
+        //     _Compare comp;
+        //     value_compare(_Compare __c) : comp(__c)
+        //     {}
+
+        public:
             _Compare comp;
             value_compare(_Compare __c) : comp(__c)
             {}
-
-        public:
             typedef bool        result_type;
             typedef value_type  first_argument_type;
             typedef value_type  second_argument_type;
