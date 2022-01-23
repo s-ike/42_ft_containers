@@ -16,7 +16,7 @@
 #define PRG_NAME "a.out"
 
 #ifdef TEST
-#define ft std
+namespace ft = std;
 #endif
 
 template <class T>
@@ -427,7 +427,7 @@ int main(int argc, char **argv)
 			print_container(v);
 		}
 		{
-			print_header("insert(iterator, const value_type&)");
+			print_header("insert (single element)");
 			ft::vector<int> v(5, 1);
 			ft::vector<int>::iterator it = v.begin() + 1;
 			ft::vector<int>::iterator return_it = v.insert(it, 42);
@@ -437,72 +437,72 @@ int main(int argc, char **argv)
 			leaks();
 		}
 		{
-			print_header("insert(iterator, size_type, value_type&)");
-			ft::vector<int> v(2, 1);
-			v.insert(v.begin() + 1, 4, 42);
+			print_header("insert (fill) - 1 empty vector");
+			ft::vector<int> v;
+			v.insert(v.begin(), 10, 42);
 			print_container(v);
 			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
 			leaks();
 		}
 		{
-			print_header("insert(iterator, InputIterator, InputIterator) 1");
-			ft::vector<int> v(2, 1);
-			ft::vector<int> v2(1, 42);
-			v2.push_back(100);
-			v2.push_back(200);
-			v.insert(v.begin() + 1, v2.begin(), v2.end());
+			print_header("insert (fill) - 2 sufficient capacity");
+			ft::vector<int> v(1, 0);
+			v.push_back(1);
+			v.push_back(2);
+			v.push_back(3);
+			v.reserve(7);
+			v.insert(v.begin() + 2, 2, 100);
 			print_container(v);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			leaks();
 		}
 		{
-			print_header("insert(iterator, InputIterator, InputIterator) 2");
+			print_header("insert (fill) - 3 small capacity");
+			ft::vector<int> v(1, 42);
+			v.insert(v.begin(), 3, 100);
+			print_container(v);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			leaks();
+		}
+		{
+			print_header("insert (range) - 1 empty");
 			ft::vector<int> v;
-			ft::vector<int> v2(1, 42);
-			v2.push_back(100);
-			v2.push_back(200);
+			ft::vector<int> v2(1, 0);
+			v2.push_back(1);
+			v2.push_back(2);
 			v.insert(v.begin(), v2.begin(), v2.end());
 			print_container(v);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			leaks();
 		}
 		{
-			print_header("insert & iterator");
-			{
-				std::cout << "[ STL ]\n";
-				std::vector<int> v(1, 42);
-				std::vector<int>::iterator itr = v.begin();
-				v.insert(v.begin(), 100);
-				print_container(v);
-				std::cout << *itr << std::endl;
-				std::cout << *++itr << std::endl;
-			}
-			{
-				std::cout << "[ ft ]\n";
-				ft::vector<int> v(1, 42);
-				ft::vector<int>::iterator itr = v.begin();
-				v.insert(v.begin(), 100);
-				print_container(v);
-				std::cout << *itr << std::endl;
-				std::cout << *++itr << std::endl;
-			}
+			print_header("insert (range) - 2 sufficient capacity");
+			ft::vector<int> v(1, 42);
+			v.reserve(10);
+			ft::vector<int> v2(1, 0);
+			v2.push_back(1);
+			v2.push_back(2);
+			v.insert(v.begin() + 1, v2.begin(), v2.end());
+			print_container(v);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			leaks();
 		}
 		{
-			print_header("insert & iterator 2");
-			{
-				std::cout << "[ STL ]\n";
-				std::vector<int> v(1, 42);
-				std::vector<int>::iterator itr = v.begin();
-				v.insert(v.begin(), 3, 100);
-				print_container(v);
-				std::cout << *itr << std::endl;
-				std::cout << *++itr << std::endl;
-			}
-			{
-				std::cout << "[ ft ]\n";
-				ft::vector<int> v(1, 42);
-				ft::vector<int>::iterator itr = v.begin();
-				v.insert(v.begin(), 3, 100);
-				print_container(v);
-				std::cout << *itr << std::endl;
-				std::cout << *++itr << std::endl;
-			}
+			print_header("insert (range) - 3 small capacity");
+			ft::vector<int> v(2, 42);
+			ft::vector<int> v2(1, 0);
+			v2.push_back(1);
+			v2.push_back(2);
+			v.insert(v.begin(), v2.begin(), v2.end());
+			print_container(v);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			leaks();
 		}
 		{
 			print_header("erase(iterator)");

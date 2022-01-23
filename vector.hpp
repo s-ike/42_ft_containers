@@ -9,6 +9,7 @@
 #include "vector_iterator.hpp"
 #include "enable_if.hpp"
 #include "is_integral.hpp"
+#include <iostream>
 
 namespace ft {
     template <class _Tp, class _Allocator = std::allocator<_Tp> >
@@ -293,26 +294,36 @@ namespace ft {
         }
         iterator insert(iterator __position, const value_type& __val)
         {
-            size_type __idx = __position - begin();
-            if (size() == capacity())
-                reserve(size() == 0 ? 1 : size() * 2);
-            __alloc_.construct(__begin_ + size(), back());
-            ++__end_;
-            iterator __pos = begin() + __idx;
-            for (iterator __i = end() - 1; __i != __pos; --__i)
-                *__i = *(__i - 1);
-            *(begin() + __idx) = __val;
-            return __pos;
+            difference_type __offset = __position - begin();
+            insert(__position, 1, __val);
+            return begin() + __offset;
         }
         void insert(iterator __position, size_type __n, const value_type& __val)
         {
-            size_type __idx = __position - begin();
+            difference_type __offset = __position - begin();
+            pointer __p = __begin_ + __offset;
             if (__n > 0)
             {
-                while (__n--)
+                if (__n <= static_cast<size_type>(__end_cap_ - __end_))
                 {
-                    iterator __pos = begin() + __idx;
-                    insert(__pos, __val);
+                    for (size_type __i = 0; __i < __n; ++__i)
+                        __alloc_.construct(__begin_ + size() + __i, __val);
+                    std::copy_backward(__make_iter(__p), __make_iter(__end_), __end_ + __n);
+                    std::fill_n(__p, __n, __val);
+                    __end_ += __n;
+                }
+                else
+                {
+                    size_type __new_size = size() + __n;
+                    if (__new_size > max_size())
+                        throw std::length_error("vector");
+                    pointer __new = __alloc_.allocate(__new_size);
+                    std::uninitialized_copy(begin(), begin() + __offset, __new);
+                    std::uninitialized_fill_n(__new + __offset, __n, __val);
+                    std::uninitialized_copy(__make_iter(__p), end(), __new + __offset + __n);
+                    __vdeallocate();
+                    __begin_ = __new;
+                    __end_cap_ = __end_ = __begin_ + __new_size;
                 }
             }
         }
@@ -320,11 +331,32 @@ namespace ft {
         typename ft::enable_if<!ft::is_integral<_InputIterator>::value, void>::type
         insert(iterator __position, _InputIterator __first, _InputIterator __last)
         {
-            size_type __idx = __position - begin();
-            while (__first != __last)
+            difference_type __offset = __position - begin();
+            pointer __p = __begin_ + __offset;
+            difference_type __n = std::distance(__first, __last);
+            if (__n > 0)
             {
-                iterator __pos = begin() + __idx;
-                insert(__pos, *--__last);
+                if (__n <= __end_cap_ - __end_)
+                {
+                    for (difference_type __i = 0; __i < __n; ++__i)
+                        __alloc_.construct(__begin_ + size() + __i, 0);
+                    std::copy_backward(__make_iter(__p), __make_iter(__end_), __end_ + __n);
+                    std::copy(__first, __last, __p);
+                    __end_ += __n;
+                }
+                else
+                {
+                    size_type __new_size = size() + __n;
+                    if (__new_size > max_size())
+                        throw std::length_error("vector");
+                    pointer __new = __alloc_.allocate(__new_size);
+                    std::uninitialized_copy(begin(), begin() + __offset, __new);
+                    std::uninitialized_copy(__first, __last, __new + __offset);
+                    std::uninitialized_copy(__make_iter(__p), end(), __new + __offset + __n);
+                    __vdeallocate();
+                    __begin_ = __new;
+                    __end_cap_ = __end_ = __begin_ + __new_size;
+                }
             }
         }
         iterator erase(iterator __position)
@@ -415,6 +447,18 @@ namespace ft {
             __x = __y;
             __y = __temp;
         }
+        // void __move_range(pointer __from, size_type __n)
+        // {
+        //     // pointer __i = ++__end_;
+        //     // 挿入位置からn番目のメモリ（constructされていない）
+        //     pointer __to = __end_ + __n;
+        //     pointer __src = --__end_;
+        //     for (; __from < __to; --__to, --__src)
+        //     {
+        //         __alloc_.construct(__to, __src);
+        //     }
+
+        // }
     };
 
     // Non-member function overloads
