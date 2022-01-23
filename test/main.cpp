@@ -11,7 +11,6 @@
 # include "../stack.hpp"
 # include "../map.hpp"
 #endif
-# include <vector>
 
 #define PRG_NAME "a.out"
 
