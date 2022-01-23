@@ -505,75 +505,93 @@ int main(int argc, char **argv)
 			leaks();
 		}
 		{
-			print_header("erase(iterator)");
+			print_header("erase (iterator)");
 			ft::vector<int> v(5);
 			int value = 0;
 			for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
 				*itr = ++value;
 			print_container(v);
+
 			v.erase(v.begin() + 1);
 			print_container(v);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			leaks();
 		}
 		{
-			print_header("erase(iterator, iterator)");
+			print_header("erase (iterator, iterator)");
 			ft::vector<int> v(5);
 			int value = 0;
-			for (ft::vector<int>::iterator p = v.begin(); v.end() != p; p = 1 + p)
-				*p = ++value;
+			for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
+				*itr = ++value;
 			print_container(v);
+
 			ft::vector<int>::iterator return_it = v.erase(v.begin() + 1, v.begin() + 3);
-			print_header("return", COLOR_B);
-			std::cout << *return_it << std::endl;
+			std::cout << "return: " << *return_it << std::endl;
 			print_container(v);
+			std::cout << "size(): " << v.size() << std::endl;
+			std::cout << "capacity(): " << v.capacity() << std::endl;
+			leaks();
 		}
 		{
 			print_header("swap");
-			ft::vector<int> foo(3,100);   // three ints with a value of 100
-			ft::vector<int> bar(5,200);   // five ints with a value of 200
+			ft::vector<int> foo(3, 100);   // three ints with a value of 100
+			ft::vector<int> bar(5, 200);   // five ints with a value of 200
+			ft::vector<int>::iterator foo_itr = foo.begin();
+			ft::vector<int>::iterator bar_itr = bar.begin();
 
 			foo.swap(bar);
 
 			std::cout << "foo contains:\n";
 			print_container(foo);
 			std::cout << "foo capa: " << foo.capacity() << std::endl;
+			std::cout << "foo_itr:\n";
+			for (; foo_itr != bar.end(); ++foo_itr)
+				std::cout << *foo_itr << '\n';
 
 			std::cout << "bar contains:\n";
 			print_container(bar);
 			std::cout << "bar capa: " << bar.capacity() << std::endl;
+			std::cout << "bar_itr:\n";
+			for (; bar_itr != foo.end(); ++bar_itr)
+				std::cout << *bar_itr << '\n';
 		}
 		{
 			print_header("get_allocator");
 			ft::vector<int> myvector;
-			int * p;
+			int* p;
 			unsigned int i;
 
 			// allocate an array with space for 5 elements using vector's allocator:
 			p = myvector.get_allocator().allocate(5);
 
 			// construct values in-place on the array:
-			for (i=0; i<5; i++) myvector.get_allocator().construct(&p[i],i);
+			for (i = 0; i < 5; i++)
+				myvector.get_allocator().construct(&p[i], i);
 
 			std::cout << "The allocated array contains:";
-			for (i=0; i<5; i++) std::cout << ' ' << p[i];
+			for (i = 0; i < 5; i++)
+				std::cout << ' ' << p[i];
 			std::cout << '\n';
 
 			// destroy and deallocate:
-			for (i=0; i<5; i++) myvector.get_allocator().destroy(&p[i]);
-			myvector.get_allocator().deallocate(p,5);
+			for (i = 0; i < 5; i++)
+				myvector.get_allocator().destroy(&p[i]);
+			myvector.get_allocator().deallocate(p, 5);
 
 			leaks();
 		}
 		{
 			print_header("relational operators");
-			ft::vector<int> foo (3,100);   // three ints with a value of 100
-			ft::vector<int> bar (2,200);   // two ints with a value of 200
+			ft::vector<int> foo(3, 100);   // three ints with a value of 100
+			ft::vector<int> bar(2, 200);   // two ints with a value of 200
 
-			if (foo==bar) std::cout << "foo and bar are equal\n";
-			if (foo!=bar) std::cout << "foo and bar are not equal\n";
-			if (foo< bar) std::cout << "foo is less than bar\n";
-			if (foo> bar) std::cout << "foo is greater than bar\n";
-			if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
-			if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+			if (foo == bar) std::cout << "foo and bar are equal\n";
+			if (foo != bar) std::cout << "foo and bar are not equal\n";
+			if (foo <  bar) std::cout << "foo is less than bar\n";
+			if (foo >  bar) std::cout << "foo is greater than bar\n";
+			if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
+			if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
 		}
 		print_header("leaks");
 		leaks();
