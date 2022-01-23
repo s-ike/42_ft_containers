@@ -43,7 +43,7 @@ re:			fclean $(NAME)
 
 .PHONY:		test
 test:
-			$(MAKE) CXXFLAGS="$(CXXFLAGS) -D NO_LEAKS=1"
+			$(MAKE) -B CXXFLAGS="$(CXXFLAGS) -D NO_LEAKS=1"
 			./$(NAME) > test_fd.txt 2> test_err_fd.txt
 			$(MAKE) -B CXXFLAGS="$(CXXFLAGS) -D NO_LEAKS=1 -D TEST=1"
 			./$(NAME) > test_stl.txt 2> test_err_stl.txt
@@ -55,7 +55,16 @@ test:
 			@cat test_err_stl.txt
 
 .PHONY:		time
-time:		main_time.cpp
+time:
+			$(MAKE) -B CXXFLAGS="$(CXXFLAGS) -D NO_LEAKS=1 -D TIME=1"
+			./$(NAME) > test_fd.txt 2> test_err_fd.txt
+			$(MAKE) -B CXXFLAGS="$(CXXFLAGS) -D NO_LEAKS=1 -D TEST=1 -D TIME=1"
+			./$(NAME) > test_stl.txt 2> test_err_stl.txt
+			@echo $(C_CYAN)"=== diff ==="$(C_DEFAULT)$(C_REST)
+			diff test_fd.txt test_stl.txt
+
+.PHONY:		time2
+time2:		main_time.cpp
 			$(CXX) $(CXXFLAGS_2) $<
 			./$(NAME)
 

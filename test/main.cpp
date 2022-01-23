@@ -13,10 +13,14 @@
 #endif
 
 #define PRG_NAME "a.out"
+#define COUNT 100000
 
 #ifdef TEST
 namespace ft = std;
 #endif
+
+// Global
+clock_t start, end;
 
 template <class T>
 void print_container(T& container)
@@ -37,6 +41,31 @@ void print_map(T& mymap)
 void print_header(const std::string& str, const std::string& color = COLOR_B_CYAN)
 {
     std::cout << color << "\n[ " << str << " ]" COLOR_RESET << std::endl;
+}
+
+void print_time(const clock_t& start, const clock_t& end, const std::string& str = "")
+{
+    std::cout << std::fixed;
+    std::cout << str << ": " << (double)(end - start) / CLOCKS_PER_SEC * 1000 << std::endl;
+}
+
+void test_start(const std::string& name, const std::string& color = COLOR_B_CYAN)
+{
+    print_header(name, color);
+#ifdef TIME
+    start = clock();
+#endif
+}
+
+void test_end(const std::string& name = "")
+{
+#ifdef TIME
+    end = clock();
+    print_time(start, end, name);
+#else
+    (void)name;
+#endif
+    std::cout << COLOR_RESET << std::endl;
 }
 
 void leaks()
@@ -101,9 +130,13 @@ int main(int argc, char **argv)
 
     if (has_arg == false || test_vectors[0])
     {
+#ifdef TIME
+        start = clock();
+#endif
         print_header("vector", COLOR_B_GREEN);
         {
-            print_header("default constructor");
+            const std::string name = "default constructor";
+            test_start(name);
             ft::vector<int> v;
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
@@ -117,18 +150,22 @@ int main(int argc, char **argv)
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             print_container(v);
+            test_end(name);
         }
         {
-            print_header("size constructor");
+            const std::string name = "size constructor";
+            test_start(name);
             ft::vector<int> v(5);
             print_container(v);
             int value = 0;
             for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
                 *itr = ++value;
             print_container(v);
+            test_end(name);
         }
         {
-            print_header("size constructor error");
+            const std::string name = "size constructor error";
+            test_start(name);
             try
             {
                 ft::vector<int> v(4611686018427387904);
@@ -137,9 +174,11 @@ int main(int argc, char **argv)
             {
                 std::cout << e.what() << std::endl;
             }
+            test_end(name);
         }
         {
-            print_header("size & value constructor");
+            const std::string name = "size & value constructor";
+            test_start(name);
             ft::vector<int> v(10, 1) ;
             print_container(v);
             v[2] = 99 ;
@@ -153,10 +192,13 @@ int main(int argc, char **argv)
 
             print_header("capacity");
             std::cout << v.capacity() << std::endl;
+
             leaks();
+            test_end(name);
         }
         {
-            print_header("range constructor");
+            const std::string name = "range constructor";
+            test_start(name);
             ft::vector<int> second(4, 100);
             ft::vector<int> third(second.begin(), second.end());
             print_container(third);
@@ -166,18 +208,22 @@ int main(int argc, char **argv)
             print_container(fourth);
 
             leaks();
+            test_end(name);
         }
         {
-            print_header("operator=");
+            const std::string name = "operator= 1";
+            test_start(name);
             ft::vector<int> v(10, 1);
             ft::vector<int> v2;
             v2 = v;
             v2[1] = 42;
             print_container(v);
             print_container(v2);
+            test_end(name);
         }
         {
-            print_header("operator= 2");
+            const std::string name = "operator= 2";
+            test_start(name);
             ft::vector<int> v(10, 1);
             ft::vector<int> v2(9, 2);
             v2 = v;
@@ -187,7 +233,8 @@ int main(int argc, char **argv)
             std::cout << "v2.size(): " << v2.size() << std::endl;
         }
         {
-            print_header("operator= 3");
+            const std::string name = "operator= 3";
+            test_start(name);
             ft::vector<int> v(10, 1);
             ft::vector<int> v2(20, 2);
             v2 = v;
@@ -195,9 +242,11 @@ int main(int argc, char **argv)
             print_container(v);
             print_container(v2);
             std::cout << "v2.size(): " << v2.size() << std::endl;
+            test_end(name);
         }
         {
-            print_header("iterator");
+            const std::string name = "iterator";
+            test_start(name);
             ft::vector<int> v(5);
             int value = 0;
             for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
@@ -240,9 +289,12 @@ int main(int argc, char **argv)
             std::cout << *(it--) << std::endl;
             std::cout << *it-- << std::endl;
             std::cout << *--it << std::endl;
+
+            test_end(name);
         }
         {
-            print_header("reverse iterator");
+            const std::string name = "reverse iterator";
+            test_start(name);
             ft::vector<int> v(5);
             int value = 5;
             for (ft::vector<int>::reverse_iterator p = v.rbegin(); p != v.rend(); ++p)
@@ -286,14 +338,19 @@ int main(int argc, char **argv)
             std::cout << *(it--) << std::endl;
             std::cout << *it-- << std::endl;
             std::cout << *--it << std::endl;
+
+            test_end(name);
         }
         {
-            print_header("max_size");
+            const std::string name = "max_size";
+            test_start(name);
             ft::vector<int> v;
             std::cout << v.max_size() << std::endl;
+            test_end(name);
         }
         {
-            print_header("resize");
+            const std::string name = "resize";
+            test_start(name);
             ft::vector<int> v(10, 1);
             print_container(v);
             std::cout << "v.resize(5): " << std::endl;
@@ -306,9 +363,11 @@ int main(int argc, char **argv)
             v.resize(12);
             print_container(v);
             leaks();
+            test_end(name);
         }
         {
-            print_header("capacity, empty, reserve");
+            const std::string name = "capacity, empty, reserve";
+            test_start(name);
             ft::vector<int> v;
             std::cout << "capacity():\n";
             std::cout << v.capacity() << std::endl;
@@ -317,9 +376,11 @@ int main(int argc, char **argv)
             v.reserve(42);
             std::cout << "v.reserve(42)\n" "capacity():\n";
             std::cout << v.capacity() << std::endl;
+            test_end(name);
         }
         {
-            print_header("element access");
+            const std::string name = "element access";
+            test_start(name);
             ft::vector<int> v(10, 1);
             v[0] = 42;
             v.at(1) = 100;
@@ -335,9 +396,11 @@ int main(int argc, char **argv)
             {
                 std::cout << e.what() << std::endl;
             }
+            test_end(name);
         }
         {
-            print_header("front() & back()");
+            const std::string name = "front() & back()";
+            test_start(name);
             ft::vector<int> v(5);
             int value = 0;
             for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
@@ -347,9 +410,12 @@ int main(int argc, char **argv)
             std::cout << v.front() << '\n';
             std::cout << "back(): \n";
             std::cout << v.back() << std::endl;
+            test_end(name);
         }
+#ifndef TIME
         {
-            print_header("assign (sufficient capacity)");
+            const std::string name = "assign (sufficient capacity)";
+            test_start(name);
             ft::vector<int> v(1);
             v.reserve(10);
             v.assign(3, 1);
@@ -357,18 +423,22 @@ int main(int argc, char **argv)
             v.assign(2, 2);
             print_container(v);
             leaks();
+            test_end(name);
         }
         {
-            print_header("assign (small capacity)");
+            const std::string name = "assign (small capacity)";
+            test_start(name);
             ft::vector<int> v(1);
             v.assign(3, 1);
             print_container(v);
             v.assign(10, 2);
             print_container(v);
             leaks();
+            test_end(name);
         }
         {
-            print_header("assign (cplusplus.com example)");
+            const std::string name = "assign (cplusplus.com example)";
+            test_start(name);
             ft::vector<int> first;
             ft::vector<int> second;
             ft::vector<int> third;
@@ -390,9 +460,22 @@ int main(int argc, char **argv)
             std::cout << "Size of third: "
                 << int (third.size()) << '\n';
             leaks();
+            test_end(name);
         }
+#else
         {
-            print_header("push_back() & pop_back()");
+            const std::string name = "assign large test";
+            test_start(name);
+            ft::vector<int> v(10, 1);
+            v.reserve(COUNT + 100);
+            v.assign(COUNT, 42);
+            test_end(name);
+        }
+#endif
+#ifndef TIME
+        {
+            const std::string name = "push_back & pop_back";
+            test_start(name);
             ft::vector<int> v(1, 1);
             v.push_back(2);
             /*
@@ -429,9 +512,28 @@ int main(int argc, char **argv)
             std::cout << "capacity(): \n" << v.capacity() << std::endl;
 
             print_container(v);
+            test_end(name);
         }
+#else
         {
-            print_header("insert (single element)");
+            const std::string name1 = "push_back large test";
+            test_start(name1);
+            ft::vector<int> v;
+            for (int i = 0; i < COUNT; ++i)
+                v.push_back(i);
+            test_end(name1);
+
+            const std::string name2 = "pop_back large test";
+            test_start(name2);
+            for (int i = 0; i < COUNT; ++i)
+                v.pop_back();
+            test_end(name2);
+        }
+#endif
+#ifndef TIME
+        {
+            const std::string name = "insert (single element)";
+            test_start(name);
             ft::vector<int> v(5, 1);
             ft::vector<int>::iterator it = v.begin() + 1;
             ft::vector<int>::iterator return_it = v.insert(it, 42);
@@ -439,18 +541,22 @@ int main(int argc, char **argv)
             print_container(v);
             std::cout << "size(): " << v.size() << std::endl;
             leaks();
+            test_end(name);
         }
         {
-            print_header("insert (fill) - 1 empty vector");
+            const std::string name = "insert (fill) - 1 empty vector";
+            test_start(name);
             ft::vector<int> v;
             v.insert(v.begin(), 10, 42);
             print_container(v);
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
         {
-            print_header("insert (fill) - 2 sufficient capacity");
+            const std::string name = "insert (fill) - 2 sufficient capacity";
+            test_start(name);
             ft::vector<int> v(1, 0);
             v.push_back(1);
             v.push_back(2);
@@ -461,18 +567,22 @@ int main(int argc, char **argv)
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
         {
-            print_header("insert (fill) - 3 small capacity");
+            const std::string name = "insert (fill) - 3 small capacity";
+            test_start(name);
             ft::vector<int> v(1, 42);
             v.insert(v.begin(), 3, 100);
             print_container(v);
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
-        {
-            print_header("insert (range) - 1 empty");
+                {
+            const std::string name = "insert (range) - 1 empty";
+            test_start(name);
             ft::vector<int> v;
             ft::vector<int> v2(1, 0);
             v2.push_back(1);
@@ -482,9 +592,11 @@ int main(int argc, char **argv)
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
         {
-            print_header("insert (range) - 2 sufficient capacity");
+            const std::string name = "insert (range) - 2 sufficient capacity";
+            test_start(name);
             ft::vector<int> v(1, 42);
             v.reserve(10);
             ft::vector<int> v2(1, 0);
@@ -495,9 +607,11 @@ int main(int argc, char **argv)
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
         {
-            print_header("insert (range) - 3 small capacity");
+            const std::string name = "insert (range) - 3 small capacity";
+            test_start(name);
             ft::vector<int> v(2, 42);
             ft::vector<int> v2(1, 0);
             v2.push_back(1);
@@ -507,9 +621,11 @@ int main(int argc, char **argv)
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
-        {
-            print_header("erase (iterator)");
+                {
+            const std::string name = "erase (iterator)";
+            test_start(name);
             ft::vector<int> v(5);
             int value = 0;
             for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
@@ -521,9 +637,11 @@ int main(int argc, char **argv)
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
         {
-            print_header("erase (iterator, iterator)");
+            const std::string name = "erase (iterator, iterator)";
+            test_start(name);
             ft::vector<int> v(5);
             int value = 0;
             for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
@@ -536,9 +654,63 @@ int main(int argc, char **argv)
             std::cout << "size(): " << v.size() << std::endl;
             std::cout << "capacity(): " << v.capacity() << std::endl;
             leaks();
+            test_end(name);
         }
         {
-            print_header("swap");
+            const std::string name = "erase (iterator, iterator) 2 same iterator";
+            test_start(name);
+            ft::vector<int> v(5);
+            int value = 0;
+            for (ft::vector<int>::iterator itr = v.begin(); itr != v.end(); ++itr)
+                *itr = ++value;
+            print_container(v);
+
+            ft::vector<int>::iterator return_it = v.erase(v.begin(), v.begin());
+            std::cout << "return: " << *return_it << std::endl;
+            print_container(v);
+            std::cout << "size(): " << v.size() << std::endl;
+            std::cout << "capacity(): " << v.capacity() << std::endl;
+            leaks();
+            test_end(name);
+        }
+#else
+        {
+            const std::string name = "insert (fill) - large test";
+            test_start(name);
+            ft::vector<int> v(10, 1);
+            v.insert(v.begin() + 2, COUNT, 42);
+            test_end(name);
+
+            const std::string name2 = "insert (range) large test";
+            test_start(name2);
+            ft::vector<int> v2(10, 2);
+            v2.insert(v2.begin() + 2, v.begin(), v.end());
+            test_end(name2);
+        }
+        {
+            const std::string name = "insert (fill) - large test 2";
+            test_start(name);
+            ft::vector<int> v(10, 1);
+            v.reserve(COUNT + 100);
+            v.insert(v.begin() + 2, COUNT, 42);
+            test_end(name);
+
+            const std::string name2 = "insert (range) large test 2";
+            test_start(name2);
+            ft::vector<int> v2(10, 2);
+            v2.reserve(COUNT + 100);
+            v2.insert(v2.begin() + 2, v.begin(), v.end());
+            test_end(name2);
+
+            const std::string name3 = "erase large test";
+            test_start(name3);
+            v.erase(v.begin(), v.begin() + COUNT);
+            test_end(name3);
+        }
+#endif
+        {
+            const std::string name = "swap";
+            test_start(name);
             ft::vector<int> foo(3, 100);   // three ints with a value of 100
             ft::vector<int> bar(5, 200);   // five ints with a value of 200
             ft::vector<int>::iterator foo_itr = foo.begin();
@@ -559,9 +731,11 @@ int main(int argc, char **argv)
             std::cout << "bar_itr:\n";
             for (; bar_itr != foo.end(); ++bar_itr)
                 std::cout << *bar_itr << '\n';
+            test_end(name);
         }
         {
-            print_header("get_allocator");
+            const std::string name = "get_allocator";
+            test_start(name);
             ft::vector<int> myvector;
             int* p;
             unsigned int i;
@@ -584,9 +758,11 @@ int main(int argc, char **argv)
             myvector.get_allocator().deallocate(p, 5);
 
             leaks();
+            test_end(name);
         }
         {
-            print_header("relational operators");
+            const std::string name = "relational operators";
+            test_start(name);
             ft::vector<int> foo(3, 100);   // three ints with a value of 100
             ft::vector<int> bar(2, 200);   // two ints with a value of 200
 
@@ -596,9 +772,15 @@ int main(int argc, char **argv)
             if (foo >  bar) std::cout << "foo is greater than bar\n";
             if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
             if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
+            test_end(name);
         }
         print_header("leaks");
         leaks();
+
+#ifdef TIME
+        end = clock();
+        print_time(start, end, "vector: ");
+#endif
     }
 
     /* ********************************************************************** */
@@ -607,6 +789,9 @@ int main(int argc, char **argv)
 
     if (has_arg == false || test_vectors[1])
     {
+#ifdef TIME
+        start = clock();
+#endif
         print_header("map", COLOR_B_GREEN);
         {
             print_header("constructor");
@@ -1026,6 +1211,11 @@ int main(int argc, char **argv)
         }
         print_header("leaks");
         leaks();
+
+#ifdef TIME
+        end = clock();
+        print_time(start, end, "map: ");
+#endif
     }
 
     /* ********************************************************************** */
@@ -1034,6 +1224,9 @@ int main(int argc, char **argv)
 
     if (has_arg == false || test_vectors[2])
     {
+#ifdef TIME
+        start = clock();
+#endif
         print_header("stack", COLOR_B_GREEN);
         {
             print_header("constructor, top, size");
@@ -1079,5 +1272,12 @@ int main(int argc, char **argv)
             if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
             if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
         }
+        print_header("leaks");
+        leaks();
+
+#ifdef TIME
+        end = clock();
+        print_time(start, end, "stack: ");
+#endif
     }
 }
