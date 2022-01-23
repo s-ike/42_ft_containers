@@ -10,6 +10,7 @@ CXXFLAGS_2	:= -Wall -Wextra -Werror -std=c++98 -pedantic
 
 RM			:= rm -f
 C_GREEN		:= "\033[32m"
+C_CYAN		:= "\033[36m"
 C_DEFAULT	:= "\033[39m"
 C_RESET		:= "\033[m"
 
@@ -43,10 +44,15 @@ re:			fclean $(NAME)
 .PHONY:		test
 test:
 			$(MAKE) CXXFLAGS="$(CXXFLAGS) -D NO_LEAKS=1"
-			./$(NAME) > test_fd.txt
+			./$(NAME) > test_fd.txt 2> test_err_fd.txt
 			$(MAKE) -B CXXFLAGS="$(CXXFLAGS) -D NO_LEAKS=1 -D TEST=1"
-			./$(NAME) > test_stl.txt
+			./$(NAME) > test_stl.txt 2> test_err_stl.txt
+			@echo $(C_CYAN)"=== diff ==="$(C_DEFAULT)$(C_REST)
 			diff test_fd.txt test_stl.txt
+			@echo $(C_CYAN)"=== ft error ==="$(C_DEFAULT)$(C_REST)
+			@cat test_err_fd.txt
+			@echo $(C_CYAN)"=== STL error ==="$(C_DEFAULT)$(C_REST)
+			@cat test_err_stl.txt
 
 .PHONY:		time
 time:		main_time.cpp
