@@ -447,18 +447,6 @@ namespace ft {
             __x = __y;
             __y = __temp;
         }
-        // void __move_range(pointer __from, size_type __n)
-        // {
-        //     // pointer __i = ++__end_;
-        //     // 挿入位置からn番目のメモリ（constructされていない）
-        //     pointer __to = __end_ + __n;
-        //     pointer __src = --__end_;
-        //     for (; __from < __to; --__to, --__src)
-        //     {
-        //         __alloc_.construct(__to, __src);
-        //     }
-
-        // }
     };
 
     // Non-member function overloads
