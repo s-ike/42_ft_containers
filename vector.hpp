@@ -371,12 +371,15 @@ namespace ft {
         }
         iterator erase(iterator __first, iterator __last)
         {
-            while (__first != __last)
+            difference_type __n = std::distance(__first, __last);
+            if (__n > 0)
             {
-                erase(__first);
-                --__last;
+                for (iterator __i = __first; __i + __n < end(); ++__i)
+                    *__i = *(__i + __n);
+                __destruct_at_end(__end_ - __n);
             }
             return __first;
+
         }
         void swap(vector& __x)
         {
