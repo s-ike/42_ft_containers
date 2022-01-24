@@ -38,6 +38,15 @@ void print_map(T& mymap)
         std::cout << i->first << " => " << i->second << std::endl;
 }
 
+template <class T>
+std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
+{
+	o << "key: " << iterator->first << " | value: " << iterator->second;
+	if (nl)
+		o << std::endl;
+	return ("");
+}
+
 void print_header(const std::string& str, const std::string& color = COLOR_B_CYAN)
 {
     std::cout << color << "\n[ " << str << " ]" COLOR_RESET << std::endl;
@@ -130,12 +139,9 @@ int main(int argc, char **argv)
 
     if (has_arg == false || test_vectors[0])
     {
-#ifdef TIME
-        start = clock();
-#endif
         print_header("vector", COLOR_B_GREEN);
         {
-            const std::string name = "default constructor";
+            const std::string name = "vector default constructor";
             test_start(name);
             ft::vector<int> v;
             std::cout << "size(): " << v.size() << std::endl;
@@ -776,11 +782,6 @@ int main(int argc, char **argv)
         }
         print_header("leaks");
         leaks();
-
-#ifdef TIME
-        end = clock();
-        print_time(start, end, "vector: ");
-#endif
     }
 
     /* ********************************************************************** */
@@ -789,19 +790,17 @@ int main(int argc, char **argv)
 
     if (has_arg == false || test_vectors[1])
     {
-#ifdef TIME
-        start = clock();
-#endif
         print_header("map", COLOR_B_GREEN);
         {
-            print_header("constructor");
+            const std::string name = "map constructor";
+            test_start(name);
             ft::map<char, int> first;   // empty
             first['a'] = 10;
             first['b'] = 30;
             first['c'] = 50;
             first['d'] = 70;
 
-            ft::map<char, int> second(first.begin(),first.end());   // range
+            ft::map<char, int> second(first.begin(), first.end());   // range
             ft::map<char, int> third(first);    // copy
             std::cout << "first:\n";
             print_map(first);
@@ -809,9 +808,11 @@ int main(int argc, char **argv)
             print_map(second);
             std::cout << "third:\n";
             print_map(third);
+            test_end(name);
         }
         {
-            print_header("constructor 2");
+            const std::string name = "map constructor 2 (std::greater)";
+            test_start(name);
             ft::map<char, int, std::greater<char> > first;  // empty
             first['a'] = 10;
             first['b'] = 30;
@@ -826,9 +827,11 @@ int main(int argc, char **argv)
             print_map(second);
             std::cout << "third:\n";
             print_map(third);
+            test_end(name);
         }
         {
-            print_header("operator=, size");
+            const std::string name = "operator=, size";
+            test_start(name);
             ft::map<char, int> first;
             ft::map<char, int> second;
 
@@ -841,21 +844,96 @@ int main(int argc, char **argv)
 
             std::cout << "Size of first: " << first.size() << '\n';
             std::cout << "Size of second: " << second.size() << '\n';
+            test_end(name);
         }
         {
-            print_header("reverse_iterator");
-            ft::map<char, int> mymap;
+            const std::string name = "iterator";
+            test_start(name);
+            ft::map<float, foo> mp;
+            for (ft::map<float, int>::size_type i = 0; i < 10; i++)
+                mp[i + 0.5] = i;
 
-            mymap['x'] = 100;
-            mymap['y'] = 200;
-            mymap['z'] = 300;
+            ft::map<float, foo>::iterator it(mp.begin());
+            ft::map<float, foo>::const_iterator ite(mp.begin());
+            std::cout << "size: " << mp.size() << std::endl;
+            std::cout << "max_size: " << mp.max_size() << std::endl;
 
-            ft::map<char, int>::reverse_iterator rit;
-            for (rit=mymap.rbegin(); rit != mymap.rend(); ++rit)
-                std::cout << rit->first << " => " << rit->second << '\n';
+            printPair(it);
+            printPair(ite);
+            std::cout << "-------" << std::endl;
+            printPair(++ite);
+            printPair(ite++);
+            printPair(ite++);
+            printPair(++ite);
+
+            it->second.m();
+            ite->second.m();
+
+            printPair(++it);
+            printPair(it++);
+            printPair(it++);
+            printPair(++it);
+            std::cout << "-------" << std::endl;
+            printPair(--ite);
+            printPair(ite--);
+            printPair(--ite);
+            printPair(ite--);
+
+            (*it).second.m();
+            (*ite).second.m();
+
+            printPair(--it);
+            printPair(it--);
+            printPair(it--);
+            printPair(--it);
+
+            test_end(name);
         }
         {
-            print_header("empty");
+            const std::string name = "reverse_iterator";
+            test_start(name);
+            ft::map<char, foo> mp;
+            for (ft::map<char, int>::size_type i = 0; i < 10; i++)
+                mp[i + 'A'] = i;
+            ft::map<char, foo>::reverse_iterator it(mp.rbegin());
+            ft::map<char, foo>::const_reverse_iterator ite(mp.rbegin());
+            std::cout << "size: " << mp.size() << std::endl;
+            std::cout << "max_size: " << mp.max_size() << std::endl;
+
+            printPair(it);
+            printPair(ite);
+            std::cout << "-------" << std::endl;
+            printPair(++ite);
+            printPair(ite++);
+            printPair(ite++);
+            printPair(++ite);
+
+            it->second.m();
+            ite->second.m();
+
+            printPair(++it);
+            printPair(it++);
+            printPair(it++);
+            printPair(++it);
+            std::cout << "-------" << std::endl;
+            printPair(--ite);
+            printPair(ite--);
+            printPair(--ite);
+            printPair(ite--);
+
+            (*it).second.m();
+            (*ite).second.m();
+
+            printPair(--it);
+            printPair(it--);
+            printPair(it--);
+            printPair(--it);
+
+            test_end(name);
+        }
+        {
+            const std::string name = "empty";
+            test_start(name);
             ft::map<int, int> mymap;
 
             std::cout << "mymap is ";
@@ -870,14 +948,18 @@ int main(int argc, char **argv)
                 std::cout << "empty" << std::endl;
             else
                 std::cout << "not empty" << std::endl;
+            test_end(name);
         }
         {
-            print_header("max_size");
+            const std::string name = "max_size";
+            test_start(name);
             ft::map<int, int> mymap;
             std::cout << "max_size: " << mymap.max_size() << std::endl;
+            test_end(name);
         }
         {
-            print_header("operator[]");
+            const std::string name = "operator[]";
+            test_start(name);
             ft::map<int, std::string> mymap;
             mymap[42] = "forty-two";
             mymap[100] = "hello";
@@ -887,9 +969,12 @@ int main(int argc, char **argv)
             mymap[400] = mymap[400];
             for (ft::map<int, std::string>::iterator i = mymap.begin(); i != mymap.end(); ++i)
                 std::cout << i->first << ',' << i->second << std::endl;
+            test_end(name);
         }
+#ifndef TIME
         {
-            print_header("insert");
+            const std::string name = "insert";
+            test_start(name);
             ft::map<char, int> mymap;
 
             print_header("first insert function version (single parameter)", COLOR_NORMAL);
@@ -933,9 +1018,11 @@ int main(int argc, char **argv)
             std::cout << "anothermap.size(): " << anothermap.size() << std::endl;
 
             leaks();
+            test_end(name);
         }
         {
-            print_header("erase");
+            const std::string name = "erase";
+            test_start(name);
             ft::map<char, int> mymap;
             ft::map<char, int>::iterator itr;
             mymap['a'] = 1;
@@ -963,9 +1050,56 @@ int main(int argc, char **argv)
             std::cout << "mymap.size(): " << mymap.size() << std::endl;
 
             leaks();
+            test_end(name);
+        }
+#else
+        {
+            const std::string name = "insert (single element) - large test";
+            test_start(name);
+            ft::map<int, int> m;
+            for (int i = 0; i < COUNT; ++i)
+                m.insert(ft::pair<int, int>(i, i));
+            test_end(name);
         }
         {
-            print_header("swap");
+            const std::string name = "insert (with hint) - large test";
+            test_start(name);
+            ft::map<int, int> m;
+            m[COUNT] = COUNT;
+            ft::map<int, int>::iterator itr = m.begin();
+            for (int i = COUNT - 1; i >= 0; --i)
+                m.insert(itr, ft::pair<int, int>(i, i));
+            test_end(name);
+
+            const std::string name2 = "insert (range) - large test";
+            test_start(name2);
+            ft::map<int, int> m2;
+            m2.insert(m.begin(), m.end());
+            test_end(name2);
+
+            ft::map<int, int> m3(m2);
+
+            const std::string name3 = "erase (by iterator) - large test";
+            test_start(name3);
+            for (int i = 0; i < COUNT; ++i)
+                m.erase(m.begin());
+            test_end(name3);
+
+            const std::string name4 = "erase (by key) - large test";
+            test_start(name4);
+            for (int i = 0; i < COUNT; ++i)
+                m2.erase(i);
+            test_end(name4);
+
+            const std::string name5 = "erase (by range) - large test";
+            test_start(name5);
+            m3.erase(m3.begin(), m3.end());
+            test_end(name5);
+        }
+#endif
+        {
+            const std::string name = "swap";
+            test_start(name);
             ft::map<char, int> foo, bar;
             foo['x'] = 100;
             foo['y'] = 200;
@@ -974,17 +1108,42 @@ int main(int argc, char **argv)
             bar['b'] = 22;
             bar['c'] = 33;
 
+            ft::map<char, int>::iterator foo_it = foo.begin();
+            ft::map<char, int>::iterator bar_it = bar.begin();
+            ft::map<char, int>* foo_ptr = &foo;
+            ft::map<char, int>* bar_ptr = &bar;
+            ft::map<char, int>& foo_ref = foo;
+            ft::map<char, int>& bar_ref = bar;
+
             foo.swap(bar);
 
             print_header("foo", COLOR_NORMAL);
             print_map(foo);
             print_header("bar", COLOR_NORMAL);
             print_map(bar);
+            print_header("foo_itr", COLOR_NORMAL);
+            std::cout << foo_it->first << " => " << foo_it->second << std::endl;
+            print_header("bar_itr", COLOR_NORMAL);
+            std::cout << bar_it->first << " => " << bar_it->second << std::endl;
+            print_header("foo_ptr", COLOR_NORMAL);
+            std::cout << "[a]: " << (*foo_ptr)['a'] << std::endl;
+            std::cout << "[x]: " << (*foo_ptr)['x'] << std::endl;
+            print_header("bar_ptr", COLOR_NORMAL);
+            std::cout << "[a]: " << (*bar_ptr)['a'] << std::endl;
+            std::cout << "[x]: " << (*bar_ptr)['x'] << std::endl;
+            print_header("foo_ref", COLOR_NORMAL);
+            std::cout << "[a]: " << foo_ref['a'] << std::endl;
+            std::cout << "[x]: " << foo_ref['x'] << std::endl;
+            print_header("bar_ref", COLOR_NORMAL);
+            std::cout << "[a]: " << bar_ref['a'] << std::endl;
+            std::cout << "[x]: " << bar_ref['x'] << std::endl;
+
+            test_end(name);
         }
         {
-            print_header("clear");
+            const std::string name = "clear";
+            test_start(name);
             ft::map<int, int> mymap;
-
             for (size_t i = 0; i < 100; i++)
                 mymap[i] = i;
             print_map(mymap);
@@ -994,11 +1153,12 @@ int main(int argc, char **argv)
             mymap[1000] = 1101;
             mymap[2000] = 2202;
             print_map(mymap);
+            test_end(name);
         }
         {
-            print_header("key_comp");
+            const std::string name = "key_comp";
+            test_start(name);
             ft::map<char, int> mymap;
-
             ft::map<char, int>::key_compare mycomp = mymap.key_comp();
 
             mymap['a'] = 100;
@@ -1013,9 +1173,11 @@ int main(int argc, char **argv)
             do {
                 std::cout << it->first << " => " << it->second << '\n';
             } while ( mycomp((*it++).first, highest) );
+            test_end(name);
         }
         {
-            print_header("value_comp");
+            const std::string name = "value_comp";
+            test_start(name);
             ft::map<char, int> mymap;
 
             mymap['x'] = 1001;
@@ -1030,26 +1192,11 @@ int main(int argc, char **argv)
             do {
                 std::cout << it->first << " => " << it->second << '\n';
             } while ( mymap.value_comp()(*it++, highest) );
+            test_end(name);
         }
         {
-            print_header("swap (non-member)");
-            ft::map<char, int> foo, bar;
-            foo['x'] = 100;
-            foo['y'] = 200;
-
-            bar['a'] = 11;
-            bar['b'] = 22;
-            bar['c'] = 33;
-
-            swap(foo,bar);
-
-            print_header("foo", COLOR_NORMAL);
-            print_map(foo);
-            print_header("bar", COLOR_NORMAL);
-            print_map(bar);
-        }
-        {
-            print_header("count");
+            const std::string name = "count";
+            test_start(name);
             ft::map<char, int> mymap;
             char c;
 
@@ -1065,9 +1212,11 @@ int main(int argc, char **argv)
                 else
                     std::cout << " is not an element of mymap.\n";
             }
+            test_end(name);
         }
         {
-            print_header("lower_bound, upper_bound");
+            const std::string name = "lower_bound, upper_bound";
+            test_start(name);
             ft::map<char, int> mymap;
             ft::map<char, int>::iterator itlow, itup;
 
@@ -1086,8 +1235,11 @@ int main(int argc, char **argv)
             // print content:
             for (ft::map<char,int>::iterator it = mymap.begin(); it != mymap.end(); ++it)
                 std::cout << it->first << " => " << it->second << '\n';
+            test_end(name);
         }
         {
+            const std::string name = "(const) lower_bound, upper_bound";
+            test_start(name);
             ft::map<char, int> mymap;
             ft::map<char, int>::const_iterator itlow, itup;
 
@@ -1107,9 +1259,11 @@ int main(int argc, char **argv)
             // print content:
             for (; itlow != itup; ++itlow)
                 std::cout << itlow->first << " => " << itlow->second << '\n';
+            test_end(name);
         }
         {
-            print_header("equal_range");
+            const std::string name = "equal_range";
+            test_start(name);
             ft::map<char, int> mymap;
 
             mymap['a'] = 10;
@@ -1135,9 +1289,11 @@ int main(int argc, char **argv)
 
             std::cout << "upper bound points to: ";
             std::cout << ret2.second->first << " => " << ret2.second->second << '\n';
+            test_end(name);
         }
         {
-            print_header("get_allocator");
+            const std::string name = "get_allocator";
+            test_start(name);
             int psize;
             ft::map<char, int> mymap;
             ft::pair<const char, int>* p;
@@ -1152,9 +1308,11 @@ int main(int argc, char **argv)
 
             mymap.get_allocator().deallocate(p, 5);
             leaks();
+            test_end(name);
         }
         {
-            print_header("get_allocator 2");
+            const std::string name = "get_allocator 2";
+            test_start(name);
             ft::map<int, char> m;
             ft::pair<const int, char>* p = m.get_allocator().allocate(2);
 
@@ -1166,9 +1324,11 @@ int main(int argc, char **argv)
 
             m.get_allocator().deallocate(p, 2);
             leaks();
+            test_end(name);
         }
         {
-            print_header("relational operators");
+            const std::string name = "relational operators";
+            test_start(name);
             ft::map<char, int> foo, bar;
             foo['a'] = 100;
             foo['b'] = 200;
@@ -1182,9 +1342,11 @@ int main(int argc, char **argv)
             if (foo >  bar) std::cout << "foo is greater than bar\n";
             if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
             if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
+            test_end(name);
         }
         {
-            print_header("swap (non-member function)");
+            const std::string name = "swap (non-member function)";
+            test_start(name);
             ft::map<char, int> foo, bar;
 
             foo['x'] = 100;
@@ -1194,28 +1356,16 @@ int main(int argc, char **argv)
             bar['b'] = 22;
             bar['c'] = 33;
 
-            swap(foo,bar);
+            swap(foo, bar);
 
             std::cout << "foo contains:\n";
             print_map(foo);
             std::cout << "bar contains:\n";
             print_map(bar);
-        }
-        {
-            print_header("const_iterator");
-            ft::map<char, int> m;
-            m['a'] = 100;
-            m['b'] = 200;
-            for (ft::map<char, int>::const_iterator it1 = m.begin(); it1 != m.end(); ++it1)
-                std::cout << ".";
+            test_end(name);
         }
         print_header("leaks");
         leaks();
-
-#ifdef TIME
-        end = clock();
-        print_time(start, end, "map: ");
-#endif
     }
 
     /* ********************************************************************** */
@@ -1224,9 +1374,6 @@ int main(int argc, char **argv)
 
     if (has_arg == false || test_vectors[2])
     {
-#ifdef TIME
-        start = clock();
-#endif
         print_header("stack", COLOR_B_GREEN);
         {
             print_header("constructor, top, size");
@@ -1274,10 +1421,5 @@ int main(int argc, char **argv)
         }
         print_header("leaks");
         leaks();
-
-#ifdef TIME
-        end = clock();
-        print_time(start, end, "stack: ");
-#endif
     }
 }
