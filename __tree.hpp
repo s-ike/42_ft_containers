@@ -1,5 +1,5 @@
-#ifndef TREE_HPP
-#define TREE_HPP
+#ifndef __TREE_HPP
+#define __TREE_HPP
 
 #include <iostream>
 #include "iterator_traits.hpp"
@@ -940,4 +940,4 @@ namespace ft {
     };
 }
 
-#endif /* TREE_HPP */
+#endif /* _TREE_HPP */
