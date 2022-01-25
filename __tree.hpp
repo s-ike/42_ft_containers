@@ -68,7 +68,6 @@ namespace ft {
         }
     };
 
-    // _Tp = ft::pair<const _Key, _T>
     template <class _Tp>
     class __tree_iterator
     {
@@ -233,7 +232,6 @@ namespace ft {
         }
     };
 
-    // _Tp = ft::pair<const _Key, _Tp>
     template <class _Tp, class _Compare, class _Allocator = std::allocator<_Tp> >
     class __tree
     {
