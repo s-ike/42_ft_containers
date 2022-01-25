@@ -63,11 +63,6 @@ time:
 			@echo $(C_CYAN)"=== diff ==="$(C_DEFAULT)$(C_REST)
 			diff test_fd.txt test_stl.txt
 
-.PHONY:		time2
-time2:		main_time.cpp
-			$(CXX) $(CXXFLAGS_2) $<
-			./$(NAME)
-
 .PHONY:		42
 42:			main_42.cpp
 			@echo $(C_GREEN)"=== ft ==="$(C_DEFAULT)$(C_REST)
