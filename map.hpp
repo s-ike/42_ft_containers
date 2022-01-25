@@ -1,8 +1,6 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include <functional>
-#include <iterator>
 #include "__tree.hpp"
 #include "algorithm.hpp"
 #include "utility.hpp"
@@ -223,7 +221,7 @@ namespace ft {
         {
             return __tree_.upper_bound(__k);
         }
-        const_iterator upper_bound (const key_type& __k) const
+        const_iterator upper_bound(const key_type& __k) const
         {
             return __tree_.upper_bound(__k);
         }

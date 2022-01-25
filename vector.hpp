@@ -9,7 +9,6 @@
 #include "vector_iterator.hpp"
 #include "enable_if.hpp"
 #include "is_integral.hpp"
-#include <iostream>
 
 namespace ft {
     template <class _Tp, class _Allocator = std::allocator<_Tp> >
