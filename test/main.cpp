@@ -1376,25 +1376,30 @@ int main(int argc, char **argv)
     {
         print_header("stack", COLOR_B_GREEN);
         {
-            print_header("constructor, top, size");
-            std::deque<int> mydeque(3,100);
+            const std::string name = "stack constructor, top, size";
+            test_start(name);
+            std::deque<int> mydeque(3, 100);    // three ints with value 100
             ft::stack<int, std::deque<int> > s(mydeque);
             std::cout << "s.top(): " << s.top() << std::endl;
             std::cout << "s.size(): " << s.size() << std::endl;
+            test_end(name);
         }
         {
-            print_header("empty");
+            const std::string name = "empty";
+            test_start(name);
             ft::stack<int> s;
-            std::cout << s.empty() << std::endl;
+            std::cout << "s.empty(): " << s.empty() << std::endl;
             s.push(42);
-            std::cout << s.empty() << std::endl;
-            std::cout << s.top() << std::endl;
+            std::cout << "s.empty(): " << s.empty() << std::endl;
+            std::cout << "s.top(): " << s.top() << std::endl;
+            test_end(name);
         }
         {
-            print_header("push, pop");
+            const std::string name = "push, pop";
+            test_start(name);
             ft::stack<int> mystack;
-
-            for (int i=0; i<5; ++i) mystack.push(i);
+            for (int i = 0; i < 5; ++i)
+                mystack.push(i);
 
             std::cout << "Popping out elements...";
             while (!mystack.empty())
@@ -1403,21 +1408,25 @@ int main(int argc, char **argv)
                 mystack.pop();
             }
             std::cout << '\n';
+            test_end(name);
         }
         {
-            print_header("relational operators");
+            const std::string name = "relational operators";
+            test_start(name);
             ft::stack<int> foo;
             foo.push(42);
             ft::stack<int> bar;
             bar.push(21);
             bar.push(100);
 
-            if (foo==bar) std::cout << "foo and bar are equal\n";
-            if (foo!=bar) std::cout << "foo and bar are not equal\n";
-            if (foo< bar) std::cout << "foo is less than bar\n";
-            if (foo> bar) std::cout << "foo is greater than bar\n";
-            if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
-            if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+            // foo (42) vs bar (21, 100):
+            if (foo == bar) std::cout << "foo and bar are equal\n";
+            if (foo != bar) std::cout << "foo and bar are not equal\n";
+            if (foo <  bar) std::cout << "foo is less than bar\n";
+            if (foo >  bar) std::cout << "foo is greater than bar\n";
+            if (foo <= bar) std::cout << "foo is less than or equal to bar\n";
+            if (foo >= bar) std::cout << "foo is greater than or equal to bar\n";
+            test_end(name);
         }
         print_header("leaks");
         leaks();
