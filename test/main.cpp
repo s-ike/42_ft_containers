@@ -174,7 +174,8 @@ int main(int argc, char **argv)
             test_start(name);
             try
             {
-                ft::vector<int> v(4611686018427387904);
+                ft::vector<int> v1;
+                ft::vector<int> v2(v1.max_size() + 1);
             }
             catch (const std::exception& e)
             {
@@ -470,7 +471,7 @@ int main(int argc, char **argv)
         }
 #else
         {
-            const std::string name = "assign large test";
+            const std::string name = "assign performance testing";
             test_start(name);
             ft::vector<int> v(10, 1);
             v.reserve(COUNT + 100);
@@ -522,14 +523,14 @@ int main(int argc, char **argv)
         }
 #else
         {
-            const std::string name1 = "push_back large test";
+            const std::string name1 = "push_back performance testing";
             test_start(name1);
             ft::vector<int> v;
             for (int i = 0; i < COUNT; ++i)
                 v.push_back(i);
             test_end(name1);
 
-            const std::string name2 = "pop_back large test";
+            const std::string name2 = "pop_back performance testing";
             test_start(name2);
             for (int i = 0; i < COUNT; ++i)
                 v.pop_back();
@@ -681,34 +682,34 @@ int main(int argc, char **argv)
         }
 #else
         {
-            const std::string name = "insert (fill) - large test";
+            const std::string name = "insert (fill) - performance testing";
             test_start(name);
             ft::vector<int> v(10, 1);
             v.insert(v.begin() + 2, COUNT, 42);
             test_end(name);
 
-            const std::string name2 = "insert (range) large test";
+            const std::string name2 = "insert (range) performance testing";
             test_start(name2);
             ft::vector<int> v2(10, 2);
             v2.insert(v2.begin() + 2, v.begin(), v.end());
             test_end(name2);
         }
         {
-            const std::string name = "insert (fill) - large test 2";
+            const std::string name = "insert (fill) - performance testing 2";
             test_start(name);
             ft::vector<int> v(10, 1);
             v.reserve(COUNT + 100);
             v.insert(v.begin() + 2, COUNT, 42);
             test_end(name);
 
-            const std::string name2 = "insert (range) large test 2";
+            const std::string name2 = "insert (range) performance testing 2";
             test_start(name2);
             ft::vector<int> v2(10, 2);
             v2.reserve(COUNT + 100);
             v2.insert(v2.begin() + 2, v.begin(), v.end());
             test_end(name2);
 
-            const std::string name3 = "erase large test";
+            const std::string name3 = "erase performance testing";
             test_start(name3);
             v.erase(v.begin(), v.begin() + COUNT);
             test_end(name3);
@@ -1054,7 +1055,7 @@ int main(int argc, char **argv)
         }
 #else
         {
-            const std::string name = "insert (single element) - large test";
+            const std::string name = "insert (single element) - performance testing";
             test_start(name);
             ft::map<int, int> m;
             for (int i = 0; i < COUNT; ++i)
@@ -1062,7 +1063,7 @@ int main(int argc, char **argv)
             test_end(name);
         }
         {
-            const std::string name = "insert (with hint) - large test";
+            const std::string name = "insert (with hint) - performance testing";
             test_start(name);
             ft::map<int, int> m;
             m[COUNT] = COUNT;
@@ -1071,7 +1072,7 @@ int main(int argc, char **argv)
                 m.insert(itr, ft::pair<int, int>(i, i));
             test_end(name);
 
-            const std::string name2 = "insert (range) - large test";
+            const std::string name2 = "insert (range) - performance testing";
             test_start(name2);
             ft::map<int, int> m2;
             m2.insert(m.begin(), m.end());
@@ -1079,19 +1080,19 @@ int main(int argc, char **argv)
 
             ft::map<int, int> m3(m2);
 
-            const std::string name3 = "erase (by iterator) - large test";
+            const std::string name3 = "erase (by iterator) - performance testing";
             test_start(name3);
             for (int i = 0; i < COUNT; ++i)
                 m.erase(m.begin());
             test_end(name3);
 
-            const std::string name4 = "erase (by key) - large test";
+            const std::string name4 = "erase (by key) - performance testing";
             test_start(name4);
             for (int i = 0; i < COUNT; ++i)
                 m2.erase(i);
             test_end(name4);
 
-            const std::string name5 = "erase (by range) - large test";
+            const std::string name5 = "erase (by range) - performance testing";
             test_start(name5);
             m3.erase(m3.begin(), m3.end());
             test_end(name5);
@@ -1394,6 +1395,7 @@ int main(int argc, char **argv)
             std::cout << "s.top(): " << s.top() << std::endl;
             test_end(name);
         }
+#ifndef TIME
         {
             const std::string name = "push, pop";
             test_start(name);
@@ -1410,6 +1412,22 @@ int main(int argc, char **argv)
             std::cout << '\n';
             test_end(name);
         }
+#else
+        {
+            const std::string name = "push - performance testing";
+            test_start(name);
+            ft::stack<int> mystack;
+            for (int i = 0; i < COUNT; ++i)
+                mystack.push(i);
+            test_end(name);
+
+            const std::string name2 = "pop - performance testing";
+            test_start(name2);
+            while (!mystack.empty())
+                mystack.pop();
+            test_end(name2);
+        }
+#endif
         {
             const std::string name = "relational operators";
             test_start(name);
