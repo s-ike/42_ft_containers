@@ -4,7 +4,7 @@
 #include "vector.hpp"
 
 namespace ft {
-    template <class _T, class _Container = ft::vector<_T> >
+    template <class _Tp, class _Container = ft::vector<_Tp> >
     class stack
     {
     public:
@@ -27,7 +27,6 @@ namespace ft {
         const value_type& top() const {return c.back();}
 
         void push(const value_type& __v) {c.push_back(__v);}
-
         void pop() {c.pop_back();}
 
         template <class T1, class _C1>
@@ -40,33 +39,33 @@ namespace ft {
     };
 
     // Non-member function overloads
-    template <class _T, class _Container>
-    bool operator==(const stack<_T, _Container>& __lhs, const stack<_T, _Container>& __rhs)
+    template <class _Tp, class _Container>
+    bool operator==(const stack<_Tp, _Container>& __lhs, const stack<_Tp, _Container>& __rhs)
     {
         return __lhs.c == __rhs.c;
     }
-    template <class _T, class _Container>
-    bool operator!=(const stack<_T, _Container>& __lhs, const stack<_T, _Container>& __rhs)
+    template <class _Tp, class _Container>
+    bool operator!=(const stack<_Tp, _Container>& __lhs, const stack<_Tp, _Container>& __rhs)
     {
         return !(__lhs == __rhs);
     }
-    template <class _T, class _Container>
-    bool operator<(const stack<_T, _Container>& __lhs, const stack<_T, _Container>& __rhs)
+    template <class _Tp, class _Container>
+    bool operator<(const stack<_Tp, _Container>& __lhs, const stack<_Tp, _Container>& __rhs)
     {
         return __lhs.c < __rhs.c;
     }
-    template <class _T, class _Container>
-    bool operator<=(const stack<_T, _Container>& __lhs, const stack<_T, _Container>& __rhs)
+    template <class _Tp, class _Container>
+    bool operator<=(const stack<_Tp, _Container>& __lhs, const stack<_Tp, _Container>& __rhs)
     {
         return !(__rhs < __lhs);
     }
-    template <class _T, class _Container>
-    bool operator>(const stack<_T, _Container>& __lhs, const stack<_T, _Container>& __rhs)
+    template <class _Tp, class _Container>
+    bool operator>(const stack<_Tp, _Container>& __lhs, const stack<_Tp, _Container>& __rhs)
     {
         return __rhs < __lhs;
     }
-    template <class _T, class _Container>
-    bool operator>=(const stack<_T, _Container>& __lhs, const stack<_T, _Container>& __rhs)
+    template <class _Tp, class _Container>
+    bool operator>=(const stack<_Tp, _Container>& __lhs, const stack<_Tp, _Container>& __rhs)
     {
         return !(__lhs < __rhs);
     }
